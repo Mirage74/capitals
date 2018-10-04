@@ -32,8 +32,9 @@ class Login extends Component {
   render() {
     const { message, messageType } = this.props.notify;
     return (
+      <div>
+      <img width="30%" height="30%" align="left" border="10" src={Albania} alt = {Albania} />
       <div className="row">
-        <img width="30%" height="30%" vertical-align="top" border="10" src={Albania} alt = {Albania} />
         <div className="col-md-6 mx-auto">
           <div className="card">
             <div className="card-body">
@@ -77,6 +78,7 @@ class Login extends Component {
             </div>
           </div>
         </div>
+      </div>
       </div>
     );
   }
