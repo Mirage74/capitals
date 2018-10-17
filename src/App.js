@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { UserIsAuthenticated, UserIsNotAuthenticated } from './helpers/auth';
+//import  { Button } from 'reactstrap'
 
 import { Provider } from 'react-redux';
 import store from './store';
@@ -18,6 +19,7 @@ import './App.css';
 
 class App extends Component {
   render() {
+    //let y = 5
     return (
       <Provider store={store}>
         <Router>
