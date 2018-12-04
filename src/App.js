@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { UserIsAuthenticated, UserIsNotAuthenticated } from './helpers/auth';
-//import  { Button } from 'reactstrap'
 
 import { Provider } from 'react-redux';
 import store from './store';
@@ -13,19 +12,18 @@ import EditClient from './components/clients/EditClient';
 import ClientDetails from './components/clients/ClientDetails';
 import Login from './components/auth/Login';
 import Register from './components/auth/Register';
-
+import Settings from './components/settings/Settings';
 
 import './App.css';
 
 class App extends Component {
   render() {
-    //let y = 5
     return (
       <Provider store={store}>
         <Router>
           <div className="App">
-            <AppNavbar />
-            <div className="container">
+
+            <div className="container-fluid">
               <Switch>
                 <Route
                   exact
@@ -56,6 +54,11 @@ class App extends Component {
                   exact
                   path="/register"
                   component={UserIsNotAuthenticated(Register)}
+                />
+                <Route
+                  exact
+                  path="/settings"
+                  component={UserIsAuthenticated(Settings)}
                 />
               </Switch>
             </div>
