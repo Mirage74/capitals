@@ -22,7 +22,7 @@ class Login extends Component {
   onSubmit = e => {
     e.preventDefault();
 
-
+    //localStorage.setItem("jwt", "JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVjMDVlZTgxYTVjYjc1MDAxNjVlMTAyNiIsImRpc3BsYXlOYW1lIjoiU2xhdmEiLCJlbWFpbCI6InNsYXZhQG1haWwucnUiLCJpYXQiOjE1NDM4OTI2ODJ9.01MFk5EF6CWksLI0wCIMXkWzv2AJpalvb1wQadM2dzQ")
     console.log(localStorage.getItem('jwt'))
 
     // let store = localStorage.createInstance()
@@ -40,7 +40,7 @@ class Login extends Component {
 
     axios.get(pathServer + 'custom', {
       headers: {
-        'Authorization': 'JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVjMDVlZTgxYTVjYjc1MDAxNjVlMTAyNiIsImRpc3BsYXlOYW1lIjoiU2xhdmEiLCJlbWFpbCI6InNsYXZhQG1haWwucnUiLCJpYXQiOjE1NDM4OTI2ODJ9.01MFk5EF6CWksLI0wCIMXkWzv2AJpalvb1wQadM2dzQ'
+        'Authorization': 'JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVjMDZmMDIzMTlmZTZjMDAxNmVkODQ4OCIsImRpc3BsYXlOYW1lIjoiSm9obiIsImVtYWlsIjoiRG9lQGdtYWlsLmNvbSIsImlhdCI6MTU0Mzk1ODU4OH0.paGA3aV_FY20hg3kYP-f1a6QsWpwdYrmqpXewrsG_Yw'
       }
     })
       .then (res => {
