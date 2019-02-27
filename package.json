@@ -10,6 +10,7 @@
     "localforage": "^1.7.3",
     "react": "^16.5.2",
     "react-dom": "^16.5.2",
+    "react-media": "^1.9.2",
     "react-redux": "^5.0.7",
     "react-redux-firebase": "^2.1.8",
     "react-router-dom": "^4.3.1",

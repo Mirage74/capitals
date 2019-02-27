@@ -21,9 +21,9 @@ class App extends Component {
     return (
       <Provider store={store}>
         <Router>
-          <div className="App">
+          <div>
 
-            <div className="container-fluid">
+            <div id="rot">
               <Switch>
                 <Route
                   exact
