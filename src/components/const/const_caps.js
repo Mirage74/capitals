@@ -85,7 +85,7 @@ import ITA from "../../photos/Italy-Rome.jpg"
 import JAM from "../../photos/Jamaica-Kingston.jpg"
 import JPN from "../../photos/Japan-Tokyo.jpg"
 import JOR from "../../photos/Jordan-Amman.jpg"
-import KAZ from "../../photos/Kazakhstan-Astana.jpg"
+import KAZ from "../../photos/Kazakhstan-Nur_Sultan.jpg"
 import KEN from "../../photos/Kenya-Nairobi.jpg"
 import KIR from "../../photos/Kiribati-Tarawa.jpg"
 import KWT from "../../photos/Kuwait-Kuwait_City.jpg"
@@ -127,11 +127,133 @@ import NER from "../../photos/Niger-Niamey.jpg"
 import NGA from "../../photos/Nigeria-Abuja.jpg"
 import PRK from "../../photos/North_Korea-Pyongyang.jpg"
 import NOR from "../../photos/Norway-Oslo.jpg"
-import MKD from "../../photos/Noth_Macedonia-Skopje.jpg"
+import MKD from "../../photos/North_Macedonia-Skopje.jpg"
 import OMN from "../../photos/Oman-Muscat.jpg"
-/* import  from "../../photos/.jpg"
-import  from "../../photos/.jpg"
-import  from "../../photos/.jpg" */
+import PAK from "../../photos/Pakistan-Islamabad.jpg"
+import PLW from "../../photos/Palau-Ngerulmud.jpg"
+import PAN from "../../photos/Panama-Panama_City.jpg"
+import PNG from "../../photos/Papua_New_Guinea-Port_Moresby.jpg"
+import PRY from "../../photos/Paraguay-Asuncion.jpg"
+import PER from "../../photos/Peru-Lima.jpg"
+import PHL from "../../photos/Philippines-Manila.jpg"
+import POL from "../../photos/Poland-Warsaw.jpg"
+import PRT from "../../photos/Portugal-Lisbon.jpg"
+import QAT from "../../photos/Qatar-Doha.jpg"
+import ROU from "../../photos/Romania-Bucharest.jpg"
+import RUS from "../../photos/Russia-Moscow.jpg"
+import RWA from "../../photos/Rwanda-Kigali.jpg"
+import KNA from "../../photos/Saint_Kitts_and_Nevis-Basseterre.jpg"
+import LCA from "../../photos/Saint_Lucia-Castries.jpg"
+import VCT from "../../photos/Saint_Vincent_and_the_Grenadines-Kingstown.jpg"
+import WSM from "../../photos/Samoa-Apia.jpg"
+import SMR from "../../photos/San_Marino-San_Marino.jpg"
+import STP from "../../photos/Sao_Tome_and_Principe-Sao_Tome.jpg"
+import SAU from "../../photos/Saudi_Arabia-Riyadh.jpg"
+import SEN from "../../photos/Senegal-Dakar.jpg"
+import SRB from "../../photos/Serbia-Belgrade.jpg"
+import SYC from "../../photos/Seychelles-Victoria.jpg"
+import SLE from "../../photos/Sierra_Leone-Freetown.jpg"
+import SGP from "../../photos/Singapore-Singapore.jpg"
+import SVK from "../../photos/Slovakia-Bratislava.jpg"
+import SVN from "../../photos/Slovenia-Ljubljana.jpg"
+import SLB from "../../photos/Solomon_Islands-Honiara.jpg"
+import SOM from "../../photos/Somalia-Mogadishu.jpg"
+import ZAF from "../../photos/South_Africa-Pretoria.jpg"
+import KOR from "../../photos/South_Korea-Seoul.jpg"
+import SSD from "../../photos/South_Sudan-Juba.jpg"
+import ESP from "../../photos/Spain-Madrid.jpg"
+import LKA from "../../photos/Sri_Lanka-Sri_Jayawardenepura.jpg"
+import SDN from "../../photos/Sudan-Khartoum.jpg"
+import SUR from "../../photos/Suriname-Paramaribo.jpg"
+import SWE from "../../photos/Sweden_Stockholm.jpg"
+import CHE from "../../photos/Switzerland-Bern.jpg"
+import SYR from "../../photos/Syria-Damascus.jpg"
+import TJK from "../../photos/Tajikistan-Dushanbe.jpg"
+import TZA from "../../photos/Tanzania-Dodoma.jpg"
+import THA from "../../photos/Thailand_Bangkok.jpg"
+import TGO from "../../photos/Togo-Lome.jpg"
+import TON from "../../photos/Tonga-Nuku_Alofa.jpg"
+import TTO from "../../photos/Trinidad_and_Tobago-Port_of_Spain.jpg"
+import TUN from "../../photos/Tunisia-Tunis.jpg"
+import TUR from "../../photos/Turkey-Ankara.jpg"
+import TKM from "../../photos/Turkmenistan-Ashgabat.jpg"
+import TUV from "../../photos/Tuvalu_Funafuti.jpg"
+import ARE from "../../photos/UAE-Abu_Dhabi.jpg"
+import UGA from "../../photos/Uganda-Kampala.jpg"
+import UKR from "../../photos/Ukraine-Kiev.jpg"
+import GBR from "../../photos/United_Kingdom-London.jpg"
+import URY from "../../photos/Uruguay-Montevideo.jpg"
+import USA from "../../photos/USA-Washington.jpg"
+import UZB from "../../photos/Uzbekistan-Tashkent.jpg"
+import VUT from "../../photos/Vanuatu-Port_Vila.jpg"
+import VEN from "../../photos/Venezuela-Caracas.jpg"
+import VNM from "../../photos/Vietnam-Hanoi.jpg"
+import YEM from "../../photos/Yemen-Sanaa.jpg"
+import ZMB from "../../photos/Zambia-Lusaka.jpg"
+import ZWE from "../../photos/Zimbabwe-Harare.jpg"
+
+const capitalsNames = ["Kabul", "Tirana", "Algiers", "Andorra la Vella", "Luanda", "St. John's", "Buenos Aires", "Yerevan", "Canberra", "Vienna",
+                       "Baku", "Nassau", "Manama", "Dhaka", "Bridgetown", "Minsk", "Brussels", "Belmopan", "Porto-Novo", "Thimphu",
+                       "Sucre", "Sarajevo", "Gaborone", "Brazilia", "Bandar Seri Begawan", "Sofia", "Ouagadougou", "Bujumbura", "Phnom Penh", "Yaounde",
+                       "Ottawa", "Praia", "Bangui", "N'Djamena", "Santiago", "Beijing", "Bogota", "Moroni", "Brazzaville", "San Jose",
+                       "Yamoussoukro", "Zagreb", "Havana", "Nicosia", "Prague", "Kinshasa", "Copenhagen", "Djibouti", "Roseau", "Santo Domingo",
+                       "Dili", "Quito", "Cairo", "San Salvador", "Malabo", "Asmara", "Tallinn", "Mbabane", "Addis Ababa", "Suva",
+                       "Helsinki", "Paris", "Libreville", "Banjul", "Tbilisi", "Berlin", "Accra", "Athens", "St. George's", "Guatemala City",
+                       "Conakry", "Bissau", "Georgetown", "Port-au-Prince", "Tegucigalpa", "Budapest", "Reykjavik", "New Delhi", "Jakarta", "Tehran",
+                       "Baghdad", "Dublin", "Jerusalem", "Rome", "Kingston", "Tokyo", "Amman", "Nur-Sultan", "Nairobi", "Tarawa",
+                       "Kuwait City", "Bishkek", "Vientiane", "Riga", "Beirut", "Maseru", "Monrovia", "Tripoli", "Vaduz", "Vilnius",
+                       "Luxembourg City", "Antananarivo", "Lilongwe", "Kuala Lumpur", "Male", "Bamako", "Valletta", "Majuro", "Nouakchott", "Port Louis",
+                       "Mexico City", "Palikir", "Chisinau", "Monaco", "Ulaanbaatar", "Podgorica", "Rabat", "Maputo", "Naypyidaw", "Windhoek",
+                       "Yaren", "Kathmandu", "Amsterdam", "Wellington", "Managua", "Niamey", "Abuja", "Pyongyang", "Skopje", "Oslo",
+                       "Muscat", "Islamabad", "Ngerulmud", "Panama City", "Port Moresby", "Asuncion", "Lima", "Manila", "Warsaw", "Lisbon",
+                       "Doha", "Bucharest", "Moscow", "Kigali", "Basseterre", "Castries", "Kingstown", "Apia", "San Marino", "Sao Tome",
+                       "Riyadh", "Dakar", "Belgrade", "Victoria", "Freetown", "Singapore", "Bratislava", "Ljubljana", "Honiara", "Mogadishu",
+                       "Pretoria", "Seoul", "Juba", "Madrid", "Sri Jayawardenepura Kotte", "Khartoum", "Paramaribo", "Stockholm", "Bern", "Damascus",
+                       "Dushanbe", "Dodoma", "Bangkok", "Lome", "Nuku'Alofa", "Port of Spain", "Tunis", "Ankara", "Ashgabat", "Funafuti",
+                       "Abu Dhabi", "Kampala", "Kiev", "London", "Montevideo", "Washington", "Tashkent", "Port Vila", "Caracas", "Hanoi",
+                       "Sanaa", "Lusaka", "Harare"]
+
+const capitalsNamesShort = ["Kabul", "Tirana", "Algiers", "Andorra la...", "Luanda", "St. John's", "Buenos Aires", "Yerevan", "Canberra", "Vienna",
+                       "Baku", "Nassau", "Manama", "Dhaka", "Bridg...", "Minsk", "Brussels", "Belmopan", "Porto- Novo", "Thimphu",
+                       "Sucre", "Sarajevo", "Gaborone", "Brazilia", "Bandar Seri...", "Sofia", "Ouaga...", "Bujum...", "Phnom Penh", "Yaounde",
+                       "Ottawa", "Praia", "Bangui", "N'Dja...", "Santiago", "Beijing", "Bogota", "Moroni", "Brazz...", "San Jose",
+                       "Yamou...", "Zagreb", "Havana", "Nicosia", "Prague", "Kinshasa", "Copen...", "Djibouti", "Roseau", "Santo Domingo",
+                       "Dili", "Quito", "Cairo", "San Salvador", "Malabo", "Asmara", "Tallinn", "Mbabane", "Addis Ababa", "Suva",
+                       "Helsinki", "Paris", "Libre...", "Banjul", "Tbilisi", "Berlin", "Accra", "Athens", "St. George's", "Guate...",
+                       "Conakry", "Bissau", "Georg...", "Port- au...", "Teguc...", "Budapest", "Reykj...", "New Delhi", "Jakarta", "Tehran",
+                       "Baghdad", "Dublin", "Jerus...", "Rome", "Kingston", "Tokyo", "Amman", "Nur-Su...", "Nairobi", "Tarawa",
+                       "Kuwait City", "Bishkek", "Vient...", "Riga", "Beirut", "Maseru", "Monrovia", "Tripoli", "Vaduz", "Vilnius",
+                       "Luxem...", "Antan...", "Lilongwe", "Kuala Lumpur", "Male", "Bamako", "Valletta", "Majuro", "Nouak...", "Port Louis",
+                       "Mexico City", "Palikir", "Chisinau", "Monaco", "Ulaan...", "Podgo...", "Rabat", "Maputo", "Naypyidaw", "Windhoek",
+                       "Yaren", "Kathmandu", "Amste...", "Welli...", "Managua", "Niamey", "Abuja", "Pyong...", "Skopje", "Oslo",
+                       "Muscat", "Islam...", "Ngeru...", "Panama City", "Port Moresby", "Asuncion", "Lima", "Manila", "Warsaw", "Lisbon",
+                       "Doha", "Bucha...", "Moscow", "Kigali", "Basse...", "Castries", "Kings...", "Apia", "San Marino", "Sao Tome",
+                       "Riyadh", "Dakar", "Belgrade", "Victoria", "Freetown", "Singa...", "Brati...", "Ljubl...", "Honiara", "Mogad...",
+                       "Pretoria", "Seoul", "Juba", "Madrid", "Sri Jayaw...", "Khartoum", "Param...", "Stock...", "Bern", "Damascus",
+                       "Dushanbe", "Dodoma", "Bangkok", "Lome", "Nuku' Alofa", "Port of...", "Tunis", "Ankara", "Ashgabat", "Funafuti",
+                       "Abu Dhabi", "Kampala", "Kiev", "London", "Monte...", "Washi...", "Tashkent", "Port Vila", "Caracas", "Hanoi",
+                       "Sanaa", "Lusaka", "Harare"]                       
+
+const countiesNames = ["Afghanistan", "Albania", "Algeria", "Andorra", "Angola", "Antigua and Barbuda", "Argentina", "Armenia", "Australia", "Austria",
+                        "Azerbaijan", "Bahamas", "Bahrain", "Bangladesh", "Barbados", "Belarus", "Belgium", "Belize", "Benin", "Bhutan",
+                        "Bolivia", "Bosnia", "Botswana", "Brazil", "Brunei", "Bulgaria", "Burkina Faso", "Burundi", "Cambodia", "Cameroon",
+                        "Canada", "Cape Verde", "Central African Republic", "Chad", "Chile", "China", "Colombia", "Comoros", "Congo", "Costa Rica",
+                        "Cote d'Ivoire", "Croatia", "Cuba", "Cyprus", "Czech", "Democratic Republic of the Congo", "Denmark", "Djibouti", "Dominica", "Dominican Republic",
+                        "Timor-Leste", "Ecuador", "Egypt", "El Salvador", "Equatorial Guinea", "Eritrea", "Estonia", "Eswatini", "Ethiopia", "Fij",
+                        "Finland", "France", "Gabon", "Gambia", "Georgia", "Germany", "Ghana", "Greece", "Grenada", "Guatemala",
+                        "Guinea", "Guinea-Bissau", "Guyana", "Haiti", "Honduras", "Hungary", "Iceland", "India", "Indonesia", "Iran",
+                        "Iraq", "Ireland", "Israel", "Italy", "Jamaica", "Japan", "Jordan", "Kazakhstan", "Kenya", "Kiribati",
+                        "Kuwait", "Kyrgyzstan", "Lao", "Latvia", "Lebanon", "Lesotho", "Liberia", "Libya", "Liechtenstein", "Lithuania",
+                        "Luxembourg", "Madagascar", "Malawi", "Malaysia", "Maldives", "Mali", "Malta", "Marshall Islands", "Mauritania", "Mauritius",
+                        "Mexico", "Micronesia-Palikir", "Moldova", "Monaco", "Mongolia", "Montenegro", "Morocco", "Mozambique", "Myanmar", "Namibia",
+                        "Nauru", "Nepal", "Netherlands", "New Zealand", "Nicaragua", "Niger", "Nigeria", "North Korea", "Noth_Macedonia", "Norway", 
+                        "Oman", "Pakistan", "Palau", "Panama", "Papua New Guinea", "Paraguay", "Peru", "Philippines", "Poland", "Portugal",
+                        "Qatar", "Romania", "Russia", "Rwanda", "Saint Kitts and Nevis", "Saint Lucia", "Saint Vincent and the Grenadines", "Samoa", "San Marino", "Sao Tome and Principe",
+                        "Saudi Arabia", "Senegal", "Serbia", "Seychelles", "Sierra Leone", "Singapore", "Slovakia", "Slovenia", "Solomon Islands", "Somalia",
+                        "South Africa", "South Korea", "South Sudan", "Spain", "Sri_Lanka", "Sudan", "Suriname", "Sweden", "Switzerland", "Syria",
+                        "Tajikistan", "Tanzania", "Thailand", "Togo", "Tonga", "Trinidad and Tobago", "Tunisia", "Turkey", "Turkmenistan", "Tuvalu",
+                        "United Arab Emirates", "Uganda", "Ukraine", "United_Kingdom", "Uruguay", "USA", "Uzbekistan", "Vanuatu", "Venezuela", "Vietnam",
+                        "Yemen", "Zambia", "Zimbabwe"]
 
 export  {AFG, ALB, DZA, AND, AGO, ATG, ARG, ARM, AUS, AUT, AZE, BHS, BHR, BGD, BRB, BLR, BEL, BLZ, BEN, BTN,
          BOL, BIH, BWA, BRA, BRN, BGR, BFA, BDI, KHM, CMR, CAN, CPV, CAF, TCD, CHL, CHN, COL, COM, COG, CRI,
@@ -139,4 +261,7 @@ export  {AFG, ALB, DZA, AND, AGO, ATG, ARG, ARM, AUS, AUT, AZE, BHS, BHR, BGD, B
          FIN, FRA, GAB, GMB, GEO, DEU, GHA, GRC, GRD, GTM, GIN, GNB, GUY, HTI, HND, HUN, ISL, IND, IDN, IRN,
          IRQ, IRL, ISR, ITA, JAM, JPN, JOR, KAZ, KEN, KIR, KWT, KGZ, LAO, LVA, LBN, LSO, LBR, LBY, LIE, LTU,
          LUX, MDG, MWI, MYS, MDV, MLI, MLT, MHL, MRT, MUS, MEX, FSM, MDA, MCO, MNG, MNE, MAR, MOZ, MMR, NAM,
-         NRU, NPL, NLD, NZL, NIC, NER, NGA, PRK, NOR, MKD, OMN	}
+         NRU, NPL, NLD, NZL, NIC, NER, NGA, PRK, NOR, MKD, OMN, PAK, PLW, PAN, PNG, PRY, PER, PHL, POL, PRT,
+         QAT, ROU, RUS, RWA, KNA, LCA, VCT, WSM, SMR, STP, SAU, SEN, SRB, SYC, SLE, SGP, SVK, SVN, SLB, SOM,
+         ZAF, KOR, SSD, ESP, LKA, SDN, SUR, SWE, CHE, SYR, TJK, TZA, THA, TGO, TON, TTO, TUN, TUR, TKM, TUV,
+         ARE, UGA, UKR, GBR, URY, USA, UZB, VUT, VEN, VNM, YEM, ZMB, ZWE, capitalsNames, capitalsNamesShort, countiesNames}

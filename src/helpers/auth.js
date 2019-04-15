@@ -8,7 +8,7 @@ export const UserIsAuthenticated = connectedRouterRedirect({
   wrapperDisplayName: 'UserIsAuthenticated',
   AuthenticatingComponent: LoadingScreen,
   allowRedirectBack: true,
-  redirectPath: (state, ownProps) =>
+    redirectPath: (state, ownProps) =>
     locationHelper.getRedirectQueryParam(ownProps) || '/login',
   authenticatingSelector: ({ firebase: { auth, profile, isInitializing } }) =>
     !auth.isLoaded || isInitializing === true,

@@ -1,0 +1,31 @@
+        <div>
+          <Media query="(max-height: 700px)"> {
+            matches => matches ? (
+              <div className="divInCenter"> {logForm} </div>
+            ) : (
+                <Media query="(max-width: 1200px)"> {
+                  matches => matches ? (
+                    <Media query="(max-width: 800px)"> {
+                      matches => matches ? (
+                        <div>
+                          <div>{resolution800MAX}</div>
+                          <div className="divInCenter">{logForm}</div>
+                        </div>
+                      ) : (
+                          <div>
+                            <div>{resolution1200MAX}</div>
+                            <div className="divInCenter">{logForm}</div>
+                          </div>
+                        )
+                    }
+                    </Media>
+                  ) : (
+                      <div>
+                        <div>{resolutionBig}</div>
+                        <div className="divInCenter">{logForm}</div>
+                      </div>
+                    )}
+                </Media>
+              )}
+          </Media>
+        </div>

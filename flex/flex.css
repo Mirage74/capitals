@@ -1,0 +1,36 @@
+body {
+display: grid;
+grid-template-areas:
+"top top top top top top top"
+"left empty empty empty empty empty right"
+"left empty empty empty empty empty right"
+"left empty empty empty empty empty right"
+"bot bot bot bot bot bot bot";
+grid-template-rows: 60px 1fr 1fr 1fr 60px;
+grid-template-columns: 20% 1fr 1fr 1fr 1fr 1fr 20%;
+grid-gap: 10px;
+height: 100vh;
+margin: 0;
+}
+div {
+padding: 20px;
+background: gold;
+}
+.Top {
+    grid-area: top;
+}
+.Bot {
+  grid-area: bot;
+}
+
+.Empty {
+grid-area: empty;
+}
+
+.Left {
+    grid-area: left;
+}
+.Right {
+    grid-area: right;
+}
+

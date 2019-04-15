@@ -8,10 +8,130 @@
     grid-template-rows:  repeat(3, 1fr);
     grid-template-columns: repeat(7, 1fr);
     grid-row-gap: 50px;
-    grid-column-gap: 30px;
+    grid-column-gap: 25px;
     height: 100vh;
     margin: 0;
 }
+
+
+.Top1 {
+    grid-area: top1;
+}
+.Top2 {
+    grid-area: top2;
+}
+.Top3 {
+    grid-area: top3;
+}
+.Top4 {
+    grid-area: top4;
+}
+.Top5 {
+    grid-area: top5;
+}
+.Top6 {
+    grid-area: top6;
+}
+.Top7 {
+    grid-area: top7;
+}                        
+
+.Bot1 {
+    grid-area: bot1;
+}
+.Bot2 {
+    grid-area: bot2;
+    }
+.Bot3 {
+    grid-area: bot3;
+}
+.Bot4 {
+    grid-area: bot4;
+}
+.Bot5 {
+    grid-area: bot5;
+}
+.Bot6 {
+    grid-area: bot6;
+}
+.Bot7 {
+    grid-area: bot7;
+}                                  
+    
+.Left {
+    grid-area: left;
+}
+
+.Right {
+    grid-area: right;
+}
+    
+.Empty {
+    grid-area: empty;
+    padding: 0;
+}
+
+.divInCenter {
+    width: 300px; 
+    height: 306px;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform:translate(-50%, -50%);
+}        
+
+
+
+
+.card-my {
+    min-width: 150px;
+    max-width: 150px;
+    min-height: 200px;
+    max-height: 200px;
+}
+
+.card-title {
+    
+    
+}
+.card-body {
+    padding: 0;
+}
+
+.form-group {
+    padding-inline-start: 10px;
+    padding-inline-end: 10px;
+}
+
+
+
+.article-enter {
+    opacity: 0.01;
+}
+
+.article-enter.article-enter-active {
+    opacity: 1;
+    transition: opacity 500ms ease-in;
+}
+
+.article-leave {
+    opacity: 1;
+}
+
+.article-leave.article-leave-active {
+    opacity: 0.01;
+    transition: opacity 300ms ease-in;
+}
+
+.article-appear {
+    opacity: 0.01;
+}
+
+.article-appear.article-appear-active {
+    opacity: 1;
+    transition: opacity .5s ease-in;
+}
+
 
 @media all and (max-width: 1200px) {
     .gridmenu {
@@ -25,108 +145,14 @@
     }   
 }
 
-.Top1 {
-    grid-area: top1;
-    background: gold;
-}
-    /*
-    background-image: url("Croatia.jpg");
-        background-repeat: no-repeat;
-        background-size: cover;
-        */
-.Top2 {
-    grid-area: top2;
-    background: gold;
-}
-.Top3 {
-    grid-area: top3;
-    background: gold;
-}
-.Top4 {
-    grid-area: top4;
-    background: gold;
-}
-.Top5 {
-    grid-area: top5;
-    background: gold;
-}
-.Top6 {
-    grid-area: top6;
-    background: gold;
-}
-.Top7 {
-    grid-area: top7;
-    background: gold;
-}                        
-
-.Bot1 {
-    grid-area: bot1;
-    background: gold;
-}
-.Bot2 {
-    grid-area: bot2;
-    background: gold;
-}
-.Bot3 {
-    grid-area: bot3;
-    background: gold;
-}
-.Bot4 {
-    grid-area: bot4;
-    background: gold;
-}
-.Bot5 {
-    grid-area: bot5;
-    background: gold;
-}
-.Bot6 {
-    grid-area: bot6;
-    background: gold;
-}
-.Bot7 {
-    grid-area: bot7;
-    background: gold;
-}                                  
-    
-.Left {
-    grid-area: left;
-    background: gold;
-}
-
-.Right {
-    grid-area: right;
-    background: gold;
-}
-    
-.Empty {
-    grid-area: empty;
-    padding: 20px;
-}
-
-.divInCenter {
-    width: 300px; 
-    height: 350px;
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform:translate(-50%, -50%);
-}        
-
-
-.card {
-    min-width: 150px;
-    min-height: 200px;
-}
-
-@media all and (max-height: 750px) {
+@media all and (max-width: 800px) {
     .gridmenu {
-        grid-row-gap: 5px;
-    }
-    .form-group {
-        max-height: 50px;
-    }
-    .divInCenter {
-        height: 250px;
-    }
-
+        display: grid;
+        grid-template-areas:
+        "empty";
+    }   
 }
+
+
+
+
