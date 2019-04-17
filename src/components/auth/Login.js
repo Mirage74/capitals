@@ -11,8 +11,8 @@ import { connect } from 'react-redux'
 import store from '../../store'
 import {getCapitals} from '../../actions/capitalactions'
 import localStorage from 'localforage'
-import { CSSTransitionGroup } from 'react-transition-group'
 import uuid from 'uuid'
+import { Log_Refresh_In_Seconds } from '../../config'
 
 
 class Login extends Component {
@@ -26,7 +26,8 @@ class Login extends Component {
 
 componentDidMount() {
   //this.props.getCapitals(getArrayRandom(16, allCapitals))
-  this.timerID = setInterval(this.props.getCapitals, 5000)
+  
+  this.timerID = setInterval(this.props.getCapitals, 1000 * Log_Refresh_In_Seconds)
   //console.log("this.props.capitals : ", this.props.capitals)
   //console.log("componentDidMount, fn : ", fn)
  }
@@ -39,7 +40,7 @@ componentDidMount() {
 
   onSubmit = e => {
     e.preventDefault();
-
+    const { email, password } = this.state;
     //localStorage.setItem("jwt", "JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVjMDVlZTgxYTVjYjc1MDAxNjVlMTAyNiIsImRpc3BsYXlOYW1lIjoiU2xhdmEiLCJlbWFpbCI6InNsYXZhQG1haWwucnUiLCJpYXQiOjE1NDM4OTI2ODJ9.01MFk5EF6CWksLI0wCIMXkWzv2AJpalvb1wQadM2dzQ")
     // onsole.log(localStorage.getItem('jwt'))
 
@@ -56,14 +57,24 @@ componentDidMount() {
 
 
 
-    axios.get(pathServer + 'custom', {
-      headers: {
-        'Authorization': 'JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVjMDZmMDIzMTlmZTZjMDAxNmVkODQ4OCIsImRpc3BsYXlOYW1lIjoiSm9obiIsImVtYWlsIjoiRG9lQGdtYWlsLmNvbSIsImlhdCI6MTU0Mzk1ODU4OH0.paGA3aV_FY20hg3kYP-f1a6QsWpwdYrmqpXewrsG_Yw'
-      }
+    // axios.get(pathServer + 'custom', {
+    //   headers: {
+    //     'Authorization': 'JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVjMDZmMDIzMTlmZTZjMDAxNmVkODQ4OCIsImRpc3BsYXlOYW1lIjoiSm9obiIsImVtYWlsIjoiRG9lQGdtYWlsLmNvbSIsImlhdCI6MTU0Mzk1ODU4OH0.paGA3aV_FY20hg3kYP-f1a6QsWpwdYrmqpXewrsG_Yw'
+    //   }
+    // })
+    //   .then(res => {
+    //     //console.log(res.data)
+    //   })
+
+    axios.post(pathServer + 'login', {
+      "email": email,
+      "password": password
     })
       .then(res => {
-        //cnsole.log(res.data)
+        console.log("jwt : ", res.data)
       })
+
+
   }
 
   onChange = e => this.setState({ [e.target.name]: e.target.value });
@@ -371,6 +382,7 @@ componentDidMount() {
               value="Login"
               className="btn btn-primary btn-block"
             />
+            <a href="#Register">Register</a>
           </form>
         </div>
       </div>
@@ -451,16 +463,7 @@ componentDidMount() {
                               <div className="divInCenter">{logForm}</div>
                             </div>
                           ) : (
-                            <CSSTransitionGroup
-                            transitionName = 'article'
-                            transitionAppear
-                            transitionEnterTimeout = {300}
-                            transitionLeaveTimeout = {500}
-                            transitionAppearTimeout = {500}
-                            component = 'div'
-                        >
                                 {item}
-                              </CSSTransitionGroup>
                             )
                         }
                       </Media>

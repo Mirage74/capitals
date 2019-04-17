@@ -55,7 +55,11 @@ class App extends Component {
                   path="/login"
                   component={Login}
                 />
-
+                <Route
+                  exact
+                  path="/Register"
+                  component={Register}
+                />
               </Switch>
             </div>
           </div>
