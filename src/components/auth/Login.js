@@ -1,27 +1,32 @@
 import "bootstrap/dist/css/bootstrap.min.css"
 import Media from "react-media"
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+import React, { Component } from 'react'
+//import PropTypes from 'prop-types';
 //import Alert from '../layout/Alert';
 import * as data from '../const/const_caps';
 import "./login.css"
+import {Redirect} from "react-router-dom"
 import pathServer from "./backendpath"
 import axios from 'axios'
 import { connect } from 'react-redux'
-import store from '../../store'
 import {getCapitals} from '../../actions/capitalactions'
-import localStorage from 'localforage'
-import uuid from 'uuid'
 import { Log_Refresh_In_Seconds } from '../../config'
 
 
 class Login extends Component {
   state = {
     email: '',
-    password: ''
+    password: '',
+    redirectReg : false,
+    redirectQuiz : false
   };
 
+  
 
+
+  handleRegClick = e => {
+    this.setState({ redirectReg: true })
+  }
 
 
 componentDidMount() {
@@ -34,12 +39,14 @@ componentDidMount() {
 
  componentWillUnmount() {
   clearInterval(this.timerID);
+  //        console.log("state login : ", this.state)
+//this.props.jwt("" + this.state.jwt)
 }
  
 
 
   onSubmit = e => {
-    e.preventDefault();
+    e.preventDefault()
     const { email, password } = this.state;
     //localStorage.setItem("jwt", "JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVjMDVlZTgxYTVjYjc1MDAxNjVlMTAyNiIsImRpc3BsYXlOYW1lIjoiU2xhdmEiLCJlbWFpbCI6InNsYXZhQG1haWwucnUiLCJpYXQiOjE1NDM4OTI2ODJ9.01MFk5EF6CWksLI0wCIMXkWzv2AJpalvb1wQadM2dzQ")
     // onsole.log(localStorage.getItem('jwt'))
@@ -80,25 +87,18 @@ componentDidMount() {
   onChange = e => this.setState({ [e.target.name]: e.target.value });
 
 
-
   render() {
-    const {message, messageType, capitals, getCapitals} = this.props
-    //console.log("capitals render : ", capitals)
-    //console.log("this.props render : ", this.props)
+    const {capitals} = this.props
+    const { redirectReg, redirectQuiz } = this.state
 
-    // let i = 0;
-    // function refreshCpt() {
-    //   getCapitals(getArrayRandom(16, allCapitals))
-    //   i++
-    //   console.log("refreshCpt : ", i)
-    // }
-    // let repeat_upd = setInterval(refreshCpt, 5000);
+   
 
-    //let arrR = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
-    //this.props.getCapitals(arrR)
-    //console.log("this.props.capitals : ", this.props.capitals)
-    //console.log("capitals :---- ", capitals)
-
+    if (redirectReg) {
+      return <Redirect to='/Register'/>
+    }
+    if (redirectQuiz) {
+      return <Redirect to='/Quiz'/>;
+    }
 
     function getOneCard(countryName, capitalName) {
       return (
@@ -350,8 +350,9 @@ componentDidMount() {
       <div className="card">
         <div className="card-body">
           <h1 className="text-center pb-4 pt-3">
+          <button  type="submit" className="btn btn-primary" onClick = {this.handleRegClick}>Register</button>
             <span className="text-primary">
-              <i className="fas fa-lock" /> Login
+              <i className="fas fa-lock" /> <i><font size="5"> or</font></i> Login
                 </span>
           </h1>
           <form onSubmit={this.onSubmit}>
@@ -382,7 +383,6 @@ componentDidMount() {
               value="Login"
               className="btn btn-primary btn-block"
             />
-            <a href="#Register">Register</a>
           </form>
         </div>
       </div>
@@ -434,18 +434,35 @@ componentDidMount() {
         <div className="Empty"></div>
       </div>
     )
+
+    const itemWidthMax800 = (
+      <div>
+        <div>{resolution800MAX}</div>
+        <div className="divInCenter">{logForm}</div>
+      </div>
+    )
     
-    const item = (
-      <div key = {uuid() }>
+    const itemWidthMax1200 = (
+      <div>
         <div>{resolution1200MAX}</div>
         <div className="divInCenter">{logForm}</div>
       </div>
     )
 
+
+    const itemWidthAbove1200 = (
+      <div>
+        <div>{resolutionBig}</div>
+        <div className="divInCenter">{logForm}</div>
+      </div>
+    )
+
+
+    
+
+
     return (
       <div>
-
-
 
         <Media query="(max-height: 700px)">
           {
@@ -459,18 +476,18 @@ componentDidMount() {
                         {
                           matches => matches ? (
                             <div>
-                              <div>{resolution800MAX}</div>
-                              <div className="divInCenter">{logForm}</div>
+                              {itemWidthMax800}
                             </div>
                           ) : (
-                                {item}
+                            <div>
+                              {itemWidthMax1200}
+                            </div>
                             )
                         }
                       </Media>
                     ) : (
                         <div>
-                          <div>{resolutionBig}</div>
-                          <div className="divInCenter">{logForm}</div>
+                          {itemWidthAbove1200}
                         </div>
                       )}
                 </Media>
@@ -484,10 +501,10 @@ componentDidMount() {
   }
 }
 
-Login.propTypes = {
+//Login.propTypes = {
   // capitals: PropTypes.array.isRequired,
   // getCapitals: PropTypes.func.isRequired
-}
+//}
 //capitals: state.cpsList.capitals
 const  mapStateToProps = (state) => ({
   capitals: state.cpsList.capitals

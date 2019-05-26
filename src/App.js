@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { HashRouter as Router, Route, Switch } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 //import { UserIsAuthenticated, UserIsNotAuthenticated } from './helpers/auth';
 
 import { Provider } from 'react-redux';
@@ -17,7 +17,7 @@ import Register from './components/auth/Register';
 import './App.css';
 
 
-{/* <Switch>
+/* <Switch>
 <Route
   exact
   path="/"
@@ -33,7 +33,7 @@ import './App.css';
   path="/register"
   component={UserIsNotAuthenticated(Register)}
 />
-</Switch> */}
+</Switch> */
 
 
 
@@ -43,7 +43,7 @@ class App extends Component {
       <Provider store={store}>
         <Router basename = {process.env.PUBLIC_URL}>
           <div>
-            <div id="rot">
+            <div id="root">
               <Switch>
                 <Route
                   exact

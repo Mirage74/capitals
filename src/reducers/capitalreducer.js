@@ -5,7 +5,7 @@ const {allCapitals} = require ('../config')
 getArrayRandom(16, allCapitals)
 
 
-let is = getArrayRandom(16, allCapitals)
+//let is = getArrayRandom(16, allCapitals)
 
 const initialState =  {
   capitals: []
