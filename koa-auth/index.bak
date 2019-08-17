@@ -6,14 +6,14 @@ const logger = require('koa-logger'); // optional module for logging
 
 const passport = require('koa-passport'); //passport for Koa
 const LocalStrategy = require('passport-local'); //local Auth Strategy
-//const JwtStrategy = require('passport-jwt').Strategy; // Auth via JWT
-//const ExtractJwt = require('passport-jwt').ExtractJwt; // Auth via JWT
+const JwtStrategy = require('passport-jwt').Strategy; // Auth via JWT
+const ExtractJwt = require('passport-jwt').ExtractJwt; // Auth via JWT
 
-//const jwtsecret = "rq?f$_?S7C8ww6Y2FTqcBvvEEM7=DDJh#qjWAbTm8j6F6U=FtU9bpf7_GK!nyAg3Kuw6h8nyb&X*_8wL%jPJ4+5SdtAxbt*kkv-%mS&y3-DfFzEtD*Mq4P^2c9AE^K5xx$!3UqAvVxeGG8CR64?bRH^MH4JHws^z5-CNR5*XvCNgb5KHF57%TxDJuRBu_xv=%-6^aH_LfGw!u9dUgBDmXEQdQu!ZDb6A#Qd*&ueU7Ac7mZet&?d=sZ3-2%!zjv-+"
-//const jwt = require('jsonwebtoken'); // auth via JWT for hhtp
-//const socketioJwt = require('socketio-jwt'); // auth via JWT for socket.io
+const jwtsecret = "rq?f$_?S7C8ww6Y2FTqcBvvEEM7=DDJh#qjWAbTm8j6F6U=FtU9bpf7_GK!nyAg3Kuw6h8nyb&X*_8wL%jPJ4+5SdtAxbt*kkv-%mS&y3-DfFzEtD*Mq4P^2c9AE^K5xx$!3UqAvVxeGG8CR64?bRH^MH4JHws^z5-CNR5*XvCNgb5KHF57%TxDJuRBu_xv=%-6^aH_LfGw!u9dUgBDmXEQdQu!ZDb6A#Qd*&ueU7Ac7mZet&?d=sZ3-2%!zjv-+"
+const jwt = require('jsonwebtoken'); // auth via JWT for hhtp
+const socketioJwt = require('socketio-jwt'); // auth via JWT for socket.io
 
-//const socketIO = require('socket.io');
+const socketIO = require('socket.io');
 
 const mongoose = require('./libs/mongoose');
 
@@ -59,11 +59,7 @@ const User = require('./libs/user')
 
 //----------Passport Local Strategy--------------//
 
-
-
-
 passport.use(new LocalStrategy({
-  usernameField: 'login',
   passwordField: 'password',
   session: false
 },
@@ -78,31 +74,32 @@ passport.use(new LocalStrategy({
       }
       return done(null, user);
     })
-  })
+  }
 )
+);
 
 //----------Passport JWT Strategy--------//
 
 // Expect JWT in the http header
 
-//const jwtOptions = {
-//  jwtFromRequest: ExtractJwt.fromAuthHeaderWithScheme("jwt"),
-//  secretOrKey: jwtsecret
-//};
+const jwtOptions = {
+  jwtFromRequest: ExtractJwt.fromAuthHeaderWithScheme("jwt"),
+  secretOrKey: jwtsecret
+};
 
-//passport.use(new JwtStrategy(jwtOptions, function (payload, done) {
-//  User.findById(payload.id, (err, user) => {
-//    if (err) {
-//      return done(err)
-//    }
-//    if (user) {
-//      done(null, user)
-//    } else {
-//      done(null, false)
-//    }
-//  })
-//})
-//);
+passport.use(new JwtStrategy(jwtOptions, function (payload, done) {
+  User.findById(payload.id, (err, user) => {
+    if (err) {
+      return done(err)
+    }
+    if (user) {
+      done(null, user)
+    } else {
+      done(null, false)
+    }
+  })
+})
+);
 
 //------------Routing---------------//
 
@@ -113,24 +110,23 @@ passport.use(new LocalStrategy({
 
 
 router.post('/user', async (ctx, next) => {
-  //let existUser = false
+  let existUser = false
   //console.log("ctx.request.body.email : ", ctx.request.body.email)
-  //let seekinDB
-  let user
+  let seekinDB
   try {
     //let ml = ctx.request.body.email
-    // seekinDB = {
-    //   displayName : ctx.request.body.displayName
-    // } 
-    user = await User.findOne({ displayName: ctx.request.body.displayName })
-    // await User.findOne( seekinDB , (err, user) => {
-    //   if (user) {
-    //     existUser = true
-    //     err = `User with "displayName" ${ctx.request.body.displayName} already exist !`
-    //     console.log(err)
-    //     ctx.body = err
-    //   } 
-    // })
+    seekinDB = {
+      email : ctx.request.body.email
+    } 
+    await User.findOne( seekinDB , (err, user) => {
+      if (user) {
+        existUser = true
+        err = `User with "email" ${ctx.request.body.email} already exist !`
+        console.log(err)
+        ctx.body = err
+      }
+
+    })
   }
 
   catch (err) {
@@ -139,7 +135,28 @@ router.post('/user', async (ctx, next) => {
     ctx.body = err
   }
 
-  if (!user) {
+  try {
+    seekinDB = {
+      displayName : ctx.request.body.displayName
+    } 
+    await User.findOne(seekinDB, (err, user) => {
+      if (user) {
+        existUser = true
+        err = `User with "Display name" ${ctx.request.body.displayName} already exist !`
+        console.log(err)
+        ctx.body = err
+      }
+
+    })
+  }
+
+  catch (err) {
+    ctx.status = 400
+    console.log(err)
+    ctx.body = err
+  }
+
+  if (!existUser) {
     try {
       let user = await User.create(ctx.request.body)
       ctx.body = user.toObject();
@@ -149,8 +166,6 @@ router.post('/user', async (ctx, next) => {
       console.log(err)
       ctx.body = err
     }
-  } else {
-    ctx.body = `User with "displayName" ${ctx.request.body.displayName} already exist !`
   }
 });
 
@@ -158,19 +173,19 @@ router.post('/user', async (ctx, next) => {
 
 router.post('/login', async (ctx, next) => {
   await passport.authenticate('local', function (err, user) {
-    console.log("user : ", user)
+    //console.log("user : ", user)
     if (user == false) {
       ctx.body = "Login failed";
     } else {
       //--payload - info to put in the JWT
       const payload = {
         id: user.id,
-        displayName: user.displayName
+        displayName: user.displayName,
+        email: user.email
       };
-//      const token = jwt.sign(payload, jwtsecret); //JWT is created here
+      const token = jwt.sign(payload, jwtsecret); //JWT is created here
 
-//      ctx.body = { user: user.displayName, token: 'JWT ' + token };
-      ctx.body = { user: user.displayName};
+      ctx.body = { user: user.displayName, token: 'JWT ' + token };
     }
   })(ctx, next);
 
@@ -178,30 +193,30 @@ router.post('/login', async (ctx, next) => {
 
 // JWT auth route
 
-//router.get('/custom', async (ctx, next) => {
+router.get('/custom', async (ctx, next) => {
 
-//  await passport.authenticate('jwt', function (err, user) {
-//    if (user) {
-//      ctx.body = "hello " + user.displayName;
-//    } else {
-//      ctx.body = "No such user";
-//      console.log("err", err)
-//    }
-//  })(ctx, next)
+  await passport.authenticate('jwt', function (err, user) {
+    if (user) {
+      ctx.body = "hello " + user.displayName;
+    } else {
+      ctx.body = "No such user";
+      console.log("err", err)
+    }
+  })(ctx, next)
 
-//});
+});
 
 //---Socket Communication-----//
-//let io = socketIO(server);
+let io = socketIO(server);
 
-//io.on('connection', socketioJwt.authorize({
-//  secret: jwtsecret,
-//  timeout: 15000
-//})).on('authenticated', function (socket) {
+io.on('connection', socketioJwt.authorize({
+  secret: jwtsecret,
+  timeout: 15000
+})).on('authenticated', function (socket) {
 
-//  console.log('this is the name from the JWT: ' + socket.decoded_token.displayName);
+  console.log('this is the name from the JWT: ' + socket.decoded_token.displayName);
 
-//  socket.on("clientEvent", (data) => {
-//    console.log(data);
-//  })
-//})
+  socket.on("clientEvent", (data) => {
+    console.log(data);
+  })
+})

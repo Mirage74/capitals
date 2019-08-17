@@ -9,12 +9,8 @@ mongoose.plugin(beautifyUnique);
 
 const userSchema = new mongoose.Schema({
   displayName: String,
-  email: {
-    type: String,
-    required: 'e-mail is required',
-    unique: 'this e-mail already exist'
-  },
   passwordHash: String,
+  maxScore: Number,
   salt: String,
 }, {
   timestamps: true
@@ -44,6 +40,6 @@ userSchema.methods.checkPassword = function (password) {
 };
 
 
-userSchema.statics.publicFields = ['id', 'displayName', 'email'];
+userSchema.statics.publicFields = ['id', 'displayName', 'maxScore'];
 
 module.exports = mongoose.model('cptUser', userSchema);

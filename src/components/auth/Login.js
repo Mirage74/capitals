@@ -1,27 +1,24 @@
 import "bootstrap/dist/css/bootstrap.min.css"
 import Media from "react-media"
 import React, { Component } from 'react'
-//import PropTypes from 'prop-types';
-//import Alert from '../layout/Alert';
 import * as data from '../const/const_caps';
 import "./login.css"
 import {Redirect} from "react-router-dom"
-import pathServer from "./backendpath"
 import axios from 'axios'
 import { connect } from 'react-redux'
 import {getCapitals} from '../../actions/capitalactions'
-import { Log_Refresh_In_Seconds } from '../../config'
+import { Log_Refresh_In_Seconds, backendPath } from '../../config'
 
 
 class Login extends Component {
   state = {
-    email: '',
+    displayName: '',
     password: '',
-    redirectReg : false,
-    redirectQuiz : false
-  };
+    redirectReg: false,
+    redirectQuiz: false
+    }
 
-  
+
 
 
   handleRegClick = e => {
@@ -30,55 +27,27 @@ class Login extends Component {
 
 
 componentDidMount() {
-  //this.props.getCapitals(getArrayRandom(16, allCapitals))
-  
   this.timerID = setInterval(this.props.getCapitals, 1000 * Log_Refresh_In_Seconds)
-  //console.log("this.props.capitals : ", this.props.capitals)
-  //console.log("componentDidMount, fn : ", fn)
  }
 
  componentWillUnmount() {
   clearInterval(this.timerID);
-  //        console.log("state login : ", this.state)
-//this.props.jwt("" + this.state.jwt)
 }
  
 
 
   onSubmit = e => {
     e.preventDefault()
-    const { email, password } = this.state;
-    //localStorage.setItem("jwt", "JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVjMDVlZTgxYTVjYjc1MDAxNjVlMTAyNiIsImRpc3BsYXlOYW1lIjoiU2xhdmEiLCJlbWFpbCI6InNsYXZhQG1haWwucnUiLCJpYXQiOjE1NDM4OTI2ODJ9.01MFk5EF6CWksLI0wCIMXkWzv2AJpalvb1wQadM2dzQ")
-    // onsole.log(localStorage.getItem('jwt'))
+    const { displayName, password } = this.state;
 
-    // let store = localStorage.createInstance()
-    //
-    //
-    //
-    // store.setItem("jwt", "JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVjMDVlZTgxYTVjYjc1MDAxNjVlMTAyNiIsImRpc3BsYXlOYW1lIjoiU2xhdmEiLCJlbWFpbCI6InNsYXZhQG1haWwucnUiLCJpYXQiOjE1NDM4OTI2ODJ9.01MFk5EF6CWksLI0wCIMXkWzv2AJpalvb1wQadM2dzQ")
-    // store.getItem("jwt")
-    //   .then(res => {
-    
-    //    })
-
-
-
-
-    // axios.get(pathServer + 'custom', {
-    //   headers: {
-    //     'Authorization': 'JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVjMDZmMDIzMTlmZTZjMDAxNmVkODQ4OCIsImRpc3BsYXlOYW1lIjoiSm9obiIsImVtYWlsIjoiRG9lQGdtYWlsLmNvbSIsImlhdCI6MTU0Mzk1ODU4OH0.paGA3aV_FY20hg3kYP-f1a6QsWpwdYrmqpXewrsG_Yw'
-    //   }
-    // })
-    //   .then(res => {
-    //     //console.log(res.data)
-    //   })
-
-    axios.post(pathServer + 'login', {
-      "email": email,
+    axios.post(backendPath + 'login', {
+      "login": displayName,
       "password": password
     })
       .then(res => {
-        console.log("jwt : ", res.data)
+        this.setState({ displayName: res.data.user })
+        this.props.displayName("" + res.data.user)
+        this.setState({ redirectQuiz: true })
       })
 
 
@@ -96,9 +65,18 @@ componentDidMount() {
     if (redirectReg) {
       return <Redirect to='/Register'/>
     }
+
     if (redirectQuiz) {
-      return <Redirect to='/Quiz'/>;
+      return <Redirect to={{
+        pathname: 'Quiz',
+        state: {
+          displayName: this.state.displayName
+        }
+      }}
+      />       
     }
+
+
 
     function getOneCard(countryName, capitalName) {
       return (
@@ -357,13 +335,13 @@ componentDidMount() {
           </h1>
           <form onSubmit={this.onSubmit}>
             <div className="form-group">
-              <label htmlFor="email">Email</label>
+              <label htmlFor="displayName">displayName</label>
               <input
                 type="text"
                 className="form-control"
-                name="email"
+                name="displayName"
                 required
-                value={this.state.email}
+                value={this.state.displayName}
                 onChange={this.onChange}
               />
             </div>
@@ -460,7 +438,6 @@ componentDidMount() {
 
     
 
-
     return (
       <div>
 
@@ -501,11 +478,7 @@ componentDidMount() {
   }
 }
 
-//Login.propTypes = {
-  // capitals: PropTypes.array.isRequired,
-  // getCapitals: PropTypes.func.isRequired
-//}
-//capitals: state.cpsList.capitals
+
 const  mapStateToProps = (state) => ({
   capitals: state.cpsList.capitals
 })

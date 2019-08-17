@@ -1,13 +1,15 @@
 import React, { Component } from 'react';
 import axios from 'axios'
-import pathServer from "./backendpath"
-
+import { Redirect } from "react-router-dom"
+//import Login from './Login'
+import { backendPath, MIN_USER_displayName_LENGTH, MIN_USER_PASSWORD_LENGTH } from '../../config'
 
 class Register extends Component {
   state = {
     displayName: '',
-    email: '',
-    password: ''
+    password: '',
+    redirectLogin: false,
+    errors: {}
   };
 
   //  componentWillMount() {
@@ -19,19 +21,34 @@ class Register extends Component {
   //  }
 
   onSubmit = e => {
-    e.preventDefault();
-    const { displayName, email, password } = this.state;
-    axios.post(pathServer + 'user', {
+    e.preventDefault()
+    const { displayName, password } = this.state
+    //console.log("errors : ", errors)
+
+    if (displayName.length < MIN_USER_displayName_LENGTH) {
+      this.setState({ errors: { displayName: `"Display name" length must be at least ${MIN_USER_displayName_LENGTH}` } })
+      return
+    }
+
+    if (password.length < MIN_USER_PASSWORD_LENGTH) {
+      this.setState({ errors: { password: `password length must be at least ${MIN_USER_PASSWORD_LENGTH}` } })
+      return
+    }
+
+    axios.post(backendPath + 'user', {
       "displayName": displayName,
-      "email": email,
-      "password": password
+      "password": password,
+      "maxScore": 0
     })
       .then(res => {
         let strExist = "" + res.data
-        if (strExist.substring(0, 24) === `User with "Display name"`) {
-          document.getElementById("idDisplayName").innerHTML = `User "${displayName}" already exist, please enter another "Display name"`
-        }
-        if (strExist.substring(0, 17) === `User with "email"`) {
+        //      console.log("res.data: ", res.data)
+        if (strExist.substring(0, 23) === `User with "displayName"`) {
+          this.setState({ errors: { displayName: `User "${displayName}" already exist, please enter another "Display name"` } })
+        } else {
+          if (res.data.displayName.length > 0) {
+            this.setState({ redirectLogin: true })
+          }
         }
 
       })
@@ -41,6 +58,81 @@ class Register extends Component {
   onChange = e => this.setState({ [e.target.name]: e.target.value });
 
   render() {
+    const { errors } = this.state
+    //console.log("errors : ", errors)
+    let buttonDisplayName, buttonPass
+    if (!errors.displayName) {
+      buttonDisplayName = (
+        <div>
+          <label id="idDisplayName" htmlFor="displayName">Display name</label>
+          <input
+            type="text"
+            className="form-control"
+            name="displayName"
+            required
+            value={this.state.displayName}
+            onChange={this.onChange}
+          />
+        </div>
+      )
+    } else {
+      buttonDisplayName = (
+        <div className="form-group row">
+          <label id="idDisplayName" htmlFor="displayName">Display name</label>
+          <input
+            type="text"
+            className="form-control is-invalid"
+            name="displayName"
+            required
+            value={this.state.displayName}
+            onChange={this.onChange}
+          />
+          <div>
+            <span className="help-block text-danger">{errors.displayName}</span>
+          </div>
+        </div >
+      )
+    }
+
+    if (!errors.password) {
+      buttonPass = (
+        <div>
+          <label htmlFor="password">Password</label>
+          <input
+            type="password"
+            className="form-control"
+            name="password"
+            required
+            value={this.state.password}
+            onChange={this.onChange}
+          />
+        </div>
+      )
+    } else {
+      buttonPass = (
+        <div className="form-group row">
+          <label id="idDisplayName" htmlFor="displayName">Display name</label>
+          <label htmlFor="password">Password</label>
+          <input
+            type="password"
+            className="form-control is-invalid"
+            name="password"
+            required
+            value={this.state.password}
+            onChange={this.onChange}
+          />
+          <div>
+            <span className="help-block text-danger">{errors.password}</span>
+          </div>
+        </div >
+      )
+    }
+
+    if (this.state.redirectLogin) {
+      return <Redirect to='/Login' />
+    }
+
+
     return (
       <div className="row">
         <div className="col-md-6 mx-auto">
@@ -53,37 +145,10 @@ class Register extends Component {
               </h1>
               <form onSubmit={this.onSubmit}>
                 <div className="form-group">
-                  <label id="idDisplayName" htmlFor="displayName">Display name</label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    name="displayName"
-                    required
-                    value={this.state.displayName}
-                    onChange={this.onChange}
-                  />
+                  {buttonDisplayName}
                 </div>
                 <div className="form-group">
-                  <label id="idEmail" htmlFor="email">Email</label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    name="email"
-                    required
-                    value={this.state.email}
-                    onChange={this.onChange}
-                  />
-                </div>
-                <div className="form-group">
-                  <label htmlFor="password">Password</label>
-                  <input
-                    type="password"
-                    className="form-control"
-                    name="password"
-                    required
-                    value={this.state.password}
-                    onChange={this.onChange}
-                  />
+                  {buttonPass}
                 </div>
                 <input
                   type="submit"

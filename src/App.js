@@ -1,43 +1,23 @@
 import React, { Component } from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-//import { UserIsAuthenticated, UserIsNotAuthenticated } from './helpers/auth';
-
 import { Provider } from 'react-redux';
 import store from './store';
-
-//import AppNavbar from './components/layout/AppNavbar';
-//import Dashboard from './components/layout/Dashboard';
-//import AddClient from './components/clients/AddClient';
-//import EditClient from './components/clients/EditClient';
-//import ClientDetails from './components/clients/ClientDetails';
-import Login from './components/auth/Login';
-import Register from './components/auth/Register';
-//import Settings from './components/settings/Settings';
-
+import Login from './components/auth/Login'
+import Register from './components/auth/Register'
+import Quiz from './components/quiz'
 import './App.css';
 
-
-/* <Switch>
-<Route
-  exact
-  path="/"
-  component={UserIsNotAuthenticated(Login)}
-/>
-<Route
-  exact
-  path="/login"
-  component={UserIsNotAuthenticated(Login)}
-/>
-<Route
-  exact
-  path="/register"
-  component={UserIsNotAuthenticated(Register)}
-/>
-</Switch> */
-
-
-
 class App extends Component {
+
+state = {
+  displayName: ""
+}
+
+getDisplayNameCallback = (dataFromChild) => {
+  this.setState({ displayName: dataFromChild })
+}
+
+
   render() {
     return (
       <Provider store={store}>
@@ -45,27 +25,29 @@ class App extends Component {
           <div>
             <div id="root">
               <Switch>
-                <Route
-                  exact
-                  path="/"
-                  component={Login}
+              <Route
+                  exact path="/"
+                  render={(props) => <Login {...props} displayName={this.getDisplayNameCallback} />}
                 />
                 <Route
-                  exact
-                  path="/login"
-                  component={Login}
-                />
+                  exact path="/login"
+                  render={(props) => <Login {...props} displayName={this.getDisplayNameCallback} />}
+                />                                
                 <Route
                   exact
                   path="/Register"
                   component={Register}
+                />
+                <Route
+                  exact path="/Quiz"
+                  render={(props) => <Quiz {...props} displayName={this.state.displayName} />}
                 />
               </Switch>
             </div>
           </div>
         </Router>
       </Provider>
-    );
+    )
   }
 }
 
