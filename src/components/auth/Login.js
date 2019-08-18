@@ -3,10 +3,11 @@ import Media from "react-media"
 import React, { Component } from 'react'
 import * as data from '../const/const_caps';
 import "./login.css"
-import {Redirect} from "react-router-dom"
+import { Redirect } from "react-router-dom"
 import axios from 'axios'
 import { connect } from 'react-redux'
-import {getCapitals} from '../../actions/capitalactions'
+import { getCapitals } from '../../actions/list-cpt/action'
+import { setDisplayName } from '../../actions/auth/action'
 import { Log_Refresh_In_Seconds, backendPath } from '../../config'
 
 
@@ -16,7 +17,7 @@ class Login extends Component {
     password: '',
     redirectReg: false,
     redirectQuiz: false
-    }
+  }
 
 
 
@@ -26,14 +27,14 @@ class Login extends Component {
   }
 
 
-componentDidMount() {
-  this.timerID = setInterval(this.props.getCapitals, 1000 * Log_Refresh_In_Seconds)
- }
+  componentDidMount() {
+    this.timerID = setInterval(this.props.getCapitals, 1000 * Log_Refresh_In_Seconds)
+  }
 
- componentWillUnmount() {
-  clearInterval(this.timerID);
-}
- 
+  componentWillUnmount() {
+    clearInterval(this.timerID);
+  }
+
 
 
   onSubmit = e => {
@@ -46,8 +47,9 @@ componentDidMount() {
     })
       .then(res => {
         this.setState({ displayName: res.data.user })
-        this.props.displayName("" + res.data.user)
+        //this.props.displayName("" + res.data.user)
         this.setState({ redirectQuiz: true })
+        this.props.setDisplayName("" + res.data.user)
       })
 
 
@@ -57,23 +59,24 @@ componentDidMount() {
 
 
   render() {
-    const {capitals} = this.props
+    const { capitals } = this.props
     const { redirectReg, redirectQuiz } = this.state
 
-   
+
 
     if (redirectReg) {
-      return <Redirect to='/Register'/>
+      return <Redirect to='/Register' />
     }
 
-    if (redirectQuiz) {
+    if (redirectQuiz || (this.props.user.length > 0) ) {
+      console.log("this.props.user : ", this.props.user)
       return <Redirect to={{
         pathname: 'Quiz',
         state: {
-          displayName: this.state.displayName
+          displayName: this.props.user
         }
       }}
-      />       
+      />
     }
 
 
@@ -294,7 +297,7 @@ componentDidMount() {
       return iso
     }
 
-        
+
 
 
 
@@ -328,7 +331,7 @@ componentDidMount() {
       <div className="card">
         <div className="card-body">
           <h1 className="text-center pb-4 pt-3">
-          <button  type="submit" className="btn btn-primary" onClick = {this.handleRegClick}>Register</button>
+            <button type="submit" className="btn btn-primary" onClick={this.handleRegClick}>Register</button>
             <span className="text-primary">
               <i className="fas fa-lock" /> <i><font size="5"> or</font></i> Login
                 </span>
@@ -419,7 +422,7 @@ componentDidMount() {
         <div className="divInCenter">{logForm}</div>
       </div>
     )
-    
+
     const itemWidthMax1200 = (
       <div>
         <div>{resolution1200MAX}</div>
@@ -436,7 +439,7 @@ componentDidMount() {
     )
 
 
-    
+
 
     return (
       <div>
@@ -456,9 +459,9 @@ componentDidMount() {
                               {itemWidthMax800}
                             </div>
                           ) : (
-                            <div>
-                              {itemWidthMax1200}
-                            </div>
+                              <div>
+                                {itemWidthMax1200}
+                              </div>
                             )
                         }
                       </Media>
@@ -470,8 +473,8 @@ componentDidMount() {
                 </Media>
               )}
         </Media>
-        
-        
+
+
       </div>
 
     )
@@ -479,10 +482,12 @@ componentDidMount() {
 }
 
 
-const  mapStateToProps = (state) => ({
-  capitals: state.cpsList.capitals
+const mapStateToProps = (state) => ({
+
+    capitals: state.listCapitals.currCapitals,
+    user: state.auth.currDisplayName
+
 })
 
-
-export default connect(mapStateToProps, {getCapitals}) (Login)
+export default connect(mapStateToProps, { getCapitals, setDisplayName })(Login)
 

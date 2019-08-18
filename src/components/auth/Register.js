@@ -10,7 +10,7 @@ class Register extends Component {
     password: '',
     redirectLogin: false,
     errors: {}
-  };
+  }
 
   //  componentWillMount() {
   //    const { allowRegistration } = this.props.settings;

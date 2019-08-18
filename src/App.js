@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-import { Provider } from 'react-redux';
-import store from './store';
+//import { Provider } from 'react-redux';
+//import store from './store';
 import Login from './components/auth/Login'
 import Register from './components/auth/Register'
 import Quiz from './components/quiz'
@@ -15,12 +15,13 @@ state = {
 
 getDisplayNameCallback = (dataFromChild) => {
   this.setState({ displayName: dataFromChild })
+  localStorage.setItem("displayName", dataFromChild)
+  console.log(localStorage)
 }
 
 
   render() {
     return (
-      <Provider store={store}>
         <Router basename = {process.env.PUBLIC_URL}>
           <div>
             <div id="root">
@@ -46,7 +47,6 @@ getDisplayNameCallback = (dataFromChild) => {
             </div>
           </div>
         </Router>
-      </Provider>
     )
   }
 }

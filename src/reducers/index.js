@@ -1,7 +1,11 @@
 import { combineReducers } from 'redux'
-import cptReducer from './capitalreducer'
-//import {getArrayRandom} from "../axfunc"
+
+import auth from "./auth/store"
+import listCapitals from "./list-cpt/store"
+
 
 export default combineReducers({
-  cpsList: cptReducer
+  listCapitals,
+  auth
 })
+
