@@ -158,18 +158,19 @@ router.post('/user', async (ctx, next) => {
 
 router.post('/login', async (ctx, next) => {
   await passport.authenticate('local', function (err, user) {
-    console.log("user : ", user)
     if (user == false) {
       ctx.body = "Login failed";
     } else {
       //--payload - info to put in the JWT
-      const payload = {
-        id: user.id,
-        displayName: user.displayName
-      };
+//      const payload = {
+//        id: user.id,
+//        displayName: user.displayName
+        
+//      };
 //      const token = jwt.sign(payload, jwtsecret); //JWT is created here
 
 //      ctx.body = { user: user.displayName, token: 'JWT ' + token };
+      console.log("user : ", user.displayName)
       ctx.body = { user: user.displayName};
     }
   })(ctx, next);

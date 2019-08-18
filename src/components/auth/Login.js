@@ -68,12 +68,12 @@ class Login extends Component {
       return <Redirect to='/Register' />
     }
 
-    if (redirectQuiz || (this.props.user.length > 0) ) {
+    if (redirectQuiz || (this.props.user.length > 0)) {
       console.log("this.props.user : ", this.props.user)
       return <Redirect to={{
         pathname: 'Quiz',
         state: {
-          displayName: this.props.user
+          //displayName: this.props.user
         }
       }}
       />
@@ -329,6 +329,7 @@ class Login extends Component {
 
     const logForm = (
       <div className="card">
+        <h4 className="text-center" >Do you know the capitals ?</h4>
         <div className="card-body">
           <h1 className="text-center pb-4 pt-3">
             <button type="submit" className="btn btn-primary" onClick={this.handleRegClick}>Register</button>
@@ -484,8 +485,8 @@ class Login extends Component {
 
 const mapStateToProps = (state) => ({
 
-    capitals: state.listCapitals.currCapitals,
-    user: state.auth.currDisplayName
+  capitals: state.listCapitals.currCapitals,
+  user: state.auth.currDisplayName
 
 })
 

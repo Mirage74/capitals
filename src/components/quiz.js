@@ -1,45 +1,51 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
+import { setDisplayName } from '../actions/auth/action'
 import "./quiz.css"
 import MenuButtons from "./layout/menubuttons"
+import ChooseLevel from "./layout/chooseLevel"
 import { Redirect } from "react-router-dom"
 
 class Quiz extends Component {
+    constructor(props) {
+        super(props)
+        this.getMenuClickCB = this.getMenuClickCB.bind(this)
+    }
+
     state = {
         redirectStartQuiz: false,
         redirectViewCapitals: false,
         redirectViewScore: false,
         redirectLogin: false,
-        password: '',
+        radioButtonSelected: 0,
         errors: {}
     }
 
+    currRadioCB = (chooseRadio) => {
+        this.setState({ radioButtonSelected: chooseRadio })
+    }
     getMenuClickCB = (dataFromChild) => {
-        console.log("getJWTcallback : ", dataFromChild)
-//        this.setState({ jwt: dataFromChild })
-      }
-
-    onSubmitStartQuiz = e => {
-        e.preventDefault()
-        this.setState({ redirectStartQuiz: true })
+        if (dataFromChild === 1) {
+            this.setState({ redirectLogin: true })
+            this.props.setDisplayName("")
+        }
+        if (dataFromChild === 2) {
+            this.setState({ redirectViewCapitals: true })
+            this.props.setDisplayName("")
+        }
+        if (dataFromChild === 3) {
+            this.setState({ redirectViewScore: true })
+            this.props.setDisplayName("")
+        }
+        if (dataFromChild === 4) {
+            this.setState({ redirectLogin: true })
+            this.props.setDisplayName("")
+        }
     }
 
-    onSubmitViewCapitals = e => {
-        e.preventDefault()
-        this.setState({ redirectViewCapitals: true })
-    }
-
-    onSubmitViewScore = e => {
-        e.preventDefault()
-        this.setState({ redirectViewScore: true })
-    }
-
-    onSubmitLogout = e => {
-        console.log("dddd")
-        e.preventDefault()
-        this.setState({ redirectLogin: true })
-    }
 
     render() {
+        console.log(this.state.radioButtonSelected)
         if (this.state.redirectStartQuiz) {
             return <Redirect to='/StartQuiz' />
         }
@@ -53,19 +59,21 @@ class Quiz extends Component {
         }
 
         if (this.state.redirectLogin) {
+            console.log("redir")
             return <Redirect to='/Login' />
         }
 
-        const {displayName} = this.props.location.state
+        const { displayName } = this.props
         let forRender = (
             <div>
                 <div className="container">
                     <div className="row">
                         <div className="col">
-                            <div className="panel-title">{displayName}</div>
+                            <h1 className="text-center">Hello, {displayName} !</h1>
+                            <MenuButtons pressedButton={this.getMenuClickCB} />
                         </div>
                         <div className="col">
-                            <MenuButtons pressedButton={this.getMenuClickCB}/>
+                            <ChooseLevel currButton={this.currRadioCB} />
                         </div>
                     </div>
                 </div>
@@ -82,4 +90,9 @@ class Quiz extends Component {
     }
 }
 
-export default Quiz
+const mapStateToProps = (state) => ({
+    displayName: state.auth.currDisplayName
+})
+
+export default connect(mapStateToProps, { setDisplayName })(Quiz)
+

@@ -8,6 +8,7 @@
     "react": "^16.9.0",
     "react-dom": "^16.9.0",
     "react-media": "^1.9.2",
+    "react-radio-group": "^3.0.3",
     "react-redux": "^7.1.0",
     "react-router-dom": "^5.0.1",
     "react-scripts": "^3.1.1",
@@ -20,5 +21,17 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "eject": "react-scripts eject"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
   }
 }

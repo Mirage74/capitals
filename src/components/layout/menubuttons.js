@@ -1,32 +1,52 @@
 import React, { Component } from 'react'
 
 class MenuButtons extends Component {
+    
+    onSubmitStartQuiz = e => {
+        e.preventDefault()
+        this.props.pressedButton(1)
+    }
+
+    onSubmitViewCapitals = e => {
+        e.preventDefault()
+        this.props.pressedButton(2)
+    }
+
+    onSubmitViewScore = e => {
+        e.preventDefault()
+        this.props.pressedButton(3)
+    }
+
+    onSubmitLogout = e => {
+        e.preventDefault()
+        this.props.pressedButton(4)
+    }
+
     render() {
-        const { onSubmitStartQuiz, onSubmitViewCapitals, onSubmitViewScore, onSubmitLogout, pressedButton } = this.props
-       
+               
         let menuBut
 
         const startQuiz = (
-            <div className="col">
-                <button id="btnsuper" type="submit" className="btn btn-primary" onClick={onSubmitStartQuiz} >Start Quiz</button>
+            <div className="col text-center">
+                <button id="btnsuper" type="submit" className="btn btn-primary" onClick={this.onSubmitStartQuiz} >Start Quiz</button>
             </div>
         )
 
         const viewCapitals = (
-            <div className="col">
-                <button id="btnsuper" type="submit" className="btn btn-primary" onClick={onSubmitViewCapitals} >View all capitals</button>
+            <div className="col text-center">
+                <button id="btnsuper" type="submit" className="btn btn-primary" onClick={this.onSubmitViewCapitals} >View capitals</button>
             </div>
         )
 
         const viewScore = (
-            <div className="col">
-                <button id="btnsuper" type="submit" className="btn btn-primary" onClick={onSubmitViewScore} >View Score</button>
+            <div className="col text-center">
+                <button id="btnsuper" type="submit" className="btn btn-primary" onClick={this.onSubmitViewScore} >View Score</button>
             </div>
         )
 
         const logout = (
-            <div className="col">
-                <button id="btnsuper" type="submit" className="btn btn-primary" onClick={pressedButton("3334r21")} >Logout</button>
+            <div className="col text-center">
+                <button id="btnsuper" type="submit" className="btn btn-primary" onClick={this.onSubmitLogout} >Logout</button>
             </div>
         )
 
@@ -48,4 +68,7 @@ class MenuButtons extends Component {
 
     }
 }
+
+
+
 export default MenuButtons
