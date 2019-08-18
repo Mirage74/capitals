@@ -5,13 +5,12 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import Login from './components/auth/Login'
 import Register from './components/auth/Register'
 import Quiz from './components/quiz'
+import StartQuiz from './components/layout/startQuiz'
 import './App.css';
 
 class App extends Component {
 
-state = {
-  displayName: ""
-}
+
 
 getDisplayNameCallback = (dataFromChild) => {
   this.setState({ displayName: dataFromChild })
@@ -28,11 +27,11 @@ getDisplayNameCallback = (dataFromChild) => {
               <Switch>
               <Route
                   exact path="/"
-                  render={(props) => <Login {...props} displayName={this.getDisplayNameCallback} />}
+                  render={(props) => <Login />}
                 />
                 <Route
                   exact path="/login"
-                  render={(props) => <Login {...props} displayName={this.getDisplayNameCallback} />}
+                  render={(props) => <Login  />}
                 />                                
                 <Route
                   exact
@@ -41,8 +40,12 @@ getDisplayNameCallback = (dataFromChild) => {
                 />
                 <Route
                   exact path="/Quiz"
-                  render={(props) => <Quiz {...props} displayName={this.state.displayName} />}
+                  render={(props) => <Quiz />}
                 />
+                <Route
+                  exact path="/StartQuiz"
+                  render={(props) => <StartQuiz {...props}/>}
+                />                
               </Switch>
             </div>
           </div>

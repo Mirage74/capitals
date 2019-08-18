@@ -234,7 +234,7 @@ const capitalsNamesShort = ["Kabul", "Tirana", "Algiers", "Andorra la...", "Luan
                        "Abu Dhabi", "Kampala", "Kiev", "London", "Monte...", "Washi...", "Tashkent", "Port Vila", "Caracas", "Hanoi",
                        "Sanaa", "Lusaka", "Harare"]                       
 
-const countiesNames = ["Afghanistan", "Albania", "Algeria", "Andorra", "Angola", "Antigua and Barbuda", "Argentina", "Armenia", "Australia", "Austria",
+const countriesNames = ["Afghanistan", "Albania", "Algeria", "Andorra", "Angola", "Antigua and Barbuda", "Argentina", "Armenia", "Australia", "Austria",
                         "Azerbaijan", "Bahamas", "Bahrain", "Bangladesh", "Barbados", "Belarus", "Belgium", "Belize", "Benin", "Bhutan",
                         "Bolivia", "Bosnia", "Botswana", "Brazil", "Brunei", "Bulgaria", "Burkina Faso", "Burundi", "Cambodia", "Cameroon",
                         "Canada", "Cape Verde", "Central African Republic", "Chad", "Chile", "China", "Colombia", "Comoros", "Congo", "Costa Rica",
@@ -288,4 +288,4 @@ export  {AFG, ALB, DZA, AND, AGO, ATG, ARG, ARM, AUS, AUT, AZE, BHS, BHR, BGD, B
          NRU, NPL, NLD, NZL, NIC, NER, NGA, PRK, NOR, MKD, OMN, PAK, PLW, PAN, PNG, PRY, PER, PHL, POL, PRT,
          QAT, ROU, RUS, RWA, KNA, LCA, VCT, WSM, SMR, STP, SAU, SEN, SRB, SYC, SLE, SGP, SVK, SVN, SLB, SOM,
          ZAF, KOR, SSD, ESP, LKA, SDN, SUR, SWE, CHE, SYR, TJK, TZA, THA, TGO, TON, TTO, TUN, TUR, TKM, TUV,
-         ARE, UGA, UKR, GBR, URY, USA, UZB, VUT, VEN, VNM, YEM, ZMB, ZWE, capitalsNames, capitalsNamesShort, countiesNames, level}
+         ARE, UGA, UKR, GBR, URY, USA, UZB, VUT, VEN, VNM, YEM, ZMB, ZWE, capitalsNames, capitalsNamesShort, countriesNames, level}

@@ -26,16 +26,13 @@ class Quiz extends Component {
     }
     getMenuClickCB = (dataFromChild) => {
         if (dataFromChild === 1) {
-            this.setState({ redirectLogin: true })
-            this.props.setDisplayName("")
+            this.setState({ redirectStartQuiz: true })
         }
         if (dataFromChild === 2) {
             this.setState({ redirectViewCapitals: true })
-            this.props.setDisplayName("")
         }
         if (dataFromChild === 3) {
             this.setState({ redirectViewScore: true })
-            this.props.setDisplayName("")
         }
         if (dataFromChild === 4) {
             this.setState({ redirectLogin: true })
@@ -45,9 +42,14 @@ class Quiz extends Component {
 
 
     render() {
-        console.log(this.state.radioButtonSelected)
         if (this.state.redirectStartQuiz) {
-            return <Redirect to='/StartQuiz' />
+            return <Redirect to={{
+                pathname: 'StartQuiz',
+                state: {
+                    radioButtonSelected: this.state.radioButtonSelected
+                }
+            }}
+            />
         }
 
         if (this.state.redirectViewCapitals) {
@@ -59,7 +61,6 @@ class Quiz extends Component {
         }
 
         if (this.state.redirectLogin) {
-            console.log("redir")
             return <Redirect to='/Login' />
         }
 
