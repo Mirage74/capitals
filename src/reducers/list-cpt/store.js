@@ -5,12 +5,14 @@ import {getArrayRandom} from "../../axfunc"
 const {allCapitals} = require ('../../config')
 
 const INITIAL_STATE = {
-  capitals: getArrayRandom(16, allCapitals)
+  capitals: getArrayRandom(16, allCapitals),
+  countriesList: []
 }
 
 const currCapitals = (state = INITIAL_STATE.capitals, { type, payload }) => {
   switch (type) {
     case ListCptTypes.GET_CAPITALS:
+      //console.log("reducer currCapitals", payload)
       return payload;
 
     default:
@@ -18,20 +20,42 @@ const currCapitals = (state = INITIAL_STATE.capitals, { type, payload }) => {
   }
 }
 
-export default combineReducers({
-  currCapitals
-})
+const currCountriesList = (state = INITIAL_STATE.countriesList, { type, payload }) => {
+  switch (type) {
+    case ListCptTypes.SET_COUNTRIES_LIST:
+      return payload;
+    case ListCptTypes.CUT_COUNTRIES_LIST:
+      let newCpts = state
+      //console.log("newCpts bef", state[payload])
+      newCpts.splice(payload, 1)
+      //console.log("newCpts aft", newCpts)
+ //     return newCpts
+      return {
+        ...state,
+        currCountriesList: newCpts
+      }
+    default:
+      return state;
+  }
+}
 
 
-// export default function (state = initialState, action) {
-//   switch (action.type) {
-//     case GET_CAPITALS:  
-//       return {
-//         ...state,
-//         capitals: action.payload
-//       }
+// const cutCountriesList = (state = INITIAL_STATE.countriesList, { type, payload }) => {
+//   switch (type) {
+//     case ListCptTypes.CUT_COUNTRIES_LIST:
+//       console.log(state)
+//       let tmp = state.splice(payload, 1);
+//       console.log(tmp)
+//       return state.splice(payload, 1);
 //     default:
-//       return state
-
+//       return state;
 //   }
 // }
+
+
+
+export default combineReducers({
+  currCapitals,
+  currCountriesList
+
+})

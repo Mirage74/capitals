@@ -1,59 +1,106 @@
 import React, { Component } from 'react'
-import { RadioGroup, Radio } from 'react-radio-group'
-import * as data from '../const/const_caps';
-import {allCapitals, TIME_PER_TURN_EASY, TIME_PER_TURN_MIDDLE, TIME_PER_TURN_HARD} from "../../config"
+import { connect } from 'react-redux'
+import { Redirect } from "react-router-dom"
+import * as data from '../const/const_caps'
+import OneTask from "./oneTask"
+import {allCapitals, TIME_PER_TURN_EASY, TIME_PER_TURN_MIDDLE, TIME_PER_TURN_HARD,  ALL_TASKS_EASY, ALL_TASKS_MIDDLE, ALL_TASKS_HARD} from "../../config"
 
 class StartQuiz extends Component {
-    handleChange = (value) => {
-        this.setState({ selectedValue: value });
-        this.props.currButton(value)
+    state = {
+        currTask: 0,
+        timeForTurnInSec: 0,
+        allTasks: 0,
+        cpt: [],
+        redirectLogin: false,
+        redirectQuiz: false
     }
+
+    
     getSource = (lvl) => {
         let arr = []
         let oneRec = {}
         for (let i = 0; i < allCapitals; i++) {
             if ( data.level[i] <= lvl) {
                 oneRec = {}
-                //console.log(i)
-                //console.log(oneRec)
-                //console.log(data.capitalsNames[i])
-                //console.log(data.countriesNames[i])
                 oneRec.capitalName = data.capitalsNames[i]
                 oneRec.countryName = data.countriesNames[i]
-                //console.log(oneRec)
                 arr.push(oneRec) 
-                //console.log(arr)
             }
         }
-        console.log(arr)
+        return arr
     }
+
+    cutCpt = (index) => {
+        //this.setState({cpt: this.state.cpt.splice(index, 1)})
+    }
+
+    componentDidMount() {
+        //console.log("startQ ")
+        const {radioButtonSelected } = this.props.location.state
+        const { displayName, cpts } = this.props
+        this.setState({ displayName: displayName })    
+        if (radioButtonSelected === 0) {
+            this.setState({ timeForTurnInSec: TIME_PER_TURN_EASY })    
+            this.setState({ allTasks: ALL_TASKS_EASY })    
+        }
+        if (radioButtonSelected === 1) {
+            this.setState({ timeForTurnInSec: TIME_PER_TURN_MIDDLE })    
+            this.setState({ allTasks: ALL_TASKS_MIDDLE })    
+        }        
+        if (radioButtonSelected === 2) {
+            this.setState({ timeForTurnInSec: TIME_PER_TURN_HARD })    
+            this.setState({ allTasks: ALL_TASKS_HARD })    
+        }
+        if ( cpts.length === 0 ) {
+            this.setState({ redirectQuiz: true })    
+        }       
+      }
+
+    
     render() {
-        const {radioButtonSelected} = this.props.location.state
-        this.getSource(0)
+        const { redirectQuiz} = this.state
+        const { displayName, cpts } = this.props
+        if (redirectQuiz || (displayName.length === 0)) {
+            return <Redirect to={{
+              pathname: 'Quiz',
+              state: {
+              }
+            }}
+            />
+          }
+        let forRender
+        if (cpts.length > 0) {
+           let currRand = Math.floor(Math.random() * Math.floor(cpts.length))
+           
+           forRender = (
+               <div>
+                   <div className="container">
+                       <div className="row">
+                           <div className="col">
+                               <h1 className="text-center">Hello, {displayName} !</h1>
+                               <OneTask index={currRand}/>
+                           </div>
+                       </div>
+                   </div>
+               </div>
+           )
+           this.cutCpt(currRand)
+        }
 
         return (
             <div>
-            <h3 className="text-left">Please choose your level:</h3>
-            <br/>
-            <RadioGroup className="text-left"
-                name="fruit"
-                selectedValue = "0"
-                onChange={this.handleChange}>
-                <label>
-                    <Radio value="0" />EASY: 65 capitals and {TIME_PER_TURN_EASY} seconds per turn
-                </label>
-                <label>
-                    <Radio value="1" />MIDDLE: 130 capitals and {TIME_PER_TURN_MIDDLE} seconds per turn
-                </label>
-                <label>
-                    <Radio value="2" />HARD: {allCapitals} capitals and {TIME_PER_TURN_HARD} seconds per turn
-                </label>
-            </RadioGroup>
+                <h1>{forRender}</h1>
             </div>
         )
     }
 }
 
+const mapStateToProps = (state) => ({
 
-export default StartQuiz
-
+    cpts: state.listCapitals.currCountriesList,
+    displayName: state.auth.currDisplayName
+  
+  })
+  
+  
+export default connect(mapStateToProps)(StartQuiz)

@@ -1,5 +1,4 @@
 import * as ActionTypes from './constant';
-//import { getRegisterInfo, getUserInfo } from '../../reducers/auth/select';
 import {getArrayRandom} from "../../axfunc"
 
 const {allCapitals} = require ('../../config')
@@ -10,3 +9,18 @@ export const getCapitals = () => async (dispatch) => {
     payload: getArrayRandom(16, allCapitals)
   })
 }
+
+export const setCountriesList = (countriesList) => async (dispatch) => {
+ dispatch({
+    type: ActionTypes.SET_COUNTRIES_LIST,
+    payload: countriesList
+  })
+}
+
+export const cutCountriesList = (index) => async (dispatch) => {
+  dispatch({
+     type: ActionTypes.CUT_COUNTRIES_LIST,
+     payload: index
+   })
+ }
+

@@ -1,10 +1,14 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { setDisplayName } from '../actions/auth/action'
+import { setCountriesList } from '../actions/list-cpt/action'
 import "./quiz.css"
 import MenuButtons from "./layout/menubuttons"
 import ChooseLevel from "./layout/chooseLevel"
 import { Redirect } from "react-router-dom"
+import * as data from './const/const_caps'
+import {getImageName} from "../axfunc"
+import {allCapitals} from "../config"
 
 class Quiz extends Component {
     constructor(props) {
@@ -40,9 +44,28 @@ class Quiz extends Component {
         }
     }
 
+    getSource = (lvl) => {
+        let arr = []
+        let oneRec = {}
+        for (let i = 0; i < allCapitals; i++) {
+            if ( data.level[i] <= lvl) {
+                oneRec = {}
+                oneRec.capitalName = data.capitalsNames[i]
+                oneRec.countryName = data.countriesNames[i]
+                oneRec.ISO = getImageName(i)
+                arr.push(oneRec) 
+            }
+        }
+        //console.log("arr", arr)
+        return arr
+    }
 
     render() {
+        const { displayName } = this.props
         if (this.state.redirectStartQuiz) {
+            let arr = this.getSource(this.state.radioButtonSelected)
+            this.props.setCountriesList(arr)
+            //console.log("arr redir", arr)
             return <Redirect to={{
                 pathname: 'StartQuiz',
                 state: {
@@ -64,7 +87,7 @@ class Quiz extends Component {
             return <Redirect to='/Login' />
         }
 
-        const { displayName } = this.props
+        
         let forRender = (
             <div>
                 <div className="container">
@@ -95,5 +118,5 @@ const mapStateToProps = (state) => ({
     displayName: state.auth.currDisplayName
 })
 
-export default connect(mapStateToProps, { setDisplayName })(Quiz)
+export default connect(mapStateToProps, { setDisplayName, setCountriesList })(Quiz)
 

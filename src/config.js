@@ -8,5 +8,9 @@ module.exports  = {
   TIME_PER_TURN_HARD : 3,
   Log_Refresh_In_Seconds : 20,
   MIN_USER_displayName_LENGTH : 3,
-  MIN_USER_PASSWORD_LENGTH : 6
+  MIN_USER_PASSWORD_LENGTH : 6,
+  ALL_TASKS_EASY : 20,
+  ALL_TASKS_MIDDLE : 30,
+  ALL_TASKS_HARD : 50,
+  ALL_ANSWERS : 5
 }
