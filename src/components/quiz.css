@@ -7,6 +7,37 @@
     font-size: 2rem;
 }
 
-.btn {
-  
+ul {
+   list-style: none;
+   
 }
+
+li {
+  width: 200px;
+ }
+
+.topContainer{
+  display: flex;
+  flex-direction: row;
+}
+
+#label-answer {
+  flex-direction: row;
+  width: 200px;
+}
+
+#radio-answer {
+  margin-left: 77px;	
+}
+
+#capName-answer {
+  margin-right: 50px;	
+  width: 150px;
+}
+
+#caps-question {
+  margin-left: 50px;	
+}
+
+
+

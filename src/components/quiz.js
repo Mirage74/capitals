@@ -56,7 +56,7 @@ class Quiz extends Component {
                 arr.push(oneRec) 
             }
         }
-        //console.log("arr", arr)
+        //console.log("arr getsour", arr)
         return arr
     }
 

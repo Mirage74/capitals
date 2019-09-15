@@ -25,10 +25,10 @@ const currCountriesList = (state = INITIAL_STATE.countriesList, { type, payload 
     case ListCptTypes.SET_COUNTRIES_LIST:
       return payload;
     case ListCptTypes.CUT_COUNTRIES_LIST:
-      let newCpts = state
+      let newCpts = [...state]
       //console.log("newCpts bef", state[payload])
       newCpts.splice(payload, 1)
-      //console.log("newCpts aft", newCpts)
+//      console.log("newCpts aft", newCpts)
  //     return newCpts
       return {
         ...state,

@@ -83,8 +83,6 @@ class Login extends Component {
 
 
     function getOneCard(countryName, capitalName) {
-      //console.log("one card countryName : ", countryName)
-      //console.log("one card capitalName : ", capitalName)
       return (
         <div>
           <div className="card card-my">
@@ -120,6 +118,7 @@ class Login extends Component {
       Card_13 = getOneCard(data[getImageName(capitals[13])], data.capitalsNamesShort[(capitals[13])])
       Card_14 = getOneCard(data[getImageName(capitals[14])], data.capitalsNamesShort[(capitals[14])])
       Card_15 = getOneCard(data[getImageName(capitals[15])], data.capitalsNamesShort[(capitals[15])])
+      //console.log("Card_0", Card_0)
     }
 
     createCards()

@@ -4,12 +4,12 @@ import {allCapitals, TIME_PER_TURN_EASY, TIME_PER_TURN_MIDDLE, TIME_PER_TURN_HAR
 
 class ChooseLevel extends Component {
     state = {
-        currSelectedValue: "0"
+        currSelectedValue: "-1"
     }
 
     handleChange = (value) => {
         this.setState({ currSelectedValue: value });
-        console.log("value", value)
+    //    console.log("value", value)
         this.props.currButton(value)
 
     }
