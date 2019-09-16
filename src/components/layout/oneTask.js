@@ -3,7 +3,7 @@ import { allCapitals, ALL_ANSWERS } from "../../config"
 import * as data from '../const/const_caps';
 import { connect } from 'react-redux'
 import uuid from 'uuid'
-import Stopwatch from './stopwatch'
+import Countdown from './stopwatch'
 import { getImageName } from "../../axfunc"
 import { RadioGroup, Radio } from 'react-radio-group'
 import { cutCountriesList } from '../../actions/list-cpt/action'
@@ -102,7 +102,7 @@ class OneTask extends Component {
 
 
   render() {
-    const { index, cpts } = this.props
+    const { index, cpts, timeForTurnInSec } = this.props
     const { currSelectedValue, randArr, cardArr } = this.state
     // console.log("cpts render", cpts)
     // console.log("index render", index)
@@ -149,9 +149,7 @@ class OneTask extends Component {
       </RadioGroup>
     )
 
-      let bd = (
-        <Stopwatch/>
-      )
+
     const cptNames = randArr.map(item =>
       <li id="capName-answer" className="text-center" key={uuid()}>
         <h5>{item.capitalName}</h5>
@@ -167,7 +165,7 @@ class OneTask extends Component {
 
     return (
       <div className="row">
-        {bd}
+        <Countdown timeForTurnInSec={timeForTurnInSec}/>
         {task}
         {radioList}
         <ul className="w-100 p-2 topContainer">{cptNames}</ul>

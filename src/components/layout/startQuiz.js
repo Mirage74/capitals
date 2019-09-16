@@ -40,15 +40,16 @@ class StartQuiz extends Component {
         const { radioButtonSelected } = this.props.location.state
         const { displayName, cpts } = this.props
         this.setState({ displayName: displayName })
-        if (radioButtonSelected === 0) {
+        if (radioButtonSelected === "0") {
             this.setState({ timeForTurnInSec: TIME_PER_TURN_EASY })
             this.setState({ allTasks: ALL_TASKS_EASY })
         }
-        if (radioButtonSelected === 1) {
+        if (radioButtonSelected === "1") {
             this.setState({ timeForTurnInSec: TIME_PER_TURN_MIDDLE })
             this.setState({ allTasks: ALL_TASKS_MIDDLE })
         }
-        if (radioButtonSelected === 2) {
+
+        if (radioButtonSelected === "2") {
             this.setState({ timeForTurnInSec: TIME_PER_TURN_HARD })
             this.setState({ allTasks: ALL_TASKS_HARD })
         }
@@ -61,7 +62,7 @@ class StartQuiz extends Component {
 
 
     render() {
-        const { redirectQuiz, currRand } = this.state
+        const { redirectQuiz, currRand, timeForTurnInSec } = this.state
         const { displayName, cpts } = this.props
         if (redirectQuiz || (displayName.length === 0)) {
             return <Redirect to={{
@@ -81,7 +82,7 @@ class StartQuiz extends Component {
                                 <div className="col">
                                     <h1 className="text-center">Hello, {displayName} !</h1>
                                     <br />
-                                    <OneTask index={currRand} currButton={this.currRadioCB} />
+                                    <OneTask index={currRand} currButton={this.currRadioCB} timeForTurnInSec={timeForTurnInSec} />
                                 </div>
                             </div>
                         </div>
