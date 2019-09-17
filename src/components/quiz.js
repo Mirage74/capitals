@@ -7,8 +7,8 @@ import MenuButtons from "./layout/menubuttons"
 import ChooseLevel from "./layout/chooseLevel"
 import { Redirect } from "react-router-dom"
 import * as data from './const/const_caps'
-import {getImageName} from "../axfunc"
-import {allCapitals} from "../config"
+import { getImageName } from "../axfunc"
+import { allCapitals } from "../config"
 
 class Quiz extends Component {
     constructor(props) {
@@ -21,7 +21,7 @@ class Quiz extends Component {
         redirectViewCapitals: false,
         redirectViewScore: false,
         redirectLogin: false,
-        radioButtonSelected: 0,
+        radioButtonSelected: -1,
         errors: {}
     }
 
@@ -48,12 +48,12 @@ class Quiz extends Component {
         let arr = []
         let oneRec = {}
         for (let i = 0; i < allCapitals; i++) {
-            if ( data.level[i] <= lvl) {
+            if (data.level[i] <= lvl) {
                 oneRec = {}
                 oneRec.capitalName = data.capitalsNames[i]
                 oneRec.countryName = data.countriesNames[i]
                 oneRec.ISO = getImageName(i)
-                arr.push(oneRec) 
+                arr.push(oneRec)
             }
         }
         //console.log("arr getsour", arr)
@@ -87,7 +87,7 @@ class Quiz extends Component {
             return <Redirect to='/Login' />
         }
 
-        
+
         let forRender = (
             <div>
                 <div className="container">

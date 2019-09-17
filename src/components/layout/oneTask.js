@@ -3,7 +3,6 @@ import { allCapitals, ALL_ANSWERS } from "../../config"
 import * as data from '../const/const_caps';
 import { connect } from 'react-redux'
 import uuid from 'uuid'
-import Countdown from './stopwatch'
 import { getImageName } from "../../axfunc"
 import { RadioGroup, Radio } from 'react-radio-group'
 import { cutCountriesList } from '../../actions/list-cpt/action'
@@ -23,8 +22,7 @@ class OneTask extends Component {
   state = {
     currSelectedValue: "-1",
     randArr: [],
-    cardArr: [],
-    confirmed: false
+    cardArr: []
   }
 
 
@@ -82,46 +80,57 @@ class OneTask extends Component {
     randArr.splice(mainCptRandIndex, 0, oneRec)
     this.setState({ randArr: randArr })
 
-    // console.log("index", index)
-    // console.log("cpts", cpts)
-    // console.log("randArr", randArr)
-
     cardArr = this.createCards(randArr)
     this.setState({ cardArr: cardArr })
   }
 
+  componentDidUpdate(prevProps) {
+    // console.log("prevprops", prevProps)
+    // console.log("this.props", this.props)
+    if (this.props.index !==prevProps.index) {
+      const { index, cpts } = this.props
+      let randInt
+      let oneRec
+      let newCpts = [...cpts]
+      let randArr = []
+      let cardArr = []
+      newCpts.splice(index, 1)
+      const mainCptRandIndex = Math.floor(Math.random() * Math.floor(ALL_ANSWERS))
+      for (let i = 0; i < ALL_ANSWERS - 1; i++) {
+        randInt = Math.floor(Math.random() * Math.floor(newCpts.length))
+        oneRec = newCpts[randInt]
+        oneRec.index = this.countryNameToIndex(oneRec.countryName)
+        randArr.push(oneRec)
+        newCpts.splice(randInt, 1)
+      }
+      oneRec = cpts[index]
+      oneRec.index = this.countryNameToIndex(oneRec.countryName)
+      randArr.splice(mainCptRandIndex, 0, oneRec)
+      this.setState({ randArr: randArr })
+  
+      cardArr = this.createCards(randArr)
+      this.setState({ cardArr: cardArr })      
+    }
+
+  }
+
   handleChange = (value) => {
+    //console.log("handleChange value", value)
     this.setState({ currSelectedValue: value });
     this.props.currButton(value)
   }
 
-  handleConfClick = e => {
-    e.preventDefault()
-    console.log("this.state.currSelectedValue: ", this.state.currSelectedValue)
-  }
-
-
+  
   render() {
-    const { index, cpts, timeForTurnInSec } = this.props
+    const { index, cpts  } = this.props
     const { currSelectedValue, randArr, cardArr } = this.state
-    // console.log("cpts render", cpts)
-    // console.log("index render", index)
-    // console.log("cpts[index].countryName", cpts[index].countryName)
 
-
-    const buttonConf = (
-      <input
-        type="submit"
-        value="Confirm"
-        className="btn btn-primary"
-        onClick={this.handleConfClick}
-      />
-    )
+   
     
     const task = (
       <div className="row">
         
-        <h1 id="caps-question" className="w-100 p-2 topContainer" >Please choose the capital of {cpts[index].countryName}: {'\u00A0'}  {buttonConf} </h1>
+        <h1 id="caps-question" className="w-100 p-2 topContainer" >Please choose the capital of {cpts[index].countryName}:</h1>
 
       </div>
     )
@@ -162,10 +171,8 @@ class OneTask extends Component {
       </li>
     )
 
-
     return (
       <div className="row">
-        <Countdown timeForTurnInSec={timeForTurnInSec}/>
         {task}
         {radioList}
         <ul className="w-100 p-2 topContainer">{cptNames}</ul>

@@ -6,14 +6,26 @@ class Timer extends React.Component {
     this.state = {
       time: this.props.timeForTurnInSec,
       start: 0,
-      isOn: false,
-      timeOut: false
+      isOn: false
     }
     this.startTimer = this.startTimer.bind(this)
     this.stopTimer = this.stopTimer.bind(this)
 
     //    console.log(this.props)
   }
+
+  componentDidMount() {
+    this.startTimer()
+  }
+
+  componentDidUpdate(prevProps) {
+    // console.log("prevprops", prevProps)
+    // console.log("this.props", this.props)    
+    if (this.props.index !==prevProps.index) {
+      this.startTimer()
+    }
+  }
+
   startTimer() {
     this.setState({
       time: this.state.time,
@@ -28,8 +40,9 @@ class Timer extends React.Component {
             time: restTime
           })
         } else {
-          console.log("timeOut !")
-          this.setState({timeOut: true, time: 0})
+          //console.log("timeOut !")
+          this.setState({time: 0})
+          this.props.timeOutCB()
           this.stopTimer()
         }
       }
@@ -40,15 +53,12 @@ class Timer extends React.Component {
     clearInterval(this.timer)
   }
 
-  componentDidMount() {
-    this.startTimer()
-  }
 
   render() {
     //let start = <button onClick={this.startTimer}>start</button>
     return (
-      <div>
-        <h3>timer: {ms(this.state.time)}</h3>
+      <div >
+        <h3>{ms(this.state.time)}</h3>
       </div>
     )
   }

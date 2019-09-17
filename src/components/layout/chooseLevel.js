@@ -11,7 +11,6 @@ class ChooseLevel extends Component {
         this.setState({ currSelectedValue: value });
     //    console.log("value", value)
         this.props.currButton(value)
-
     }
     render() {
         const {currSelectedValue } = this.state
