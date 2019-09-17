@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
+import uuid from 'uuid'
 import { Redirect } from "react-router-dom"
 import * as data from '../const/const_caps'
 import OneTask from "./oneTask"
@@ -11,21 +12,32 @@ import { allCapitals, TIME_PER_TURN_EASY, TIME_PER_TURN_MIDDLE, TIME_PER_TURN_HA
 
 class StartQuiz extends Component {
     state = {
-        currTask: 0,
         timeForTurnInSec: 0,
         timeForTurnInSecInitial: 0,
         allTasks: 0,
         cpt: [],
-        radioButtonSelected: -1,
+        radioButtonSelected: "-1",
+        indexSelected: -1,
+        corrAnswer: "-2",
         currRand: -1,
         redirectLogin: false,
         redirectQuiz: false,
-        confirmed: false,
-        timeOut: false
+        timeOut: false,
+        resQuest: [],
+        questFinished: false
     }
 
     currRadioCB = (chooseRadio) => {
-        this.setState({ radioButtonSelected: chooseRadio })
+        this.setState({ radioButtonSelected: "" + chooseRadio })
+    }
+
+    currIndexSelectedCB = (index) => {
+        this.setState({ indexSelected: index })
+    }
+
+    currCorrectAnswerCB = (num) => {
+        this.setState({ corrAnswer: "" + num })
+        //console.log("corrAnswer", num)
     }
 
     timeOutCB = () => {
@@ -35,10 +47,39 @@ class StartQuiz extends Component {
         this.setState({ timeForTurnInSec: this.state.timeForTurnInSecInitial })
     }
 
+    countryNameToIndex = (cn) => {
+        let found = false
+        let i = 0
+        while (!found && (i < allCapitals)) {
+            if (data.countriesNames[i] === cn) {
+                found = true
+                return i
+            }
+            i++
+        }
+        if (!found) {
+            console.log("CountryName not found: ", cn)
+        }
+    }
+
     handleConfClick = e => {
         e.preventDefault()
-        console.log("this.state.radioButtonSelected: ", this.state.radioButtonSelected)
-        this.setState({confirmed: true})
+        const { indexSelected, currRand, resQuest, allTasks } = this.state
+        let newRes = [...resQuest]
+        let oneRec = {}
+        oneRec.numTask = resQuest.length
+        oneRec.questionIndex = this.countryNameToIndex(this.props.cpts[currRand].countryName)
+        oneRec.answerIndex = indexSelected
+        newRes.push(oneRec)
+        this.setState({ resQuest: newRes })
+        if (newRes.length < allTasks) {
+            let currRand = Math.floor(Math.random() * Math.floor(this.props.cpts.length))
+            this.setState({ currRand: currRand })
+            this.setState({ timerStop: true })
+            this.setState({ timeForTurnInSec: this.state.timeForTurnInSecInitial })
+        } else {
+            this.setState({ questFinished: true })
+        }
     }
 
     getSource = (lvl) => {
@@ -74,7 +115,7 @@ class StartQuiz extends Component {
             timeForAnsw = TIME_PER_TURN_HARD
             this.setState({ allTasks: ALL_TASKS_HARD })
         }
-        this.setState({ timeForTurnInSecInitial: timeForAnsw })        
+        this.setState({ timeForTurnInSecInitial: timeForAnsw })
         this.setState({ timeForTurnInSec: timeForAnsw })
         if (cpts.length === 0) {
             this.setState({ redirectQuiz: true })
@@ -85,59 +126,67 @@ class StartQuiz extends Component {
 
 
     render() {
-        const { redirectQuiz, currRand, timeForTurnInSec, timeForTurnInSecInitial, confirmed, timeOut } = this.state
+        const { redirectQuiz, currRand, timeForTurnInSec, timeForTurnInSecInitial, questFinished, resQuest } = this.state
         const { displayName, cpts } = this.props
-        if (confirmed) {
-            console.log("confirmed")
-        }
-        if (timeOut) {
-            console.log("timeOut")
-        }        
-        const buttonConf = (
-            <input
-                type="submit"
-                value="Confirm"
-                className="btn btn-primary"
-                onClick={this.handleConfClick}
-            />
-        )
-        if (redirectQuiz || (displayName.length === 0)) {
-            return <Redirect to={{
-                pathname: 'Quiz',
-                state: {
-                }
-            }}
-            />
-        }
         let forRender, oneTask
+        if (questFinished) {
 
-        if (cpts.length > 0) {
-            if (currRand > -1) {
-                oneTask = <OneTask index={currRand} currButton={this.currRadioCB} timeForTurnInSec={timeForTurnInSec} />
-            } else {
-                oneTask = <div></div>
+            const list = resQuest.map(item =>
+                <li id="quest-res" className="text-center" key={uuid()}>
+                    <h5>{item.numTask}</h5>
+                    <h5>{item.questionIndex}</h5>
+                    <h5>{item.answerIndex}</h5>
+                </li>
+            )
+            forRender = <ul className="w-100 p-2 topContainer">{list}</ul>
+        } else {
+
+            const buttonConf = (
+                <input
+                    type="submit"
+                    value="Confirm"
+                    className="btn btn-primary"
+                    onClick={this.handleConfClick}
+                />
+            )
+            if (redirectQuiz || (displayName.length === 0)) {
+                return <Redirect to={{
+                    pathname: 'Quiz',
+                    state: {
+                    }
+                }}
+                />
             }
 
-            forRender = (
-                <div>
-                    <div className="container">
-                        <div className="row">
-                            <div className="col">
-                                <h1 className="text-center">Hello, {displayName} !</h1>
-                                <Row>
-                                    <Col md={{ span: 2, offset: 8 }}>
-                                        {buttonConf}
-                                    </Col>                                    
-                                    <Col>
-                                        <Countdown timeForTurnInSec={timeForTurnInSecInitial} timeOutCB={this.timeOutCB} index={currRand} />
-                                    </Col>                                    
-                                </Row>
-                                {oneTask}
+
+            if (cpts.length > 0) {
+                if (currRand > -1) {
+                    oneTask = <OneTask index={currRand} currButton={this.currRadioCB} correctAnswer={this.currCorrectAnswerCB} timeForTurnInSec={timeForTurnInSec} indexSelected={this.currIndexSelectedCB} />
+                } else {
+                    oneTask = <div></div>
+                }
+
+                forRender = (
+                    <div>
+                        <div className="container">
+                            <div className="row">
+                                <div className="col">
+                                    <h1 className="text-center">Hello, {displayName} !</h1>
+                                    <Row>
+                                        <Col md={{ span: 2, offset: 8 }}>
+                                            {buttonConf}
+                                        </Col>
+                                        <Col>
+                                            <Countdown timeForTurnInSec={timeForTurnInSecInitial} timeOutCB={this.timeOutCB} index={currRand} />
+                                        </Col>
+                                    </Row>
+                                    {oneTask}
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            )
+                )
+            }
         }
 
         return (

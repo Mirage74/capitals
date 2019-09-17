@@ -12,13 +12,6 @@ import "../quiz.css"
 
 class OneTask extends Component {
 
-  //   constructor(props) {
-  //     super(props);
-  //     this.state = {
-  //         initialCps: []
-  //     };
-  // }
-
   state = {
     currSelectedValue: "-1",
     randArr: [],
@@ -37,7 +30,7 @@ class OneTask extends Component {
       i++
     }
     if (!found) {
-      console.log("ISOtoIndex error")
+      console.log("CountryName not found: ", cn)
     }
   }
 
@@ -60,7 +53,7 @@ class OneTask extends Component {
   }
 
   componentDidMount() {
-    const { index, cpts } = this.props
+    const { index, cpts, correctAnswer } = this.props
     let randInt
     let oneRec
     let newCpts = [...cpts]
@@ -68,6 +61,7 @@ class OneTask extends Component {
     let cardArr = []
     newCpts.splice(index, 1)
     const mainCptRandIndex = Math.floor(Math.random() * Math.floor(ALL_ANSWERS))
+    correctAnswer("" + mainCptRandIndex)
     for (let i = 0; i < ALL_ANSWERS - 1; i++) {
       randInt = Math.floor(Math.random() * Math.floor(newCpts.length))
       oneRec = newCpts[randInt]
@@ -88,7 +82,7 @@ class OneTask extends Component {
     // console.log("prevprops", prevProps)
     // console.log("this.props", this.props)
     if (this.props.index !==prevProps.index) {
-      const { index, cpts } = this.props
+      const { index, cpts, correctAnswer } = this.props
       let randInt
       let oneRec
       let newCpts = [...cpts]
@@ -96,6 +90,7 @@ class OneTask extends Component {
       let cardArr = []
       newCpts.splice(index, 1)
       const mainCptRandIndex = Math.floor(Math.random() * Math.floor(ALL_ANSWERS))
+      correctAnswer("" + mainCptRandIndex)
       for (let i = 0; i < ALL_ANSWERS - 1; i++) {
         randInt = Math.floor(Math.random() * Math.floor(newCpts.length))
         oneRec = newCpts[randInt]
@@ -110,6 +105,7 @@ class OneTask extends Component {
   
       cardArr = this.createCards(randArr)
       this.setState({ cardArr: cardArr })      
+      this.setState({currSelectedValue: -1})
     }
 
   }
@@ -118,15 +114,14 @@ class OneTask extends Component {
     //console.log("handleChange value", value)
     this.setState({ currSelectedValue: value });
     this.props.currButton(value)
+    this.props.indexSelected(this.state.randArr[parseInt(value)].index)
   }
-
+  
   
   render() {
     const { index, cpts  } = this.props
     const { currSelectedValue, randArr, cardArr } = this.state
 
-   
-    
     const task = (
       <div className="row">
         
