@@ -8,54 +8,60 @@ class Timer extends React.Component {
     }
     this.startTimer = this.startTimer.bind(this)
     this.stopTimer = this.stopTimer.bind(this)
-
-    //    console.log(this.props)
   }
 
   componentDidMount() {
     this.startTimer()
   }
-componentWillUnmount() {
-  this.stopTimer()
-}
+  componentWillUnmount() {
+    this.stopTimer()
+  }
   componentDidUpdate(prevProps) {
-    if (this.props.index !==prevProps.index) {
-      // console.log("prevprops", prevProps)
-      // console.log("this.props", this.props)         
+    if (this.props.index !== prevProps.index) {
       this.startTimer()
     }
   }
 
-  startTimer() {
-    this.setState({
-      time: this.props.timeForTurnInSec,
-      start: Date.now() - this.state.time
-    })
-    this.timer = setInterval(
-      () => {
+  timer = setInterval(
+    () => {
+      //if (!this.props.questFinished) {
         let restTime = this.props.timeForTurnInSec * 1000 - Date.now() + this.state.start
         if (restTime >= 0) {
           this.setState({
             time: Math.round(restTime / 1000)
           })
         } else {
-          //console.log("timeOut !")
-          this.setState({time: 0})
           this.props.timeOutCB()
           this.stopTimer()
         }
-      }
-      , 1000);
+      //}
+    }, 1000);
+
+
+
+  startTimer() {
+    this.setState({
+      time: this.props.timeForTurnInSec,
+      start: Date.now() - this.state.time
+    })
   }
+
   stopTimer() {
     clearInterval(this.timer)
   }
 
 
   render() {
+
+    let forRender
+    if (!this.props.questFinished) {
+      forRender = <h3>{this.state.time}s</h3>
+    } else {
+      forRender = null
+    }
     return (
       <div >
-        <h3>{this.state.time}s</h3>
+        {forRender}
       </div>
     )
   }

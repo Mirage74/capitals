@@ -8,9 +8,11 @@ import "../quiz.css"
 import Countdown from './stopwatch'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
+import { updUser } from '../../actions/list-cpt/action'
 import { allCapitals, TIME_PER_TURN_EASY, TIME_PER_TURN_MIDDLE, TIME_PER_TURN_HARD, ALL_TASKS_EASY, ALL_TASKS_MIDDLE, ALL_TASKS_HARD } from "../../config"
 
 class StartQuiz extends Component {
+
     state = {
         timeForTurnInSec: 0,
         timeForTurnInSecInitial: 0,
@@ -22,29 +24,51 @@ class StartQuiz extends Component {
         currRand: -1,
         redirectLogin: false,
         redirectQuiz: false,
-        timeOut: false,
         resQuest: [],
         questFinished: false
     }
 
+
     currRadioCB = (chooseRadio) => {
-        this.setState({ radioButtonSelected: "" + chooseRadio })
+        const { questFinished } = this.state
+        if (!questFinished) {
+            this.setState({ radioButtonSelected: "" + chooseRadio })
+        }
     }
 
     currIndexSelectedCB = (index) => {
-        this.setState({ indexSelected: index })
+        const { questFinished } = this.state
+        if (!questFinished) {
+            this.setState({ indexSelected: index })
+        }
     }
 
     currCorrectAnswerCB = (num) => {
-        this.setState({ corrAnswer: "" + num })
-        //console.log("corrAnswer", num)
+        const { questFinished } = this.state
+        if (!questFinished) {
+            this.setState({ corrAnswer: "" + num })
+        }
     }
 
     timeOutCB = () => {
-        this.setState({ timeOut: true })
-        let currRand = Math.floor(Math.random() * Math.floor(this.props.cpts.length))
-        this.setState({ currRand: currRand })
-        this.setState({ timeForTurnInSec: this.state.timeForTurnInSecInitial })
+        const { currRand, resQuest, allTasks, questFinished } = this.state
+        if (!questFinished) {
+            //this.setState({ timeOut: true })
+            let newRes = [...resQuest]
+            let oneRec = {}
+            oneRec.numTask = resQuest.length
+            oneRec.questionIndex = this.countryNameToIndex(this.props.cpts[currRand].countryName)
+            oneRec.answerIndex = "-1"
+            newRes.push(oneRec)
+            this.setState({ resQuest: newRes })
+            if (newRes.length < allTasks) {
+                let currRand = Math.floor(Math.random() * Math.floor(this.props.cpts.length))
+                this.setState({ currRand: currRand })
+                this.setState({ timeForTurnInSec: this.state.timeForTurnInSecInitial })
+            } else {
+                this.setState({ questFinished: true })
+            }
+        }
     }
 
     countryNameToIndex = (cn) => {
@@ -64,23 +88,40 @@ class StartQuiz extends Component {
 
     handleConfClick = e => {
         e.preventDefault()
-        const { indexSelected, currRand, resQuest, allTasks } = this.state
-        let newRes = [...resQuest]
-        let oneRec = {}
-        oneRec.numTask = resQuest.length
-        oneRec.questionIndex = this.countryNameToIndex(this.props.cpts[currRand].countryName)
-        oneRec.answerIndex = indexSelected
-        newRes.push(oneRec)
-        this.setState({ resQuest: newRes })
-        if (newRes.length < allTasks) {
-            let currRand = Math.floor(Math.random() * Math.floor(this.props.cpts.length))
-            this.setState({ currRand: currRand })
-            this.setState({ timerStop: true })
-            this.setState({ timeForTurnInSec: this.state.timeForTurnInSecInitial })
-        } else {
-            this.setState({ questFinished: true })
+        const { indexSelected, currRand, resQuest, allTasks, questFinished } = this.state
+        const { displayName } = this.props
+        if (!questFinished) {
+            let newRes = [...resQuest]
+            let oneRec = {}
+            oneRec.numTask = resQuest.length
+            oneRec.questionIndex = this.countryNameToIndex(this.props.cpts[currRand].countryName)
+            oneRec.answerIndex = indexSelected
+            newRes.push(oneRec)
+            this.setState({ resQuest: newRes })
+            if (newRes.length < allTasks) {
+                let currRand = Math.floor(Math.random() * Math.floor(this.props.cpts.length))
+                this.setState({ currRand: currRand })
+                this.setState({ timeForTurnInSec: this.state.timeForTurnInSecInitial })
+            } else {
+                let updatedUser = {
+                    displayName: displayName,
+                    bestScore: 17,
+                    lastRes: newRes
+                }
+                //console.log("displayName", displayName)
+                //console.log("updatedUser", updatedUser)
+                this.props.updUser(updatedUser)
+                .then(res => {
+                    this.setState({ questFinished: true })
+                  })                
+            }
         }
     }
+
+
+
+
+
 
     getSource = (lvl) => {
         let arr = []
@@ -130,7 +171,7 @@ class StartQuiz extends Component {
         const { displayName, cpts } = this.props
         let forRender, oneTask
         if (questFinished) {
-
+            //let user = await User.updateOne({_id:ctx.userById}, ctx.request.body.data);
             const list = resQuest.map(item =>
                 <li id="quest-res" className="text-center" key={uuid()}>
                     <h5>{item.numTask}</h5>
@@ -186,6 +227,7 @@ class StartQuiz extends Component {
                         </div>
                     </div>
                 )
+
             }
         }
 
@@ -205,4 +247,4 @@ const mapStateToProps = (state) => ({
 })
 
 
-export default connect(mapStateToProps)(StartQuiz)
+export default connect(mapStateToProps, {updUser})(StartQuiz)

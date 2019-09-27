@@ -9,8 +9,8 @@ module.exports  = {
   Log_Refresh_In_Seconds : 20,
   MIN_USER_displayName_LENGTH : 3,
   MIN_USER_PASSWORD_LENGTH : 6,
-  ALL_TASKS_EASY : 5,
+  ALL_TASKS_EASY : 3,
   ALL_TASKS_MIDDLE : 30,
-  ALL_TASKS_HARD : 50,
+  ALL_TASKS_HARD : 5,
   ALL_ANSWERS : 5
 }

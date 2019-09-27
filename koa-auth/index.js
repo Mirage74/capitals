@@ -109,28 +109,27 @@ passport.use(new LocalStrategy({
 // new user route
 
 
+router.param('userByDisplayname', async (displayName, ctx, next) => {
+//  let tempUser = await User.findById(id)
+//  ctx.userById = tempUser.toObject()
+//console.log("testPARAM")
+
+   ctx.userByDisplayname = await User.findOne({ displayName: displayName })
+
+//   console.log("ctx.userByDisplayname : ", ctx.userByDisplayname)
+  if (!ctx.userByDisplayname) {
+    ctx.userByDisplayname = {displayName : "NOT_EXIST_USER"}
+  }
+  await next();
+})
+
 
 
 
 router.post('/user', async (ctx, next) => {
-  //let existUser = false
-  //console.log("ctx.request.body.email : ", ctx.request.body.email)
-  //let seekinDB
   let user
   try {
-    //let ml = ctx.request.body.email
-    // seekinDB = {
-    //   displayName : ctx.request.body.displayName
-    // } 
     user = await User.findOne({ displayName: ctx.request.body.displayName })
-    // await User.findOne( seekinDB , (err, user) => {
-    //   if (user) {
-    //     existUser = true
-    //     err = `User with "displayName" ${ctx.request.body.displayName} already exist !`
-    //     console.log(err)
-    //     ctx.body = err
-    //   } 
-    // })
   }
 
   catch (err) {
@@ -156,6 +155,11 @@ router.post('/user', async (ctx, next) => {
 
 // local auth route. Creates JWT is successful
 
+
+
+
+
+
 router.post('/login', async (ctx, next) => {
   await passport.authenticate('local', function (err, user) {
     if (user == false) {
@@ -177,20 +181,26 @@ router.post('/login', async (ctx, next) => {
 
 });
 
-// JWT auth route
 
-//router.get('/custom', async (ctx, next) => {
+router.get('/:userByDisplayname',  async function(ctx) {
+  ctx.body = ctx.userByDisplayname.displayName
+})
 
-//  await passport.authenticate('jwt', function (err, user) {
-//    if (user) {
-//      ctx.body = "hello " + user.displayName;
-//    } else {
-//      ctx.body = "No such user";
-//      console.log("err", err)
-//    }
-//  })(ctx, next)
 
-//});
+router.put('/:userByDisplayname',  async function(ctx) {
+console.log("PUT PUT PUT")
+//  console.log("ctx.request.body", ctx.request.body)
+
+    const user = await User.updateOne({_id:ctx.userByDisplayname._id}, ctx.request.body.data);
+    console.log("user", user.nModified) 
+
+    ctx.body = user.nModified
+})
+
+
+
+
+
 
 //---Socket Communication-----//
 //let io = socketIO(server);

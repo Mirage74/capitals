@@ -2,13 +2,15 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { setDisplayName } from '../actions/auth/action'
 import { setCountriesList } from '../actions/list-cpt/action'
+import axios from 'axios'
+import store from 'store'
 import "./quiz.css"
 import MenuButtons from "./layout/menubuttons"
 import ChooseLevel from "./layout/chooseLevel"
 import { Redirect } from "react-router-dom"
 import * as data from './const/const_caps'
 import { getImageName } from "../axfunc"
-import { allCapitals } from "../config"
+import { allCapitals, backendPath, KEY_PERSIST_STORE } from "../config"
 
 class Quiz extends Component {
     constructor(props) {
@@ -24,6 +26,18 @@ class Quiz extends Component {
         radioButtonSelected: -1,
         errors: {}
     }
+
+    async componentDidMount() {
+        const res = await axios.get(backendPath + `${this.props.displayName}`)
+        // store.each(function(value, key) {
+        //     console.log(key, '==', value)
+        // })             
+         if (res.data !== this.props.displayName ) {
+             store.remove("persist:" + KEY_PERSIST_STORE)
+            this.setState({ redirectLogin: true })
+            this.props.setDisplayName("")
+         }
+    }    
 
     currRadioCB = (chooseRadio) => {
         this.setState({ radioButtonSelected: chooseRadio })

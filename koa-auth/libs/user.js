@@ -10,7 +10,8 @@ mongoose.plugin(beautifyUnique);
 const userSchema = new mongoose.Schema({
   displayName: String,
   passwordHash: String,
-  maxScore: Number,
+  bestScore: Number,
+  lastRes: Object,
   salt: String,
 }, {
   timestamps: true
@@ -40,6 +41,6 @@ userSchema.methods.checkPassword = function (password) {
 };
 
 
-userSchema.statics.publicFields = ['id', 'displayName', 'maxScore'];
+userSchema.statics.publicFields = ['id', 'displayName', 'bestScore', 'lastRes'];
 
 module.exports = mongoose.model('cptUser', userSchema);

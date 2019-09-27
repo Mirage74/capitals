@@ -38,7 +38,7 @@ class Register extends Component {
     axios.post(backendPath + 'user', {
       "displayName": displayName,
       "password": password,
-      "maxScore": 0
+      "bestScore": 0
     })
       .then(res => {
         let strExist = "" + res.data
