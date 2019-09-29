@@ -17,6 +17,9 @@ class Timer extends React.Component {
     this.stopTimer()
   }
   componentDidUpdate(prevProps) {
+    // console.log("componentDidUpdate TIMER")
+    // console.log("this.props TIMER", this.props)
+    // console.log("prevProps TIMER", prevProps)
     if (this.props.index !== prevProps.index) {
       this.startTimer()
     }

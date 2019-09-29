@@ -32,6 +32,8 @@ class Quiz extends Component {
         // store.each(function(value, key) {
         //     console.log(key, '==', value)
         // })             
+        
+
          if (res.data !== this.props.displayName ) {
              store.remove("persist:" + KEY_PERSIST_STORE)
             this.setState({ redirectLogin: true })

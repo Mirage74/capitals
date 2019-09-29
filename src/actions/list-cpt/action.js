@@ -19,10 +19,12 @@ export const setCountriesList = (countriesList) => async (dispatch) => {
   })
 }
 
-export const cutCountriesList = (index) => async (dispatch) => {
+export const cutCountriesList = (cpts, index) => async (dispatch) => {
+  let newCpts = [...cpts]
+  newCpts.splice(index, 1)
   dispatch({
      type: ActionTypes.CUT_COUNTRIES_LIST,
-     payload: index
+     payload: newCpts
    })
  }
 

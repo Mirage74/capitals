@@ -13,10 +13,10 @@ const currCapitals = (state = INITIAL_STATE.capitals, { type, payload }) => {
   switch (type) {
     case ListCptTypes.GET_CAPITALS:
       //console.log("reducer currCapitals", payload)
-      return payload;
+      return payload
 
     default:
-      return state;
+      return state
   }
 }
 
@@ -25,14 +25,11 @@ const currCountriesList = (state = INITIAL_STATE.countriesList, { type, payload 
     case ListCptTypes.SET_COUNTRIES_LIST:
       return payload;
     case ListCptTypes.CUT_COUNTRIES_LIST:
-      let newCpts = [...state]
-      newCpts.splice(payload, 1)
-      return {
-        ...state,
-        currCountriesList: newCpts
-      }
+      console.log("reducer pay", payload)
+      return payload
+
     default:
-      return state;
+      return state
   }
 }
 

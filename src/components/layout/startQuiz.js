@@ -8,7 +8,7 @@ import "../quiz.css"
 import Countdown from './stopwatch'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
-import { updUser } from '../../actions/list-cpt/action'
+import { updUser, cutCountriesList } from '../../actions/list-cpt/action'
 import { allCapitals, TIME_PER_TURN_EASY, TIME_PER_TURN_MIDDLE, TIME_PER_TURN_HARD, ALL_TASKS_EASY, ALL_TASKS_MIDDLE, ALL_TASKS_HARD } from "../../config"
 
 class StartQuiz extends Component {
@@ -52,17 +52,21 @@ class StartQuiz extends Component {
 
     timeOutCB = () => {
         const { currRand, resQuest, allTasks, questFinished } = this.state
+        const { cpts } = this.props
+        const cptsArray = Object.keys(cpts).map(function (key) {
+            return [Number(key), cpts[key]];
+        });
         if (!questFinished) {
             //this.setState({ timeOut: true })
             let newRes = [...resQuest]
             let oneRec = {}
             oneRec.numTask = resQuest.length
-            oneRec.questionIndex = this.countryNameToIndex(this.props.cpts[currRand].countryName)
+            oneRec.questionIndex = this.countryNameToIndex(cpts[currRand].countryName)
             oneRec.answerIndex = "-1"
             newRes.push(oneRec)
             this.setState({ resQuest: newRes })
             if (newRes.length < allTasks) {
-                let currRand = Math.floor(Math.random() * Math.floor(this.props.cpts.length))
+                let currRand = Math.floor(Math.random() * Math.floor(cptsArray.length))
                 this.setState({ currRand: currRand })
                 this.setState({ timeForTurnInSec: this.state.timeForTurnInSecInitial })
             } else {
@@ -86,40 +90,63 @@ class StartQuiz extends Component {
         }
     }
 
+    calcScore = (arr) => {
+        let cnt = 0
+        for (let i = 0; i < arr.length; i++) {
+            if (arr[i].questionIndex === arr[i].answerIndex) {
+                cnt++
+            }
+        }
+        return cnt
+    }
+
     handleConfClick = e => {
         e.preventDefault()
         const { indexSelected, currRand, resQuest, allTasks, questFinished } = this.state
-        const { displayName } = this.props
+        const { displayName, cpts } = this.props
+        const cptsArray = Object.keys(cpts).map(function (key) {
+            return [Number(key), cpts[key]];
+        })
+        // console.log("cptsArray", cptsArray);
+        // console.log("cptsArray.length", cptsArray.length);
+
         if (!questFinished) {
+            console.log("cpts", cpts)
+            console.log("currRand", currRand)
+            this.props.cutCountriesList(cpts, currRand)
             let newRes = [...resQuest]
             let oneRec = {}
             oneRec.numTask = resQuest.length
-            oneRec.questionIndex = this.countryNameToIndex(this.props.cpts[currRand].countryName)
+            oneRec.questionIndex = this.countryNameToIndex(cpts[currRand].countryName)
             oneRec.answerIndex = indexSelected
             newRes.push(oneRec)
             this.setState({ resQuest: newRes })
+            // console.log("confirm newRes", newRes)
+            // console.log("confirm newRes.length", newRes.length)
+            // console.log("confirm allTasks", allTasks)
+            // console.log("confirm currRand", currRand)
             if (newRes.length < allTasks) {
-                let currRand = Math.floor(Math.random() * Math.floor(this.props.cpts.length))
+                let currRand = Math.floor(Math.random() * Math.floor(cptsArray.length))
+                // console.log("this.props.cpts IIIFFFF", this.props.cpts)
+                // console.log("this.props.cpts.length IIIFFFF", this.props.length)                
+                // console.log("confirm currRand IIIFFFF", currRand)
                 this.setState({ currRand: currRand })
                 this.setState({ timeForTurnInSec: this.state.timeForTurnInSecInitial })
             } else {
                 let updatedUser = {
                     displayName: displayName,
-                    bestScore: 17,
+                    bestScore: this.calcScore(newRes),
                     lastRes: newRes
                 }
                 //console.log("displayName", displayName)
                 //console.log("updatedUser", updatedUser)
                 this.props.updUser(updatedUser)
-                .then(res => {
-                    this.setState({ questFinished: true })
-                  })                
+                    .then(res => {
+                        this.setState({ questFinished: true })
+                    })
             }
         }
     }
-
-
-
 
 
 
@@ -138,9 +165,15 @@ class StartQuiz extends Component {
     }
 
 
+    isEmptyObj = object => !Object.getOwnPropertySymbols(object).length && !Object.getOwnPropertyNames(object).length
+
     componentDidMount() {
         const { radioButtonSelected } = this.props.location.state
         const { displayName, cpts } = this.props
+        const cptsArray = Object.keys(cpts).map(function (key) {
+            return [Number(key), cpts[key]];
+        })
+
         this.setState({ displayName: displayName })
         let timeForAnsw = 0
         if (radioButtonSelected === "0") {
@@ -158,10 +191,11 @@ class StartQuiz extends Component {
         }
         this.setState({ timeForTurnInSecInitial: timeForAnsw })
         this.setState({ timeForTurnInSec: timeForAnsw })
-        if (cpts.length === 0) {
+
+        if (this.isEmptyObj(cpts) || (cpts.length === 0)) {
             this.setState({ redirectQuiz: true })
         }
-        let currRand = Math.floor(Math.random() * Math.floor(cpts.length))
+        let currRand = Math.floor(Math.random() * Math.floor(cptsArray.length))
         this.setState({ currRand: currRand })
     }
 
@@ -170,65 +204,77 @@ class StartQuiz extends Component {
         const { redirectQuiz, currRand, timeForTurnInSec, timeForTurnInSecInitial, questFinished, resQuest } = this.state
         const { displayName, cpts } = this.props
         let forRender, oneTask
-        if (questFinished) {
-            //let user = await User.updateOne({_id:ctx.userById}, ctx.request.body.data);
-            const list = resQuest.map(item =>
-                <li id="quest-res" className="text-center" key={uuid()}>
-                    <h5>{item.numTask}</h5>
-                    <h5>{item.questionIndex}</h5>
-                    <h5>{item.answerIndex}</h5>
-                </li>
-            )
-            forRender = <ul className="w-100 p-2 topContainer">{list}</ul>
+
+        if (this.isEmptyObj(cpts) || (cpts.length === 0)) {
+            forRender = (<div></div>)
         } else {
 
-            const buttonConf = (
-                <input
-                    type="submit"
-                    value="Confirm"
-                    className="btn btn-primary"
-                    onClick={this.handleConfClick}
-                />
-            )
-            if (redirectQuiz || (displayName.length === 0)) {
-                return <Redirect to={{
-                    pathname: 'Quiz',
-                    state: {
-                    }
-                }}
-                />
-            }
-
-
-            if (cpts.length > 0) {
-                if (currRand > -1) {
-                    oneTask = <OneTask index={currRand} currButton={this.currRadioCB} correctAnswer={this.currCorrectAnswerCB} timeForTurnInSec={timeForTurnInSec} indexSelected={this.currIndexSelectedCB} />
-                } else {
-                    oneTask = <div></div>
+            if (questFinished) {
+                const list = resQuest.map(item =>
+                    <li id="quest-res" className="text-center" key={uuid()}>
+                        <h5>{item.numTask}</h5>
+                        <h5>{item.questionIndex}</h5>
+                        <h5>{item.answerIndex}</h5>
+                    </li>
+                )
+                forRender = <ul className="w-100 p-2 topContainer">{list}</ul>
+            } else {
+                const buttonConf = (
+                    <input
+                        type="submit"
+                        value="Confirm"
+                        className="btn btn-primary"
+                        onClick={this.handleConfClick}
+                    />
+                )
+                if (redirectQuiz || (displayName.length === 0)) {
+                    return <Redirect to={{
+                        pathname: 'Quiz',
+                        state: {
+                        }
+                    }}
+                    />
                 }
 
-                forRender = (
-                    <div>
-                        <div className="container">
-                            <div className="row">
-                                <div className="col">
-                                    <h1 className="text-center">Hello, {displayName} !</h1>
-                                    <Row>
-                                        <Col md={{ span: 2, offset: 8 }}>
-                                            {buttonConf}
-                                        </Col>
-                                        <Col>
-                                            <Countdown timeForTurnInSec={timeForTurnInSecInitial} timeOutCB={this.timeOutCB} index={currRand} />
-                                        </Col>
-                                    </Row>
-                                    {oneTask}
+
+                if (!this.isEmptyObj(cpts)) {
+                    if (currRand > -1) {
+                        oneTask = <OneTask index={currRand} currButton={this.currRadioCB} correctAnswer={this.currCorrectAnswerCB} timeForTurnInSec={timeForTurnInSec} indexSelected={this.currIndexSelectedCB} />
+                    } else {
+                        oneTask = <div></div>
+                    }
+
+                    forRender = (
+                        <div>
+                            <div className="container">
+                                <div className="row">
+                                    <div className="col">
+                                        <h1 className="text-center">Hello, {displayName} !</h1>
+                                        <Row>
+                                            <Col md={{ span: 2, offset: 8 }}>
+                                                {buttonConf}
+                                            </Col>
+                                            <Col>
+                                                <Countdown timeForTurnInSec={timeForTurnInSecInitial} timeOutCB={this.timeOutCB} index={currRand} />
+                                            </Col>
+                                        </Row>
+                                        {oneTask}
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                )
+                    )
 
+                }
             }
+        }
+        if (redirectQuiz || (displayName.length === 0)) {
+            return <Redirect to={{
+                pathname: 'Quiz',
+                state: {
+                }
+            }}
+            />
         }
 
         return (
@@ -247,4 +293,5 @@ const mapStateToProps = (state) => ({
 })
 
 
-export default connect(mapStateToProps, {updUser})(StartQuiz)
+
+export default connect(mapStateToProps, { updUser, cutCountriesList })(StartQuiz)
