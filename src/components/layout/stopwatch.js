@@ -11,13 +11,14 @@ class Timer extends React.Component {
   }
 
   componentDidMount() {
+    //console.log("componentDidMount timer")
     this.startTimer()
   }
   componentWillUnmount() {
     this.stopTimer()
   }
   componentDidUpdate(prevProps) {
-    // console.log("componentDidUpdate TIMER")
+     //console.log("componentDidUpdate TIMER")
     // console.log("this.props TIMER", this.props)
     // console.log("prevProps TIMER", prevProps)
     if (this.props.index !== prevProps.index) {
@@ -35,7 +36,7 @@ class Timer extends React.Component {
           })
         } else {
           this.props.timeOutCB()
-          this.stopTimer()
+          //this.stopTimer()
         }
       //}
     }, 1000);
@@ -43,6 +44,7 @@ class Timer extends React.Component {
 
 
   startTimer() {
+    //console.log("startTimer TIMER")    
     this.setState({
       time: this.props.timeForTurnInSec,
       start: Date.now() - this.state.time
@@ -50,6 +52,7 @@ class Timer extends React.Component {
   }
 
   stopTimer() {
+    //console.log("StopTimer TIMER")    
     clearInterval(this.timer)
   }
 

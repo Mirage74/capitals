@@ -25,7 +25,7 @@ const currCountriesList = (state = INITIAL_STATE.countriesList, { type, payload 
     case ListCptTypes.SET_COUNTRIES_LIST:
       return payload;
     case ListCptTypes.CUT_COUNTRIES_LIST:
-      console.log("reducer pay", payload)
+      //console.log("reducer pay", payload)
       return payload
 
     default:

@@ -9,6 +9,7 @@ import Countdown from './stopwatch'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import { updUser, cutCountriesList } from '../../actions/list-cpt/action'
+import { setUser } from '../../actions/auth/action'
 import { allCapitals, TIME_PER_TURN_EASY, TIME_PER_TURN_MIDDLE, TIME_PER_TURN_HARD, ALL_TASKS_EASY, ALL_TASKS_MIDDLE, ALL_TASKS_HARD } from "../../config"
 
 class StartQuiz extends Component {
@@ -52,7 +53,8 @@ class StartQuiz extends Component {
 
     timeOutCB = () => {
         const { currRand, resQuest, allTasks, questFinished } = this.state
-        const { cpts } = this.props
+        const { cpts, user } = this.props
+        const { displayName } = this.props.user
         const cptsArray = Object.keys(cpts).map(function (key) {
             return [Number(key), cpts[key]];
         });
@@ -70,7 +72,25 @@ class StartQuiz extends Component {
                 this.setState({ currRand: currRand })
                 this.setState({ timeForTurnInSec: this.state.timeForTurnInSecInitial })
             } else {
-                this.setState({ questFinished: true })
+                let userScore = this.calcScore(newRes)
+                if (userScore < user.bestScore) {
+                    userScore = user.bestScore
+                }
+                console.log("userScore", userScore)
+                let updatedUser = {
+                    displayName: displayName,
+                    bestScore: userScore,
+                    lastRes: newRes
+                }
+                let updatedUserRedux = updatedUser               
+                updatedUserRedux._id = user._id
+                this.props.updUser(updatedUser)
+                    .then(res => {
+                        this.props.setUser(updatedUserRedux)
+                            .then(res => {
+                                this.setState({ questFinished: true })
+                            })
+                    }) 
             }
         }
     }
@@ -102,17 +122,18 @@ class StartQuiz extends Component {
 
     handleConfClick = e => {
         e.preventDefault()
-        const { indexSelected, currRand, resQuest, allTasks, questFinished } = this.state
-        const { displayName, cpts } = this.props
-        const cptsArray = Object.keys(cpts).map(function (key) {
-            return [Number(key), cpts[key]];
-        })
+        const { indexSelected, currRand, resQuest, allTasks, questFinished, radioButtonSelected } = this.state
+        //console.log("radioButtonSelected", radioButtonSelected)
+        const { cpts, user } = this.props
+        const { displayName } = this.props.user
+
         // console.log("cptsArray", cptsArray);
         // console.log("cptsArray.length", cptsArray.length);
 
-        if (!questFinished) {
-            console.log("cpts", cpts)
-            console.log("currRand", currRand)
+        if ( (!questFinished) && (parseInt(radioButtonSelected) > -1) ) {
+            const cptsArray = Object.keys(cpts).map(function (key) {
+                return [Number(key), cpts[key]];
+            })
             this.props.cutCountriesList(cpts, currRand)
             let newRes = [...resQuest]
             let oneRec = {}
@@ -126,6 +147,7 @@ class StartQuiz extends Component {
             // console.log("confirm allTasks", allTasks)
             // console.log("confirm currRand", currRand)
             if (newRes.length < allTasks) {
+                this.setState({radioButtonSelected: -1})
                 let currRand = Math.floor(Math.random() * Math.floor(cptsArray.length))
                 // console.log("this.props.cpts IIIFFFF", this.props.cpts)
                 // console.log("this.props.cpts.length IIIFFFF", this.props.length)                
@@ -133,17 +155,25 @@ class StartQuiz extends Component {
                 this.setState({ currRand: currRand })
                 this.setState({ timeForTurnInSec: this.state.timeForTurnInSecInitial })
             } else {
+                let userScore = this.calcScore(newRes)
+                if (userScore < user.bestScore) {
+                    userScore = user.bestScore
+                }
+                console.log("userScore", userScore)                
                 let updatedUser = {
                     displayName: displayName,
-                    bestScore: this.calcScore(newRes),
+                    bestScore: userScore,
                     lastRes: newRes
                 }
-                //console.log("displayName", displayName)
-                //console.log("updatedUser", updatedUser)
+                let updatedUserRedux = updatedUser               
+                updatedUserRedux._id = user._id                
                 this.props.updUser(updatedUser)
                     .then(res => {
-                        this.setState({ questFinished: true })
-                    })
+                        this.props.setUser(updatedUserRedux)
+                            .then(res => {
+                                this.setState({ questFinished: true })
+                            })
+                    }) 
             }
         }
     }
@@ -202,7 +232,7 @@ class StartQuiz extends Component {
 
     render() {
         const { redirectQuiz, currRand, timeForTurnInSec, timeForTurnInSecInitial, questFinished, resQuest } = this.state
-        const { displayName, cpts } = this.props
+        const { user, cpts } = this.props
         let forRender, oneTask
 
         if (this.isEmptyObj(cpts) || (cpts.length === 0)) {
@@ -227,7 +257,7 @@ class StartQuiz extends Component {
                         onClick={this.handleConfClick}
                     />
                 )
-                if (redirectQuiz || (displayName.length === 0)) {
+                if (redirectQuiz || (user.displayName.length === 0)) {
                     return <Redirect to={{
                         pathname: 'Quiz',
                         state: {
@@ -249,7 +279,7 @@ class StartQuiz extends Component {
                             <div className="container">
                                 <div className="row">
                                     <div className="col">
-                                        <h1 className="text-center">Hello, {displayName} !</h1>
+                                        <h1 className="text-center">Hello, {user.displayName} !</h1>
                                         <Row>
                                             <Col md={{ span: 2, offset: 8 }}>
                                                 {buttonConf}
@@ -268,7 +298,7 @@ class StartQuiz extends Component {
                 }
             }
         }
-        if (redirectQuiz || (displayName.length === 0)) {
+        if (redirectQuiz || (user.displayName.length === 0)) {
             return <Redirect to={{
                 pathname: 'Quiz',
                 state: {
@@ -288,10 +318,10 @@ class StartQuiz extends Component {
 const mapStateToProps = (state) => ({
 
     cpts: state.listCapitals.currCountriesList,
-    displayName: state.auth.currDisplayName
+    user: state.auth.currUser
 
 })
 
 
 
-export default connect(mapStateToProps, { updUser, cutCountriesList })(StartQuiz)
+export default connect(mapStateToProps, { setUser, updUser, cutCountriesList })(StartQuiz)

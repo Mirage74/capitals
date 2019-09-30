@@ -165,25 +165,27 @@ router.post('/login', async (ctx, next) => {
     if (user == false) {
       ctx.body = "Login failed";
     } else {
-      //--payload - info to put in the JWT
-//      const payload = {
-//        id: user.id,
-//        displayName: user.displayName
-        
-//      };
-//      const token = jwt.sign(payload, jwtsecret); //JWT is created here
 
-//      ctx.body = { user: user.displayName, token: 'JWT ' + token };
-      console.log("user : ", user.displayName)
-      ctx.body = { user: user.displayName};
-    }
+      let userObj = {
+        _id: user._id,
+        displayName: user.displayName,
+        bestScore: user.bestScore,
+        lastRes: user.lastRes
+      } 
+    ctx.body = userObj
+  }
   })(ctx, next);
-
 });
 
 
 router.get('/:userByDisplayname',  async function(ctx) {
-  ctx.body = ctx.userByDisplayname.displayName
+      let userObj = {
+        _id: ctx.userByDisplayname._id,
+        displayName: ctx.userByDisplayname.displayName,
+        bestScore: ctx.userByDisplayname.bestScore,
+        lastRes: ctx.userByDisplayname.lastRes
+      } 
+    ctx.body = userObj
 })
 
 

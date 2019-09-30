@@ -2,12 +2,12 @@ import { combineReducers } from 'redux';
 import { AuthTypes } from '../../actions';
 
 const INITIAL_STATE = {
-  displayName: ""
+  user: {}
 }
 
-const currDisplayName = (state = INITIAL_STATE.displayName, { type, payload }) => {
+const currUser = (state = INITIAL_STATE.user, { type, payload }) => {
   switch (type) {
-    case AuthTypes.DISPLAY_NAME:
+    case AuthTypes.SET_USER:
       return payload;
 
     default:
@@ -16,6 +16,6 @@ const currDisplayName = (state = INITIAL_STATE.displayName, { type, payload }) =
 }
 
 export default combineReducers({
-  currDisplayName
+  currUser
 })
 

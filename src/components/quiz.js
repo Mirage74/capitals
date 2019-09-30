@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { setDisplayName } from '../actions/auth/action'
+import { setUser } from '../actions/auth/action'
 import { setCountriesList } from '../actions/list-cpt/action'
 import axios from 'axios'
 import store from 'store'
@@ -27,17 +27,26 @@ class Quiz extends Component {
         errors: {}
     }
 
-    async componentDidMount() {
-        const res = await axios.get(backendPath + `${this.props.displayName}`)
-        // store.each(function(value, key) {
-        //     console.log(key, '==', value)
-        // })             
-        
-
-         if (res.data !== this.props.displayName ) {
-             store.remove("persist:" + KEY_PERSIST_STORE)
+ 
+async componentDidMount() {        
+    let dn = this.props.user.displayName
+    //console.log("dn 1", dn)
+    if (dn.length === 0) {
+        dn = this.props.location.state.displayName
+        //console.log("dn 2", dn)
+    }
+        const res = await axios.get(backendPath + `${dn}`)
+        const compareID = res.data._id === this.props.user._id 
+        console.log("res.data._id", res.data._id)
+        console.log("this.props.user._id", this.props.user._id)
+        const compareDisplayName = res.data.displayName === this.props.user.displayName 
+        const compareBestScore = res.data.bestScore === this.props.user.bestScore 
+        console.log("compareID", compareID, compareDisplayName, compareBestScore)
+         
+         if (! (compareID && compareDisplayName && compareBestScore) ) {
+            store.remove("persist:" + KEY_PERSIST_STORE)
             this.setState({ redirectLogin: true })
-            this.props.setDisplayName("")
+            this.props.setUser({})
          }
     }    
 
@@ -56,7 +65,7 @@ class Quiz extends Component {
         }
         if (dataFromChild === 4) {
             this.setState({ redirectLogin: true })
-            this.props.setDisplayName("")
+            this.props.setUser("")
         }
     }
 
@@ -77,7 +86,7 @@ class Quiz extends Component {
     }
 
     render() {
-        const { displayName } = this.props
+        const { displayName } = this.props.user
         if (this.state.redirectStartQuiz) {
             let arr = this.getSource(this.state.radioButtonSelected)
             this.props.setCountriesList(arr)
@@ -131,8 +140,8 @@ class Quiz extends Component {
 }
 
 const mapStateToProps = (state) => ({
-    displayName: state.auth.currDisplayName
+    user: state.auth.currUser
 })
 
-export default connect(mapStateToProps, { setDisplayName, setCountriesList })(Quiz)
+export default connect(mapStateToProps, { setUser, setCountriesList })(Quiz)
 

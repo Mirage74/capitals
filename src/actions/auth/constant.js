@@ -3,4 +3,4 @@ import {
 } from "../utils";
 
 export const prefix = "action.user-info";
-export const DISPLAY_NAME = getActionType(prefix)("DISPLAY_NAME");
+export const SET_USER = getActionType(prefix)("SET_USER");

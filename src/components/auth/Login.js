@@ -8,7 +8,7 @@ import { Redirect } from "react-router-dom"
 import axios from 'axios'
 import { connect } from 'react-redux'
 import { getCapitals } from '../../actions/list-cpt/action'
-import { setDisplayName } from '../../actions/auth/action'
+import { setUser } from '../../actions/auth/action'
 import { Log_Refresh_In_Seconds, backendPath } from '../../config'
 
 
@@ -41,16 +41,14 @@ class Login extends Component {
   onSubmit = e => {
     e.preventDefault()
     const { displayName, password } = this.state;
-
     axios.post(backendPath + 'login', {
       "login": displayName,
       "password": password
     })
       .then(res => {
-        this.setState({ displayName: res.data.user })
-        //this.props.displayName("" + res.data.user)
+        this.setState({ displayName: res.data.displayName })
+        this.props.setUser(res.data)        
         this.setState({ redirectQuiz: true })
-        this.props.setDisplayName("" + res.data.user)
       })
 
 
@@ -69,17 +67,17 @@ class Login extends Component {
       return <Redirect to='/Register' />
     }
 
+
+
     if (redirectQuiz || (this.props.user.length > 0)) {
-      //console.log("this.props.user : ", this.props.user)
       return <Redirect to={{
         pathname: 'Quiz',
         state: {
-          //displayName: this.props.user
+          displayName: this.state.displayName
         }
       }}
       />
     }
-
 
 
     function getOneCard(countryName, capitalName) {
@@ -94,8 +92,6 @@ class Login extends Component {
         </div>
       )
     }
-
-
 
     
 
@@ -285,9 +281,9 @@ class Login extends Component {
 const mapStateToProps = (state) => ({
 
   capitals: state.listCapitals.currCapitals,
-  user: state.auth.currDisplayName
+  user: state.auth.currUser
 
 })
 
-export default connect(mapStateToProps, { getCapitals, setDisplayName })(Login)
+export default connect(mapStateToProps, { getCapitals, setUser })(Login)
 

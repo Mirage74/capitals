@@ -1,9 +1,8 @@
 import * as ActionTypes from './constant';
 
-export const setDisplayName = (displayName) => async (dispatch) => {
-//  console.log("action ", displayName)
+export const setUser = (user) => async (dispatch) => {
  dispatch({
-    type: ActionTypes.DISPLAY_NAME,
-    payload: displayName
+    type: ActionTypes.SET_USER,
+    payload: user
   })
 }

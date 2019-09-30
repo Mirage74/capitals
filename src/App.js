@@ -40,7 +40,7 @@ getDisplayNameCallback = (dataFromChild) => {
                 />
                 <Route
                   exact path="/Quiz"
-                  render={(props) => <Quiz />}
+                  render={(props) => <Quiz {...props} />}
                 />
                 <Route
                   exact path="/StartQuiz"

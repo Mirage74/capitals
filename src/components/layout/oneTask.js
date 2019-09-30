@@ -65,11 +65,14 @@ class OneTask extends Component {
     const mainCptRandIndex = Math.floor(Math.random() * Math.floor(ALL_ANSWERS))
     correctAnswer("" + mainCptRandIndex)
     for (let i = 0; i < ALL_ANSWERS - 1; i++) {
-      //console.log("DM cpts", cpts)
-      randInt = Math.floor(Math.random() * Math.floor(cpts.length))
+      // console.log("DM i", i)
+      // console.log("DM cpts", cpts)
+      randInt = Math.floor(Math.random() * Math.floor(newCpts.length))
       //console.log("DM randInt", randInt)
       oneRec = newCpts[randInt]
-      //console.log("DM oneRec", oneRec)
+      // console.log("DM newCpts[randInt - 1]", newCpts[randInt - 1])
+      // console.log("DM newCpts[randInt]", newCpts[randInt])
+      // console.log("DM oneRec", oneRec)
       oneRec.index = this.countryNameToIndex(oneRec.countryName)
       randArr.push(oneRec)
       newCpts.splice(randInt, 1)
