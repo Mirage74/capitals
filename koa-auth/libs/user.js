@@ -10,8 +10,8 @@ mongoose.plugin(beautifyUnique);
 const userSchema = new mongoose.Schema({
   displayName: String,
   passwordHash: String,
-  bestScore: Number,
-  lastRes: Object,
+  bestScore: Array,
+  lastRes: Array,
   salt: String,
 }, {
   timestamps: true

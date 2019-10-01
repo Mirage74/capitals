@@ -2,7 +2,7 @@ import "bootstrap/dist/css/bootstrap.min.css"
 import Media from "react-media"
 import React, { Component } from 'react'
 import * as data from '../const/const_caps';
-import {getImageName} from "../../axfunc"
+import { getImageName } from "../../axfunc"
 import "./login.css"
 import { Redirect } from "react-router-dom"
 import axios from 'axios'
@@ -13,6 +13,7 @@ import { Log_Refresh_In_Seconds, backendPath } from '../../config'
 
 
 class Login extends Component {
+  _isMounted = false
   state = {
     displayName: '',
     password: '',
@@ -24,16 +25,21 @@ class Login extends Component {
 
 
   handleRegClick = e => {
-    this.setState({ redirectReg: true })
+    if (this._isMounted) {
+      this.setState({ redirectReg: true })
+      //console.log("this.setState({ redirectReg: true })")
+    }
   }
 
 
   componentDidMount() {
+    this._isMounted = true    
     this.timerID = setInterval(this.props.getCapitals, 1000 * Log_Refresh_In_Seconds)
   }
 
   componentWillUnmount() {
-    clearInterval(this.timerID);
+    clearInterval(this.timerID)
+    this._isMounted = false
   }
 
 
@@ -46,34 +52,45 @@ class Login extends Component {
       "password": password
     })
       .then(res => {
-        this.setState({ displayName: res.data.displayName })
-        this.props.setUser(res.data)        
-        this.setState({ redirectQuiz: true })
+        console.log("res.data", res.data)
+        if (res.data !== "Login failed") {
+          //this.setState({ displayName: res.data.displayName })
+          if (this._isMounted) {
+            this.props.setUser(res.data)
+            //this.setState({ redirectQuiz: true })
+          }
+        }
       })
-
-
   }
 
-  onChange = e => this.setState({ [e.target.name]: e.target.value });
+  onChange = e => {
+    if (this._isMounted) {
+      //console.log("this.setState({ [e.target.name]: e.target.value })")
+      this.setState({ [e.target.name]: e.target.value })
+    }
+  }
 
+  isEmptyObject = (obj) => {
+    for (let key in obj) {
+      if (obj.hasOwnProperty(key))
+        return false
+    }
+    return true
+  }
 
   render() {
-    const { capitals } = this.props
+    const { capitals, user } = this.props
     const { redirectReg, redirectQuiz } = this.state
-
-
-
     if (redirectReg) {
       return <Redirect to='/Register' />
     }
 
-
-
-    if (redirectQuiz || (this.props.user.length > 0)) {
+    //if (redirectQuiz || ( (user !== "Login failed") && (user !== ""))) {
+    if (redirectQuiz || (typeof user === 'object' && user !== null && !this.isEmptyObject(user))) {
       return <Redirect to={{
         pathname: 'Quiz',
         state: {
-          displayName: this.state.displayName
+          //displayName: this.state.displayName
         }
       }}
       />
@@ -93,7 +110,7 @@ class Login extends Component {
       )
     }
 
-    
+
 
     let Card_0, Card_1, Card_2, Card_3, Card_4, Card_5, Card_6, Card_7, Card_8, Card_9, Card_10, Card_11, Card_12, Card_13, Card_14, Card_15
 
@@ -286,4 +303,3 @@ const mapStateToProps = (state) => ({
 })
 
 export default connect(mapStateToProps, { getCapitals, setUser })(Login)
-

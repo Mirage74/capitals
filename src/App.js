@@ -12,11 +12,11 @@ class App extends Component {
 
 
 
-getDisplayNameCallback = (dataFromChild) => {
-  this.setState({ displayName: dataFromChild })
-  localStorage.setItem("displayName", dataFromChild)
-  console.log(localStorage)
-}
+// getDisplayNameCallback = (dataFromChild) => {
+//   this.setState({ displayName: dataFromChild })
+//   localStorage.setItem("displayName", dataFromChild)
+//   console.log(localStorage)
+// }
 
 
   render() {
@@ -27,11 +27,11 @@ getDisplayNameCallback = (dataFromChild) => {
               <Switch>
               <Route
                   exact path="/"
-                  render={(props) => <Login />}
+                  render={(props) => <Login {...props} />}
                 />
                 <Route
                   exact path="/login"
-                  render={(props) => <Login  />}
+                  render={(props) => <Login {...props} />}
                 />                                
                 <Route
                   exact

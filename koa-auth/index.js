@@ -6,20 +6,16 @@ const logger = require('koa-logger'); // optional module for logging
 
 const passport = require('koa-passport'); //passport for Koa
 const LocalStrategy = require('passport-local'); //local Auth Strategy
-//const JwtStrategy = require('passport-jwt').Strategy; // Auth via JWT
-//const ExtractJwt = require('passport-jwt').ExtractJwt; // Auth via JWT
-
-//const jwtsecret = "rq?f$_?S7C8ww6Y2FTqcBvvEEM7=DDJh#qjWAbTm8j6F6U=FtU9bpf7_GK!nyAg3Kuw6h8nyb&X*_8wL%jPJ4+5SdtAxbt*kkv-%mS&y3-DfFzEtD*Mq4P^2c9AE^K5xx$!3UqAvVxeGG8CR64?bRH^MH4JHws^z5-CNR5*XvCNgb5KHF57%TxDJuRBu_xv=%-6^aH_LfGw!u9dUgBDmXEQdQu!ZDb6A#Qd*&ueU7Ac7mZet&?d=sZ3-2%!zjv-+"
-//const jwt = require('jsonwebtoken'); // auth via JWT for hhtp
-//const socketioJwt = require('socketio-jwt'); // auth via JWT for socket.io
-
-//const socketIO = require('socket.io');
 
 const mongoose = require('./libs/mongoose');
 
 
-const app = new Koa();
-const router = new Router();
+const app = new Koa()
+const router = new Router()
+
+const subRouter = new Router({
+  prefix: '/score'
+})
 app.use(serve('public'));
 app.use(logger());
 app.use(bodyParser());
@@ -50,6 +46,7 @@ app.use(async (ctx, next) => {
 
 app.use(passport.initialize()); // initialize passport first
 app.use(router.routes()); // then routes
+app.use(subRouter.routes()); // then routes
 const server = app.listen(process.env.PORT || 4000);// launch server on port  4000
 
 
@@ -110,16 +107,22 @@ passport.use(new LocalStrategy({
 
 
 router.param('userByDisplayname', async (displayName, ctx, next) => {
-//  let tempUser = await User.findById(id)
-//  ctx.userById = tempUser.toObject()
-//console.log("testPARAM")
-
+console.log("param dispname")
    ctx.userByDisplayname = await User.findOne({ displayName: displayName })
-
-//   console.log("ctx.userByDisplayname : ", ctx.userByDisplayname)
-  if (!ctx.userByDisplayname) {
+   if (!ctx.userByDisplayname) {
     ctx.userByDisplayname = {displayName : "NOT_EXIST_USER"}
   }
+  await next();
+})
+
+subRouter.param('lvl', async (lvl, ctx, next) => {
+console.log("param", lvl)
+//   if ( (lvl === "0") || (lvl === "1") || (lvl === "2) ) {
+   if (true) {
+     ctx.lvl = parseInt(lvl)
+   } else {
+     ctx.lvl = "wrong parameter lvl"
+    }
   await next();
 })
 
@@ -127,6 +130,7 @@ router.param('userByDisplayname', async (displayName, ctx, next) => {
 
 
 router.post('/user', async (ctx, next) => {
+  ctx.request.body.displayName = ctx.request.body.displayName.toLowerCase()
   let user
   try {
     user = await User.findOne({ displayName: ctx.request.body.displayName })
@@ -158,9 +162,8 @@ router.post('/user', async (ctx, next) => {
 
 
 
-
-
 router.post('/login', async (ctx, next) => {
+  ctx.request.body.login =   ctx.request.body.login.toLowerCase()
   await passport.authenticate('local', function (err, user) {
     if (user == false) {
       ctx.body = "Login failed";
@@ -189,13 +192,18 @@ router.get('/:userByDisplayname',  async function(ctx) {
 })
 
 
-router.put('/:userByDisplayname',  async function(ctx) {
-console.log("PUT PUT PUT")
-//  console.log("ctx.request.body", ctx.request.body)
+subRouter.get('/:lvl',  async function(ctx) {
+    console.log("ctx.lvl", ctx.lvl)
+    let users = User.find({ "bestScore.0": { $gt: 0 }})
+    let pr = await users.exec()
+    console.log("users", pr)
+    ctx.body = pr.toString()
+})
 
+
+//router.put('/:userByDisplayname',  async function(ctx) {
+router.put('/:lvl',  async function(ctx) {
     const user = await User.updateOne({_id:ctx.userByDisplayname._id}, ctx.request.body.data);
-    console.log("user", user.nModified) 
-
     ctx.body = user.nModified
 })
 

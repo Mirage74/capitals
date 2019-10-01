@@ -6,7 +6,8 @@ const {allCapitals} = require ('../../config')
 
 const INITIAL_STATE = {
   capitals: getArrayRandom(16, allCapitals),
-  countriesList: []
+  countriesList: [],
+  usersList: [{}, {}, {}]
 }
 
 const currCapitals = (state = INITIAL_STATE.capitals, { type, payload }) => {
@@ -25,7 +26,6 @@ const currCountriesList = (state = INITIAL_STATE.countriesList, { type, payload 
     case ListCptTypes.SET_COUNTRIES_LIST:
       return payload;
     case ListCptTypes.CUT_COUNTRIES_LIST:
-      //console.log("reducer pay", payload)
       return payload
 
     default:
@@ -33,9 +33,18 @@ const currCountriesList = (state = INITIAL_STATE.countriesList, { type, payload 
   }
 }
 
+const currUserList = (state = INITIAL_STATE.usersList, { type, payload }) => {
+  switch (type) {
+    case ListCptTypes.SET_USERS_LIST:
+      return payload
+    default:
+      return state
+  }
+}
 
 
 export default combineReducers({
   currCapitals,
-  currCountriesList
+  currCountriesList,
+  currUserList
 })

@@ -35,10 +35,12 @@ class Register extends Component {
       return
     }
 
+    
     axios.post(backendPath + 'user', {
       "displayName": displayName,
       "password": password,
-      "bestScore": 0
+      "bestScore": [0, 0, 0],
+      "lastRes": [{}, {}, {}]
     })
       .then(res => {
         let strExist = "" + res.data
@@ -47,6 +49,8 @@ class Register extends Component {
           this.setState({ errors: { displayName: `User "${displayName}" already exist, please enter another "Display name"` } })
         } else {
           if (res.data.displayName.length > 0) {
+            // console.log(res.data.bestScore)
+            // console.log(res.data.bestScore[2])
             this.setState({ redirectLogin: true })
           }
         }

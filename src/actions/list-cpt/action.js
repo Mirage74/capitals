@@ -1,51 +1,61 @@
 import * as ActionTypes from './constant';
 import { backendPath } from '../../config'
 import axios from 'axios'
-import {getArrayRandom} from "../../axfunc"
+import { getArrayRandom } from "../../axfunc"
 
-const {allCapitals} = require ('../../config')
+const { allCapitals } = require('../../config')
 
 export const getCapitals = () => async (dispatch) => {
- dispatch({
+  dispatch({
     type: ActionTypes.GET_CAPITALS,
     payload: getArrayRandom(16, allCapitals)
   })
 }
 
 export const setCountriesList = (countriesList) => async (dispatch) => {
- dispatch({
+  dispatch({
     type: ActionTypes.SET_COUNTRIES_LIST,
     payload: countriesList
   })
 }
 
+export const setUsersList = (currList, lvl) => async (dispatch) => {
+  const res = await axios.get(backendPath + `score/0`)
+  console.log("res.data", res.data)
+  let newList = [...currList]
+  newList[lvl] = res.data
+  dispatch({
+    type: ActionTypes.SET_USERS_LIST,
+    payload: newList
+  })
+}
+
+
+
+
 export const cutCountriesList = (cpts, index) => async (dispatch) => {
   let newCpts = [...cpts]
   newCpts.splice(index, 1)
   dispatch({
-     type: ActionTypes.CUT_COUNTRIES_LIST,
-     payload: newCpts
-   })
- }
+    type: ActionTypes.CUT_COUNTRIES_LIST,
+    payload: newCpts
+  })
+}
 
- export const updUser = (user) => async dispatch => {
-  //console.log(user)
+export const updUser = (user) => async dispatch => {
   const configAx = {
     method: 'put',
     data: user
   }
-
-    
-  //const res = await axios.put(backendPath + `user/edit/${user.displayName}`, configAx)
   const res = await axios.put(backendPath + `${user.displayName}`, configAx)
-  .catch(err => {
-    console.log("error updating user : ", err)
-  })
+    .catch(err => {
+      console.log("error updating user : ", err)
+    })
   dispatch({
     type: ActionTypes.UPDATE_USER,
     payload: res.data
-    
+
   })
   return res.data
 }
- 
+

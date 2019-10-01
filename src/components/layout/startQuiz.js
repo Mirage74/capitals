@@ -123,13 +123,9 @@ class StartQuiz extends Component {
     handleConfClick = e => {
         e.preventDefault()
         const { indexSelected, currRand, resQuest, allTasks, questFinished, radioButtonSelected } = this.state
-        //console.log("radioButtonSelected", radioButtonSelected)
+        const { levelValue } = this.props.location.state
         const { cpts, user } = this.props
         const { displayName } = this.props.user
-
-        // console.log("cptsArray", cptsArray);
-        // console.log("cptsArray.length", cptsArray.length);
-
         if ( (!questFinished) && (parseInt(radioButtonSelected) > -1) ) {
             const cptsArray = Object.keys(cpts).map(function (key) {
                 return [Number(key), cpts[key]];
@@ -142,28 +138,25 @@ class StartQuiz extends Component {
             oneRec.answerIndex = indexSelected
             newRes.push(oneRec)
             this.setState({ resQuest: newRes })
-            // console.log("confirm newRes", newRes)
-            // console.log("confirm newRes.length", newRes.length)
-            // console.log("confirm allTasks", allTasks)
-            // console.log("confirm currRand", currRand)
             if (newRes.length < allTasks) {
                 this.setState({radioButtonSelected: -1})
                 let currRand = Math.floor(Math.random() * Math.floor(cptsArray.length))
-                // console.log("this.props.cpts IIIFFFF", this.props.cpts)
-                // console.log("this.props.cpts.length IIIFFFF", this.props.length)                
-                // console.log("confirm currRand IIIFFFF", currRand)
                 this.setState({ currRand: currRand })
                 this.setState({ timeForTurnInSec: this.state.timeForTurnInSecInitial })
             } else {
                 let userScore = this.calcScore(newRes)
-                if (userScore < user.bestScore) {
-                    userScore = user.bestScore
+                if (userScore < user.bestScore[levelValue]) {
+                    userScore = user.bestScore[levelValue]
                 }
-                console.log("userScore", userScore)                
+                console.log("userScore", userScore) 
+                let tmpLastRes = [...user.lastRes]
+                tmpLastRes[levelValue] = newRes
+                let tmpScore = [...user.bestScore]
+                tmpScore[levelValue] = userScore
                 let updatedUser = {
                     displayName: displayName,
-                    bestScore: userScore,
-                    lastRes: newRes
+                    bestScore: tmpScore,
+                    lastRes: tmpLastRes
                 }
                 let updatedUserRedux = updatedUser               
                 updatedUserRedux._id = user._id                
@@ -198,7 +191,7 @@ class StartQuiz extends Component {
     isEmptyObj = object => !Object.getOwnPropertySymbols(object).length && !Object.getOwnPropertyNames(object).length
 
     componentDidMount() {
-        const { radioButtonSelected } = this.props.location.state
+        const { levelValue } = this.props.location.state
         const { displayName, cpts } = this.props
         const cptsArray = Object.keys(cpts).map(function (key) {
             return [Number(key), cpts[key]];
@@ -206,16 +199,16 @@ class StartQuiz extends Component {
 
         this.setState({ displayName: displayName })
         let timeForAnsw = 0
-        if (radioButtonSelected === "0") {
+        if (levelValue === "0") {
             timeForAnsw = TIME_PER_TURN_EASY
             this.setState({ allTasks: ALL_TASKS_EASY })
         }
-        if (radioButtonSelected === "1") {
+        if (levelValue === "1") {
             timeForAnsw = TIME_PER_TURN_MIDDLE
             this.setState({ allTasks: ALL_TASKS_MIDDLE })
         }
 
-        if (radioButtonSelected === "2") {
+        if (levelValue === "2") {
             timeForAnsw = TIME_PER_TURN_HARD
             this.setState({ allTasks: ALL_TASKS_HARD })
         }
