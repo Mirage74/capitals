@@ -116,13 +116,14 @@ console.log("param dispname")
 })
 
 subRouter.param('lvl', async (lvl, ctx, next) => {
-console.log("param", lvl)
-//   if ( (lvl === "0") || (lvl === "1") || (lvl === "2) ) {
-   if (true) {
-     ctx.lvl = parseInt(lvl)
-   } else {
-     ctx.lvl = "wrong parameter lvl"
-    }
+//console.log("param", lvl)
+  if ( (lvl === "0") || (lvl === "1") || (lvl === "2") ) {
+    ctx.lvl = parseInt(lvl)
+//    console.log("ctx.lvl", ctx.lvl)
+  } else {
+    console.log("wrong parameter lvl")
+    ctx.lvl = "wrong parameter lvl"
+  }
   await next();
 })
 
@@ -201,8 +202,7 @@ subRouter.get('/:lvl',  async function(ctx) {
 })
 
 
-//router.put('/:userByDisplayname',  async function(ctx) {
-router.put('/:lvl',  async function(ctx) {
+router.put('/:userByDisplayname',  async function(ctx) {
     const user = await User.updateOne({_id:ctx.userByDisplayname._id}, ctx.request.body.data);
     ctx.body = user.nModified
 })

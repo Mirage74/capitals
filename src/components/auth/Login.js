@@ -46,15 +46,16 @@ class Login extends Component {
 
   onSubmit = e => {
     e.preventDefault()
-    const { displayName, password } = this.state;
+    const { displayName, password } = this.state
+    let dn = displayName.toLowerCase()
     axios.post(backendPath + 'login', {
-      "login": displayName,
+      "login": dn,
       "password": password
     })
       .then(res => {
         console.log("res.data", res.data)
         if (res.data !== "Login failed") {
-          //this.setState({ displayName: res.data.displayName })
+          this.setState({ displayName: res.data.displayName })
           if (this._isMounted) {
             this.props.setUser(res.data)
             //this.setState({ redirectQuiz: true })
@@ -87,10 +88,11 @@ class Login extends Component {
 
     //if (redirectQuiz || ( (user !== "Login failed") && (user !== ""))) {
     if (redirectQuiz || (typeof user === 'object' && user !== null && !this.isEmptyObject(user))) {
+      console.log("login this.state.displayName ", this.state.displayName)
       return <Redirect to={{
         pathname: 'Quiz',
         state: {
-          //displayName: this.state.displayName
+          displayName: this.state.displayName
         }
       }}
       />

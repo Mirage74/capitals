@@ -55,6 +55,8 @@ class StartQuiz extends Component {
         const { currRand, resQuest, allTasks, questFinished } = this.state
         const { cpts, user } = this.props
         const { displayName } = this.props.user
+        const { levelValue } = this.props.location.state        
+        this.props.cutCountriesList(cpts, currRand)
         const cptsArray = Object.keys(cpts).map(function (key) {
             return [Number(key), cpts[key]];
         });
@@ -72,15 +74,21 @@ class StartQuiz extends Component {
                 this.setState({ currRand: currRand })
                 this.setState({ timeForTurnInSec: this.state.timeForTurnInSecInitial })
             } else {
+
+
                 let userScore = this.calcScore(newRes)
-                if (userScore < user.bestScore) {
-                    userScore = user.bestScore
+                if (userScore < user.bestScore[levelValue]) {
+                    userScore = user.bestScore[levelValue]
                 }
-                console.log("userScore", userScore)
+                console.log("userScore", userScore) 
+                let tmpLastRes = [...user.lastRes]
+                tmpLastRes[levelValue] = newRes
+                let tmpScore = [...user.bestScore]
+                tmpScore[levelValue] = userScore
                 let updatedUser = {
                     displayName: displayName,
-                    bestScore: userScore,
-                    lastRes: newRes
+                    bestScore: tmpScore,
+                    lastRes: tmpLastRes
                 }
                 let updatedUserRedux = updatedUser               
                 updatedUserRedux._id = user._id
@@ -91,6 +99,9 @@ class StartQuiz extends Component {
                                 this.setState({ questFinished: true })
                             })
                     }) 
+                    .catch(err => {
+                        console.log("Error update user, component startQuiz", err)
+                      })                    
             }
         }
     }
@@ -127,10 +138,16 @@ class StartQuiz extends Component {
         const { cpts, user } = this.props
         const { displayName } = this.props.user
         if ( (!questFinished) && (parseInt(radioButtonSelected) > -1) ) {
+            console.log("cpts BEF", cpts)
+            console.log("cpts BEF length", cpts.length)
+            this.props.cutCountriesList(cpts, currRand)
+            console.log("cpts AFT ", cpts)
+            console.log("cpts AFT length", cpts.length)
             const cptsArray = Object.keys(cpts).map(function (key) {
                 return [Number(key), cpts[key]];
             })
-            this.props.cutCountriesList(cpts, currRand)
+            console.log("cptsArray", cptsArray)
+            console.log("cptsArray length", cptsArray.length)
             let newRes = [...resQuest]
             let oneRec = {}
             oneRec.numTask = resQuest.length
@@ -227,6 +244,10 @@ class StartQuiz extends Component {
         const { redirectQuiz, currRand, timeForTurnInSec, timeForTurnInSecInitial, questFinished, resQuest } = this.state
         const { user, cpts } = this.props
         let forRender, oneTask
+        // console.log("oneTask currRand", currRand)
+        // console.log("oneTask cpts", cpts)
+        // console.log("oneTask cpts.length", cpts.length)
+        
 
         if (this.isEmptyObj(cpts) || (cpts.length === 0)) {
             forRender = (<div></div>)

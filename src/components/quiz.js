@@ -41,19 +41,26 @@ class Quiz extends Component {
         //console.log("user DM", user)
         if (typeof user === 'object' && user !== null && !this.isEmptyObject(user)) {
             await setUsersList(usersList, 0)
-            let dn = this.props.user.displayName
+            console.log("quiz user", user)
+            console.log("this.props.location.state", this.props.location.state)
+            let dn = user.displayName
             if (dn.length === 0) {
                 dn = this.props.location.state.displayName
             }
             const res = await axios.get(backendPath + `${dn}`)
             // console.log("res.data", res.data)
             // console.log("this.props.user", this.props.user)
-            const compareID = res.data._id === this.props.user._id
-            const compareDisplayName = res.data.displayName === this.props.user.displayName
-            const compareBestScore = res.data.bestScore[0] === this.props.user.bestScore[0]
+            const compareID = res.data._id === user._id
+            const compareDisplayName = res.data.displayName === user.displayName
+            console.log("res.data.bestScore[0]", res.data.bestScore[0])
+            console.log("user.bestScore[0]", user.bestScore[0]) 
+            console.log("is equasl ?", `${res.data.bestScore[0]} = ${user.bestScore[0]}`)
+            const compareBestScore = res.data.bestScore[0] === user.bestScore[0]
+            console.log("compare", compareID, compareDisplayName, compareBestScore)
             if (!(compareID && compareDisplayName && compareBestScore)) {
                 store.remove("persist:" + KEY_PERSIST_STORE)
                 if (this._isMounted) {
+                    console.log("redirect login 1")
                     this.setState({ redirectLogin: true })
                 }
                 this.props.setUser({})
@@ -62,8 +69,7 @@ class Quiz extends Component {
             store.remove("persist:" + KEY_PERSIST_STORE)
             this.props.setUser({})
             if (this._isMounted) {
-                this.setState({ redirectLogin: true })
-
+                console.log("redirect login 2")                
                 this.setState({ redirectLogin: true })
             }
         }
@@ -89,6 +95,7 @@ class Quiz extends Component {
             this.setState({ redirectViewScore: true })
         }
         if ( (dataFromChild === 4) && (this._isMounted) ) {
+            console.log("redirect login 3")            
             this.setState({ redirectLogin: true })
             this.props.setUser("")
         }
@@ -135,6 +142,7 @@ class Quiz extends Component {
             }
 
             if (this.state.redirectLogin) {
+                console.log("redirectLoginredirectLoginredirectLoginredirectLoginredirectLogin")
                 return <Redirect to='/Login' />
             }
 
