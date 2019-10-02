@@ -51,59 +51,15 @@ class StartQuiz extends Component {
         }
     }
 
-    timeOutCB = () => {
-        const { currRand, resQuest, allTasks, questFinished } = this.state
-        const { cpts, user } = this.props
-        const { displayName } = this.props.user
-        const { levelValue } = this.props.location.state        
-        this.props.cutCountriesList(cpts, currRand)
-        const cptsArray = Object.keys(cpts).map(function (key) {
-            return [Number(key), cpts[key]];
-        });
-        if (!questFinished) {
-            //this.setState({ timeOut: true })
-            let newRes = [...resQuest]
-            let oneRec = {}
-            oneRec.numTask = resQuest.length
-            oneRec.questionIndex = this.countryNameToIndex(cpts[currRand].countryName)
-            oneRec.answerIndex = "-1"
-            newRes.push(oneRec)
-            this.setState({ resQuest: newRes })
-            if (newRes.length < allTasks) {
-                let currRand = Math.floor(Math.random() * Math.floor(cptsArray.length))
-                this.setState({ currRand: currRand })
-                this.setState({ timeForTurnInSec: this.state.timeForTurnInSecInitial })
-            } else {
 
-
-                let userScore = this.calcScore(newRes)
-                if (userScore < user.bestScore[levelValue]) {
-                    userScore = user.bestScore[levelValue]
-                }
-                console.log("userScore", userScore) 
-                let tmpLastRes = [...user.lastRes]
-                tmpLastRes[levelValue] = newRes
-                let tmpScore = [...user.bestScore]
-                tmpScore[levelValue] = userScore
-                let updatedUser = {
-                    displayName: displayName,
-                    bestScore: tmpScore,
-                    lastRes: tmpLastRes
-                }
-                let updatedUserRedux = updatedUser               
-                updatedUserRedux._id = user._id
-                this.props.updUser(updatedUser)
-                    .then(res => {
-                        this.props.setUser(updatedUserRedux)
-                            .then(res => {
-                                this.setState({ questFinished: true })
-                            })
-                    }) 
-                    .catch(err => {
-                        console.log("Error update user, component startQuiz", err)
-                      })                    
+    calcScore = (arr) => {
+        let cnt = 0
+        for (let i = 0; i < arr.length; i++) {
+            if (arr[i].questionIndex === arr[i].answerIndex) {
+                cnt++
             }
         }
+        return cnt
     }
 
     countryNameToIndex = (cn) => {
@@ -121,88 +77,85 @@ class StartQuiz extends Component {
         }
     }
 
-    calcScore = (arr) => {
-        let cnt = 0
-        for (let i = 0; i < arr.length; i++) {
-            if (arr[i].questionIndex === arr[i].answerIndex) {
-                cnt++
-            }
+    finishQuiz = (newRes, levelValue) => {
+        const { user, updUser, setUser } = this.props
+        let userScore = this.calcScore(newRes)
+        if (userScore < user.bestScore[levelValue]) {
+            userScore = user.bestScore[levelValue]
         }
-        return cnt
+        console.log("userScore", userScore)
+
+        let tmpLastRes = [...user.lastRes]
+        tmpLastRes[levelValue] = newRes
+        let tmpScore = [...user.bestScore]
+        tmpScore[levelValue] = userScore
+
+        let updatedUser = {
+            displayName: user.displayName,
+            bestScore: tmpScore,
+            lastRes: tmpLastRes
+        }
+
+        let updatedUserRedux = updatedUser
+        updatedUserRedux._id = user._id
+        updUser(updatedUser)
+            .then(res => {
+                setUser(updatedUserRedux)
+                    .then(res => {
+                        this.setState({ questFinished: true })
+                    })
+            })
+            .catch(err => {
+                console.log("Error update user, component startQuiz", err)
+            })
     }
+
+    nextTask = () => {
+        const { currRand, resQuest, allTasks, indexSelected } = this.state
+        const {cpts, cutCountriesList} = this.props
+        const { levelValue } = this.props.location.state
+        cutCountriesList(cpts, currRand)
+        const cptsArray = Object.keys(cpts).map(function (key) {
+            return [Number(key), cpts[key]];
+        })
+        let newRes = [...resQuest]
+        let oneRec = {}
+        oneRec.numTask = resQuest.length
+        oneRec.questionIndex = this.countryNameToIndex(cpts[currRand].countryName)
+        oneRec.answerIndex = indexSelected
+        newRes.push(oneRec)
+        this.setState({ resQuest: newRes })
+        if (newRes.length < allTasks) {
+            this.setState({ radioButtonSelected: -1 })
+            let currRand = Math.floor(Math.random() * Math.floor(cptsArray.length))
+            this.setState({ currRand: currRand })
+            this.setState({ timeForTurnInSec: this.state.timeForTurnInSecInitial })
+        } else {
+            this.finishQuiz(newRes, levelValue)
+        }
+    }
+
+    timeOutCB = () => {
+        const { currRand, questFinished } = this.state
+        const { cpts } = this.props
+        this.props.cutCountriesList(cpts, currRand)
+        if (!questFinished) {
+            this.nextTask()
+        }
+    }
+
+
+
 
     handleConfClick = e => {
         e.preventDefault()
-        const { indexSelected, currRand, resQuest, allTasks, questFinished, radioButtonSelected } = this.state
-        const { levelValue } = this.props.location.state
-        const { cpts, user } = this.props
-        const { displayName } = this.props.user
-        if ( (!questFinished) && (parseInt(radioButtonSelected) > -1) ) {
-            console.log("cpts BEF", cpts)
-            console.log("cpts BEF length", cpts.length)
-            this.props.cutCountriesList(cpts, currRand)
-            console.log("cpts AFT ", cpts)
-            console.log("cpts AFT length", cpts.length)
-            const cptsArray = Object.keys(cpts).map(function (key) {
-                return [Number(key), cpts[key]];
-            })
-            console.log("cptsArray", cptsArray)
-            console.log("cptsArray length", cptsArray.length)
-            let newRes = [...resQuest]
-            let oneRec = {}
-            oneRec.numTask = resQuest.length
-            oneRec.questionIndex = this.countryNameToIndex(cpts[currRand].countryName)
-            oneRec.answerIndex = indexSelected
-            newRes.push(oneRec)
-            this.setState({ resQuest: newRes })
-            if (newRes.length < allTasks) {
-                this.setState({radioButtonSelected: -1})
-                let currRand = Math.floor(Math.random() * Math.floor(cptsArray.length))
-                this.setState({ currRand: currRand })
-                this.setState({ timeForTurnInSec: this.state.timeForTurnInSecInitial })
-            } else {
-                let userScore = this.calcScore(newRes)
-                if (userScore < user.bestScore[levelValue]) {
-                    userScore = user.bestScore[levelValue]
-                }
-                console.log("userScore", userScore) 
-                let tmpLastRes = [...user.lastRes]
-                tmpLastRes[levelValue] = newRes
-                let tmpScore = [...user.bestScore]
-                tmpScore[levelValue] = userScore
-                let updatedUser = {
-                    displayName: displayName,
-                    bestScore: tmpScore,
-                    lastRes: tmpLastRes
-                }
-                let updatedUserRedux = updatedUser               
-                updatedUserRedux._id = user._id                
-                this.props.updUser(updatedUser)
-                    .then(res => {
-                        this.props.setUser(updatedUserRedux)
-                            .then(res => {
-                                this.setState({ questFinished: true })
-                            })
-                    }) 
-            }
+        const { questFinished, radioButtonSelected } = this.state
+        if ((!questFinished) && (parseInt(radioButtonSelected) > -1)) {
+            this.nextTask()
         }
     }
 
 
-
-    getSource = (lvl) => {
-        let arr = []
-        let oneRec = {}
-        for (let i = 0; i < allCapitals; i++) {
-            if (data.level[i] <= lvl) {
-                oneRec = {}
-                oneRec.capitalName = data.capitalsNames[i]
-                oneRec.countryName = data.countriesNames[i]
-                arr.push(oneRec)
-            }
-        }
-        return arr
-    }
 
 
     isEmptyObj = object => !Object.getOwnPropertySymbols(object).length && !Object.getOwnPropertyNames(object).length
@@ -247,7 +200,7 @@ class StartQuiz extends Component {
         // console.log("oneTask currRand", currRand)
         // console.log("oneTask cpts", cpts)
         // console.log("oneTask cpts.length", cpts.length)
-        
+
 
         if (this.isEmptyObj(cpts) || (cpts.length === 0)) {
             forRender = (<div></div>)

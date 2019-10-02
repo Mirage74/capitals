@@ -107,7 +107,7 @@ passport.use(new LocalStrategy({
 
 
 router.param('userByDisplayname', async (displayName, ctx, next) => {
-console.log("param dispname")
+//console.log("param dispname")
    ctx.userByDisplayname = await User.findOne({ displayName: displayName })
    if (!ctx.userByDisplayname) {
     ctx.userByDisplayname = {displayName : "NOT_EXIST_USER"}
@@ -194,10 +194,13 @@ router.get('/:userByDisplayname',  async function(ctx) {
 
 
 subRouter.get('/:lvl',  async function(ctx) {
-    console.log("ctx.lvl", ctx.lvl)
-    let users = User.find({ "bestScore.0": { $gt: 0 }})
+    let qry = {}
+    qry[`bestScore.${ctx.lvl}`] = { $gt: 0 }	
+    console.log("qry",qry )
+    let users = User.find(qry)
     let pr = await users.exec()
     console.log("users", pr)
+	
     ctx.body = pr.toString()
 })
 

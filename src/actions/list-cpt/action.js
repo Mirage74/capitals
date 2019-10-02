@@ -21,7 +21,7 @@ export const setCountriesList = (countriesList) => async (dispatch) => {
 
 export const setUsersList = (currList, lvl) => async (dispatch) => {
   const res = await axios.get(backendPath + `score/${lvl}`)
-  //console.log("res.data", res.data)
+  console.log("setUsersList res.data", res.data)
   let newList = [...currList]
   newList[lvl] = res.data
   dispatch({
