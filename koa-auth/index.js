@@ -115,15 +115,11 @@ router.param('userByDisplayname', async (displayName, ctx, next) => {
   await next();
 })
 
-subRouter.param('lvl', async (lvl, ctx, next) => {
-//console.log("param", lvl)
-  if ( (lvl === "0") || (lvl === "1") || (lvl === "2") ) {
-    ctx.lvl = parseInt(lvl)
-//    console.log("ctx.lvl", ctx.lvl)
-  } else {
-    console.log("wrong parameter lvl")
-    ctx.lvl = "wrong parameter lvl"
-  }
+subRouter.param('lvlNum', async (lvlNum, ctx, next) => {
+//console.log("lvlNum PARAM", lvlNum)
+//console.log("lvlNum PARAM parseInt(lvlNum)", parseInt(lvlNum))
+    ctx.lvlNum = parseInt(lvlNum)
+
   await next();
 })
 
@@ -193,15 +189,25 @@ router.get('/:userByDisplayname',  async function(ctx) {
 })
 
 
-subRouter.get('/:lvl',  async function(ctx) {
+subRouter.get('/:lvlNum',  async function(ctx) {
     let qry = {}
-    qry[`bestScore.${ctx.lvl}`] = { $gt: 0 }	
-    console.log("qry",qry )
-    let users = User.find(qry)
-    let pr = await users.exec()
-    console.log("users", pr)
-	
-    ctx.body = pr.toString()
+    let users = await User.find().exec()
+    let usersArr = []
+    for (let i = 0; i < ctx.lvlNum; i++) {
+      qry[`bestScore.${i}`] = { $gt: 0 }	
+      let users = await User.find(qry).exec()
+      users = users.map( item => 
+        [
+          item._id,
+          item.displayName,
+          item.bestScore[i],
+          item.lastRes[i]
+        ]     
+      )
+    usersArr.push(users)
+  }
+
+    ctx.body = usersArr
 })
 
 

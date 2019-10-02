@@ -19,14 +19,13 @@ export const setCountriesList = (countriesList) => async (dispatch) => {
   })
 }
 
-export const setUsersList = (currList, lvl) => async (dispatch) => {
-  const res = await axios.get(backendPath + `score/${lvl}`)
+export const setUsersList = (currList, lvlNum) => async (dispatch) => {
+  const res = await axios.get(backendPath + `score/${lvlNum}`)
   console.log("setUsersList res.data", res.data)
-  let newList = [...currList]
-  newList[lvl] = res.data
+  
   dispatch({
     type: ActionTypes.SET_USERS_LIST,
-    payload: newList
+    payload: res.data
   })
 }
 

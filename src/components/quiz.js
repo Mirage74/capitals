@@ -35,12 +35,22 @@ class Quiz extends Component {
         return true
     }
 
+    async componentDidUpdate (prevProps) {
+
+        // console.log("componentDidUpdate prev", prevProps.usersList)
+        // console.log("componentDidUpdate props", this.props.usersList)
+    }
     async componentDidMount() {
         this._isMounted = true        
         const { user, usersList, setUsersList } = this.props
+        console.log("quiz usersList ", usersList)
         //console.log("user DM", user)
         if (typeof user === 'object' && user !== null && !this.isEmptyObject(user)) {
-            await setUsersList(usersList, 0)
+            await setUsersList(usersList, 3)
+            //console.log("quiz usersList 0", usersList)
+//            console.log("quiz usersList 0000 ", usersList)            
+            // await setUsersList(usersList, 1)
+            // await setUsersList(usersList, 2)
             // console.log("quiz user", user)
             // console.log("this.props.location.state", this.props.location.state)
             let dn = user.displayName

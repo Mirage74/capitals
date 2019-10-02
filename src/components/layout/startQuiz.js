@@ -145,8 +145,6 @@ class StartQuiz extends Component {
     }
 
 
-
-
     handleConfClick = e => {
         e.preventDefault()
         const { questFinished, radioButtonSelected } = this.state
