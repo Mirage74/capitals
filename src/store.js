@@ -10,7 +10,7 @@ const persistConfig = {
   key: KEY_PERSIST_STORE,
   storage,
   blacklist: ['session'],
-  whitelist: ['auth'],
+  whitelist: ['auth', 'listCapitals'],
 }
 
 const persistedReducer = persistReducer(persistConfig, rootReducer)

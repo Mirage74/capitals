@@ -53,7 +53,7 @@ class Login extends Component {
       "password": password
     })
       .then(res => {
-        console.log("res.data", res.data)
+        //console.log("res.data", res.data)
         if (res.data !== "Login failed") {
           this.setState({ displayName: res.data.displayName })
           if (this._isMounted) {
@@ -88,7 +88,7 @@ class Login extends Component {
 
     //if (redirectQuiz || ( (user !== "Login failed") && (user !== ""))) {
     if (redirectQuiz || (typeof user === 'object' && user !== null && !this.isEmptyObject(user))) {
-      console.log("login this.state.displayName ", this.state.displayName)
+      //console.log("login this.state.displayName ", this.state.displayName)
       return <Redirect to={{
         pathname: 'Quiz',
         state: {

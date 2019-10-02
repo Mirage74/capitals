@@ -6,6 +6,7 @@ import axios from 'axios'
 import store from 'store'
 import "./quiz.css"
 import MenuButtons from "./layout/menubuttons"
+import ScoreList from "./layout/scorelist"
 import ChooseLevel from "./layout/chooseLevel"
 import { Redirect } from "react-router-dom"
 import * as data from './const/const_caps'
@@ -43,30 +44,17 @@ class Quiz extends Component {
     async componentDidMount() {
         this._isMounted = true        
         const { user, usersList, setUsersList } = this.props
-        console.log("quiz usersList ", usersList)
-        //console.log("user DM", user)
         if (typeof user === 'object' && user !== null && !this.isEmptyObject(user)) {
             await setUsersList(usersList, 3)
-            //console.log("quiz usersList 0", usersList)
-//            console.log("quiz usersList 0000 ", usersList)            
-            // await setUsersList(usersList, 1)
-            // await setUsersList(usersList, 2)
-            // console.log("quiz user", user)
-            // console.log("this.props.location.state", this.props.location.state)
+//            console.log("quiz user", user)
             let dn = user.displayName
             if (dn.length === 0) {
                 dn = this.props.location.state.displayName
             }
             const res = await axios.get(backendPath + `${dn}`)
-            // console.log("res.data", res.data)
-            // console.log("this.props.user", this.props.user)
             const compareID = res.data._id === user._id
             const compareDisplayName = res.data.displayName === user.displayName
-            // console.log("res.data.bestScore[0]", res.data.bestScore[0])
-            // console.log("user.bestScore[0]", user.bestScore[0]) 
-            // console.log("is equasl ?", `${res.data.bestScore[0]} = ${user.bestScore[0]}`)
             const compareBestScore = res.data.bestScore[0] === user.bestScore[0]
-//            console.log("compare", compareID, compareDisplayName, compareBestScore)
             if (!(compareID && compareDisplayName && compareBestScore)) {
                 store.remove("persist:" + KEY_PERSIST_STORE)
                 if (this._isMounted) {
@@ -105,7 +93,7 @@ class Quiz extends Component {
             this.setState({ redirectViewScore: true })
         }
         if ( (dataFromChild === 4) && (this._isMounted) ) {
-            console.log("redirect login 3")            
+            //console.log("redirect login 3")            
             this.setState({ redirectLogin: true })
             this.props.setUser("")
         }
@@ -152,7 +140,6 @@ class Quiz extends Component {
             }
 
             if (this.state.redirectLogin) {
-                console.log("redirectLoginredirectLoginredirectLoginredirectLoginredirectLogin")
                 return <Redirect to='/Login' />
             }
 
@@ -167,6 +154,7 @@ class Quiz extends Component {
                             </div>
                             <div className="col">
                                 <ChooseLevel currButton={this.currRadioCB} />
+                                <ScoreList />
                             </div>
                         </div>
                     </div>

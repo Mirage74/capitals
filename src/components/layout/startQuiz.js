@@ -112,22 +112,37 @@ class StartQuiz extends Component {
 
     nextTask = () => {
         const { currRand, resQuest, allTasks, indexSelected } = this.state
-        const {cpts, cutCountriesList} = this.props
+        const { cpts, cutCountriesList } = this.props
         const { levelValue } = this.props.location.state
-        cutCountriesList(cpts, currRand)
-        const cptsArray = Object.keys(cpts).map(function (key) {
-            return [Number(key), cpts[key]];
-        })
+        // const cptsArray = Object.keys(cpts).map(function (key) {
+        //     return [Number(key), cpts[key]];
+        // })
+        //console.log("cptsArray", cptsArray)
         let newRes = [...resQuest]
         let oneRec = {}
         oneRec.numTask = resQuest.length
         oneRec.questionIndex = this.countryNameToIndex(cpts[currRand].countryName)
         oneRec.answerIndex = indexSelected
         newRes.push(oneRec)
+        //console.log("oneRec", oneRec)        
         this.setState({ resQuest: newRes })
+
+
+        // console.log("cpts BEF CUT", cpts)
+        // console.log("cpts.length BEF CUT", cpts.length)
+        // console.log("currRand BEF CUT", currRand)
+        const newCpts = [...cpts]
+        newCpts.splice(currRand, 1)
+        cutCountriesList(newCpts)
+        // console.log("newCpts AFT CUT", newCpts)
+        // console.log("newCpts.length AFT CUT", newCpts.length)
+        // console.log("currRand AFT CUT", currRand)
+
+
+
         if (newRes.length < allTasks) {
             this.setState({ radioButtonSelected: -1 })
-            let currRand = Math.floor(Math.random() * Math.floor(cptsArray.length))
+            let currRand = Math.floor(Math.random() * Math.floor(newCpts.length))
             this.setState({ currRand: currRand })
             this.setState({ timeForTurnInSec: this.state.timeForTurnInSecInitial })
         } else {
@@ -136,9 +151,8 @@ class StartQuiz extends Component {
     }
 
     timeOutCB = () => {
-        const { currRand, questFinished } = this.state
-        const { cpts } = this.props
-        this.props.cutCountriesList(cpts, currRand)
+        const { questFinished } = this.state
+        this.setState({indexSelected: -1})
         if (!questFinished) {
             this.nextTask()
         }
@@ -159,46 +173,58 @@ class StartQuiz extends Component {
     isEmptyObj = object => !Object.getOwnPropertySymbols(object).length && !Object.getOwnPropertyNames(object).length
 
     componentDidMount() {
-        const { levelValue } = this.props.location.state
-        const { displayName, cpts } = this.props
-        const cptsArray = Object.keys(cpts).map(function (key) {
-            return [Number(key), cpts[key]];
-        })
+        if (this.props.location.state) {
+            const { levelValue } = this.props.location.state
+            const { displayName, cpts } = this.props
+            const cptsArray = Object.keys(cpts).map(function (key) {
+                return [Number(key), cpts[key]];
+            })
 
-        this.setState({ displayName: displayName })
-        let timeForAnsw = 0
-        if (levelValue === "0") {
-            timeForAnsw = TIME_PER_TURN_EASY
-            this.setState({ allTasks: ALL_TASKS_EASY })
-        }
-        if (levelValue === "1") {
-            timeForAnsw = TIME_PER_TURN_MIDDLE
-            this.setState({ allTasks: ALL_TASKS_MIDDLE })
-        }
+            this.setState({ displayName: displayName })
+            let timeForAnsw = 0
+            if (levelValue === "0") {
+                timeForAnsw = TIME_PER_TURN_EASY
+                this.setState({ allTasks: ALL_TASKS_EASY })
+            }
+            if (levelValue === "1") {
+                timeForAnsw = TIME_PER_TURN_MIDDLE
+                this.setState({ allTasks: ALL_TASKS_MIDDLE })
+            }
 
-        if (levelValue === "2") {
-            timeForAnsw = TIME_PER_TURN_HARD
-            this.setState({ allTasks: ALL_TASKS_HARD })
-        }
-        this.setState({ timeForTurnInSecInitial: timeForAnsw })
-        this.setState({ timeForTurnInSec: timeForAnsw })
+            if (levelValue === "2") {
+                timeForAnsw = TIME_PER_TURN_HARD
+                this.setState({ allTasks: ALL_TASKS_HARD })
+            }
+            this.setState({ timeForTurnInSecInitial: timeForAnsw })
+            this.setState({ timeForTurnInSec: timeForAnsw })
 
-        if (this.isEmptyObj(cpts) || (cpts.length === 0)) {
+            if (this.isEmptyObj(cpts) || (cpts.length === 0)) {
+                this.setState({ redirectQuiz: true })
+            }
+            let currRand = Math.floor(Math.random() * Math.floor(cptsArray.length))
+            this.setState({ currRand: currRand })
+        } else {
             this.setState({ redirectQuiz: true })
         }
-        let currRand = Math.floor(Math.random() * Math.floor(cptsArray.length))
-        this.setState({ currRand: currRand })
     }
 
 
     render() {
-        const { redirectQuiz, currRand, timeForTurnInSec, timeForTurnInSecInitial, questFinished, resQuest } = this.state
+        const { redirectQuiz, currRand, timeForTurnInSec, timeForTurnInSecInitial, questFinished, resQuest, allTasks } = this.state
         const { user, cpts } = this.props
         let forRender, oneTask
         // console.log("oneTask currRand", currRand)
         // console.log("oneTask cpts", cpts)
         // console.log("oneTask cpts.length", cpts.length)
-
+        let currTask = resQuest.length + 1
+        if (currTask > allTasks)  {
+            currTask = allTasks
+        }
+        const currTaskNum = (
+            <div>
+                {currTask}/{allTasks}
+            </div>
+        )
 
         if (this.isEmptyObj(cpts) || (cpts.length === 0)) {
             forRender = (<div></div>)
@@ -207,7 +233,7 @@ class StartQuiz extends Component {
             if (questFinished) {
                 const list = resQuest.map(item =>
                     <li id="quest-res" className="text-center" key={uuid()}>
-                        <h5>{item.numTask}</h5>
+                        <h5>{item.numTask + 1}</h5>
                         <h5>{item.questionIndex}</h5>
                         <h5>{item.answerIndex}</h5>
                     </li>
@@ -251,6 +277,7 @@ class StartQuiz extends Component {
                                             </Col>
                                             <Col>
                                                 <Countdown timeForTurnInSec={timeForTurnInSecInitial} timeOutCB={this.timeOutCB} index={currRand} />
+                                                {currTaskNum}
                                             </Col>
                                         </Row>
                                         {oneTask}
@@ -281,10 +308,8 @@ class StartQuiz extends Component {
 }
 
 const mapStateToProps = (state) => ({
-
     cpts: state.listCapitals.currCountriesList,
     user: state.auth.currUser
-
 })
 
 

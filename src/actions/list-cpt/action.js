@@ -21,20 +21,18 @@ export const setCountriesList = (countriesList) => async (dispatch) => {
 
 export const setUsersList = (currList, lvlNum) => async (dispatch) => {
   const res = await axios.get(backendPath + `score/${lvlNum}`)
-  console.log("setUsersList res.data", res.data)
-  
+  //console.log("setUsersList res.data", res.data)
   dispatch({
     type: ActionTypes.SET_USERS_LIST,
     payload: res.data
   })
+  return res.data
 }
 
 
 
 
-export const cutCountriesList = (cpts, index) => async (dispatch) => {
-  let newCpts = [...cpts]
-  newCpts.splice(index, 1)
+export const cutCountriesList = (newCpts) => async (dispatch) => {
   dispatch({
     type: ActionTypes.CUT_COUNTRIES_LIST,
     payload: newCpts

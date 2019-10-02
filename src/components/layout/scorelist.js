@@ -1,38 +1,78 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import axios from 'axios'
-import uuid from 'uuid'
+import Row from 'react-bootstrap/Row'
+import Col from 'react-bootstrap/Col'
 
 class ScoreList extends Component {
+    state = {
+        stateLvl_0: [],
+        stateLvl_1: [],
+        stateLvl_2: []
+    }
+
+    compare(a, b) {
+        if (a[2] < b[2]) {
+            return 1
+        }
+        if (a[2] > b[2]) {
+            return -1
+        }
+        return 0;
+    }
+
+    componentDidMount() {
+        const { usersList } = this.props
+        let tmpAr
+
+        tmpAr = usersList[0].sort(this.compare)
+        if (tmpAr.length > 5) {
+            tmpAr = tmpAr.slice(0, 5)
+        }
+        this.setState({ stateLvl_0: tmpAr })
+
+        tmpAr = usersList[1].sort(this.compare)
+        if (tmpAr.length > 5) {
+            tmpAr = tmpAr.slice(0, 5)
+        }
+        this.setState({ stateLvl_1: tmpAr })
+
+        tmpAr = usersList[2].sort(this.compare)
+        if (tmpAr.length > 5) {
+            tmpAr = tmpAr.slice(0, 5)
+        }
+        this.setState({ stateLvl_2: tmpAr })
+
+    }
 
     render() {
-        const { index, cpts } = this.props
-        //console.log("cpts", cpts)
-        const { currSelectedValue, randArr, cardArr } = this.state
-
-        const task = (
-            <div className="row">
-
-                <h1 id="caps-question" className="w-100 p-2 topContainer" >Please choose the capital of {cpts[index].countryName}:</h1>
-
-            </div>
+        const { stateLvl_0, stateLvl_1, stateLvl_2 } = this.state
+        const lvl_0 = stateLvl_0.map(item =>
+            <h5 key={item[0]}>{item[1]} {item[2]} </h5>
         )
 
-        const radioList = (
+        const lvl_1 = stateLvl_1.map(item =>
+            <h5 key={item[0]}>{item[1]}</h5>
+        )
 
-    const cptNames = randArr.map(item =>
-            <li id="capName-answer" className="text-center" key={uuid()}>
-                <h5>{item.capitalName}</h5>
-            </li>
+        const lvl_2 = stateLvl_2.map(item =>
+            <h5 key={item[0]}>{item[1]}</h5>
         )
 
 
-    return (
-            <div className="row">
-                {task}
-                {radioList}
-                <ul className="w-100 p-2 topContainer">{cptNames}</ul>
-                <ul className="w-100 p-2 topContainer">{pics}</ul>
+        return (
+            <div>
+                <Row>
+                    <Col md={4}>
+                        {lvl_0}
+                    </Col>
+                    <Col md={4}>
+                        {lvl_1}
+                    </Col>
+                    <Col md={4}>
+                        {lvl_2}
+                    </Col>
+
+                </Row>
             </div>
         )
 
@@ -40,10 +80,13 @@ class ScoreList extends Component {
 }
 
 const mapStateToProps = (state) => ({
-    user: state.auth.currUser
+    user: state.auth.currUser,
+    usersList: state.listCapitals.currUserList
 })
 
 export default connect(mapStateToProps)(ScoreList)
+
+
 
 
 

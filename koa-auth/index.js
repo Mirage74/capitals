@@ -190,11 +190,14 @@ router.get('/:userByDisplayname',  async function(ctx) {
 
 
 subRouter.get('/:lvlNum',  async function(ctx) {
-    let qry = {}
+    let qry
     let users = await User.find().exec()
     let usersArr = []
     for (let i = 0; i < ctx.lvlNum; i++) {
+      qry = {}
       qry[`bestScore.${i}`] = { $gt: 0 }	
+//      console.log("qry", qry)
+//      console.log("i", i)
       let users = await User.find(qry).exec()
       users = users.map( item => 
         [

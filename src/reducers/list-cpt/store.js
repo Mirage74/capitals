@@ -36,8 +36,8 @@ const currCountriesList = (state = INITIAL_STATE.countriesList, { type, payload 
 }
 
 const currUserList = (state = INITIAL_STATE.usersList, { type, payload }) => {
-  console.log("reducer userlist", payload)
-  console.log("reducer type", type)
+  // console.log("reducer userlist", payload)
+  // console.log("reducer type", type)
   switch (type) {
     case ListCptTypes.SET_USERS_LIST:
       return payload

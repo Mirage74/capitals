@@ -45,7 +45,7 @@ class App extends Component {
                 <Route
                   exact path="/StartQuiz"
                   render={(props) => <StartQuiz {...props}/>}
-                />                
+                />
               </Switch>
             </div>
           </div>
