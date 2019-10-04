@@ -1,16 +1,16 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import uuid from 'uuid'
 import { Redirect } from "react-router-dom"
-import * as data from '../const/const_caps'
 import OneTask from "./oneTask"
 import "../quiz.css"
+import { calcScore, countryNameToIndex } from './Start/axf'
 import Countdown from './stopwatch'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
+import Button from 'react-bootstrap/Button'
 import { updUser, cutCountriesList } from '../../actions/list-cpt/action'
 import { setUser } from '../../actions/auth/action'
-import { allCapitals, TIME_PER_TURN_EASY, TIME_PER_TURN_MIDDLE, TIME_PER_TURN_HARD, ALL_TASKS_EASY, ALL_TASKS_MIDDLE, ALL_TASKS_HARD } from "../../config"
+import { TIME_PER_TURN_EASY, TIME_PER_TURN_MIDDLE, TIME_PER_TURN_HARD, ALL_TASKS_EASY, ALL_TASKS_MIDDLE, ALL_TASKS_HARD } from "../../config"
 
 class StartQuiz extends Component {
 
@@ -51,35 +51,10 @@ class StartQuiz extends Component {
         }
     }
 
-
-    calcScore = (arr) => {
-        let cnt = 0
-        for (let i = 0; i < arr.length; i++) {
-            if (arr[i].questionIndex === arr[i].answerIndex) {
-                cnt++
-            }
-        }
-        return cnt
-    }
-
-    countryNameToIndex = (cn) => {
-        let found = false
-        let i = 0
-        while (!found && (i < allCapitals)) {
-            if (data.countriesNames[i] === cn) {
-                found = true
-                return i
-            }
-            i++
-        }
-        if (!found) {
-            console.log("CountryName not found: ", cn)
-        }
-    }
-
+    
     finishQuiz = (newRes, levelValue) => {
         const { user, updUser, setUser } = this.props
-        let userScore = this.calcScore(newRes)
+        let userScore = calcScore(newRes)
         if (userScore < user.bestScore[levelValue]) {
             userScore = user.bestScore[levelValue]
         }
@@ -103,6 +78,7 @@ class StartQuiz extends Component {
                 setUser(updatedUserRedux)
                     .then(res => {
                         this.setState({ questFinished: true })
+                        //setCountriesList([])
                     })
             })
             .catch(err => {
@@ -114,32 +90,16 @@ class StartQuiz extends Component {
         const { currRand, resQuest, allTasks, indexSelected } = this.state
         const { cpts, cutCountriesList } = this.props
         const { levelValue } = this.props.location.state
-        // const cptsArray = Object.keys(cpts).map(function (key) {
-        //     return [Number(key), cpts[key]];
-        // })
-        //console.log("cptsArray", cptsArray)
         let newRes = [...resQuest]
         let oneRec = {}
         oneRec.numTask = resQuest.length
-        oneRec.questionIndex = this.countryNameToIndex(cpts[currRand].countryName)
+        oneRec.questionIndex = countryNameToIndex(cpts[currRand].countryName)
         oneRec.answerIndex = indexSelected
         newRes.push(oneRec)
-        //console.log("oneRec", oneRec)        
         this.setState({ resQuest: newRes })
-
-
-        // console.log("cpts BEF CUT", cpts)
-        // console.log("cpts.length BEF CUT", cpts.length)
-        // console.log("currRand BEF CUT", currRand)
         const newCpts = [...cpts]
         newCpts.splice(currRand, 1)
         cutCountriesList(newCpts)
-        // console.log("newCpts AFT CUT", newCpts)
-        // console.log("newCpts.length AFT CUT", newCpts.length)
-        // console.log("currRand AFT CUT", currRand)
-
-
-
         if (newRes.length < allTasks) {
             this.setState({ radioButtonSelected: -1 })
             let currRand = Math.floor(Math.random() * Math.floor(newCpts.length))
@@ -152,9 +112,11 @@ class StartQuiz extends Component {
 
     timeOutCB = () => {
         const { questFinished } = this.state
-        this.setState({indexSelected: -1})
+        this.setState({ indexSelected: -1 })
         if (!questFinished) {
             this.nextTask()
+        } else {
+            this.setState({ redirectQuiz: true })
         }
     }
 
@@ -164,10 +126,15 @@ class StartQuiz extends Component {
         const { questFinished, radioButtonSelected } = this.state
         if ((!questFinished) && (parseInt(radioButtonSelected) > -1)) {
             this.nextTask()
+        } else {
+            this.setState({ redirectQuiz: true })
         }
     }
 
-
+    handleCancel = e => {
+        e.preventDefault()
+        this.setState({redirectQuiz: true})
+    }
 
 
     isEmptyObj = object => !Object.getOwnPropertySymbols(object).length && !Object.getOwnPropertyNames(object).length
@@ -213,11 +180,9 @@ class StartQuiz extends Component {
         const { redirectQuiz, currRand, timeForTurnInSec, timeForTurnInSecInitial, questFinished, resQuest, allTasks } = this.state
         const { user, cpts } = this.props
         let forRender, oneTask
-        // console.log("oneTask currRand", currRand)
-        // console.log("oneTask cpts", cpts)
-        // console.log("oneTask cpts.length", cpts.length)
+
         let currTask = resQuest.length + 1
-        if (currTask > allTasks)  {
+        if (currTask > allTasks) {
             currTask = allTasks
         }
         const currTaskNum = (
@@ -231,14 +196,15 @@ class StartQuiz extends Component {
         } else {
 
             if (questFinished) {
-                const list = resQuest.map(item =>
-                    <li id="quest-res" className="text-center" key={uuid()}>
-                        <h5>{item.numTask + 1}</h5>
-                        <h5>{item.questionIndex}</h5>
-                        <h5>{item.answerIndex}</h5>
-                    </li>
-                )
-                forRender = <ul className="w-100 p-2 topContainer">{list}</ul>
+                this.setState({redirectQuiz: true})
+                // const list = resQuest.map(item =>
+                //     <li id="quest-res" className="text-center" key={uuid()}>
+                //         <h5>{item.numTask + 1}</h5>
+                //         <h5>{item.questionIndex}</h5>
+                //         <h5>{item.answerIndex}</h5>
+                //     </li>
+                // )
+                // forRender = <ul className="w-100 p-2 topContainer">{list}</ul>
             } else {
                 const buttonConf = (
                     <input
@@ -281,6 +247,8 @@ class StartQuiz extends Component {
                                             </Col>
                                         </Row>
                                         {oneTask}
+                                        <br/><br/><br/>
+                                        <Button variant="danger" onClick={this.handleCancel}>Cancel</Button>
                                     </div>
                                 </div>
                             </div>

@@ -11,6 +11,8 @@ import ChooseLevel from "./layout/chooseLevel"
 import { Redirect } from "react-router-dom"
 import * as data from './const/const_caps'
 import { getImageName } from "../axfunc"
+import Row from 'react-bootstrap/Row'
+import Col from 'react-bootstrap/Col'
 import { allCapitals, backendPath, KEY_PERSIST_STORE } from "../config"
 
 class Quiz extends Component {
@@ -36,17 +38,17 @@ class Quiz extends Component {
         return true
     }
 
-    async componentDidUpdate (prevProps) {
+    async componentDidUpdate(prevProps) {
 
         // console.log("componentDidUpdate prev", prevProps.usersList)
         // console.log("componentDidUpdate props", this.props.usersList)
     }
     async componentDidMount() {
-        this._isMounted = true        
+        this._isMounted = true
         const { user, usersList, setUsersList } = this.props
         if (typeof user === 'object' && user !== null && !this.isEmptyObject(user)) {
             await setUsersList(usersList, 3)
-//            console.log("quiz user", user)
+            //            console.log("quiz user", user)
             let dn = user.displayName
             if (dn.length === 0) {
                 dn = this.props.location.state.displayName
@@ -67,7 +69,7 @@ class Quiz extends Component {
             store.remove("persist:" + KEY_PERSIST_STORE)
             this.props.setUser({})
             if (this._isMounted) {
-                console.log("redirect login 2")                
+                console.log("redirect login 2")
                 this.setState({ redirectLogin: true })
             }
         }
@@ -79,20 +81,20 @@ class Quiz extends Component {
 
     currRadioCB = (chooseRadio) => {
         if (this._isMounted) {
-        this.setState({ radioButtonSelected: chooseRadio })
+            this.setState({ radioButtonSelected: chooseRadio })
         }
     }
     getMenuClickCB = (dataFromChild) => {
-        if ( (dataFromChild === 1) && (this._isMounted) ){
+        if ((dataFromChild === 1) && (this._isMounted)) {
             this.setState({ redirectStartQuiz: true })
         }
-        if ( (dataFromChild === 2) && (this._isMounted) ) {
+        if ((dataFromChild === 2) && (this._isMounted)) {
             this.setState({ redirectViewCapitals: true })
         }
-        if ( (dataFromChild === 3) && (this._isMounted) ) {
+        if ((dataFromChild === 3) && (this._isMounted)) {
             this.setState({ redirectViewScore: true })
         }
-        if ( (dataFromChild === 4) && (this._isMounted) ) {
+        if ((dataFromChild === 4) && (this._isMounted)) {
             //console.log("redirect login 3")            
             this.setState({ redirectLogin: true })
             this.props.setUser("")
@@ -146,18 +148,16 @@ class Quiz extends Component {
 
             forRender = (
                 <div>
-                    <div className="container">
-                        <div className="row">
-                            <div className="col">
-                                <h1 className="text-center">Hello, {displayName} !</h1>
-                                <MenuButtons pressedButton={this.getMenuClickCB} />
-                            </div>
-                            <div className="col">
-                                <ChooseLevel currButton={this.currRadioCB} />
-                                <ScoreList />
-                            </div>
-                        </div>
-                    </div>
+                    <Row>
+                        <Col float="center" md={{ span: 2, offset: 1 }} >
+                            <MenuButtons pressedButton={this.getMenuClickCB} />
+                        </Col>
+                        <Col md={{ span: 6, offset: 1 }}>
+                            <ChooseLevel currButton={this.currRadioCB} displayName={displayName}/>
+                            <br />                            
+                            <ScoreList />
+                        </Col>
+                    </Row>
                 </div>
             )
 
