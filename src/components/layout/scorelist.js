@@ -40,7 +40,7 @@ class ScoreList extends Component {
 
         tmpAr = usersList[2].sort(this.compare)
         if (tmpAr.length > 5) {
-            tmpAr = tmpAr.slice(0, 2)
+            tmpAr = tmpAr.slice(0, 5)
         }
         this.setState({ stateLvl_2: tmpAr })
 

@@ -1,20 +1,27 @@
 import React, { Component } from 'react'
 import { RadioGroup, Radio } from 'react-radio-group'
 import Col from 'react-bootstrap/Col'
-import { allCapitals, TIME_PER_TURN_EASY, TIME_PER_TURN_MIDDLE, TIME_PER_TURN_HARD, ALL_TASKS_EASY, ALL_TASKS_MIDDLE, ALL_TASKS_HARD } from "../../config"
+import { allCapitals, TIME_PER_TURN_EASY, TIME_PER_TURN_MIDDLE, TIME_PER_TURN_HARD, ALL_TASKS_EASY, ALL_TASKS_MIDDLE, ALL_TASKS_HARD, BORDER_COLOR_CHANGE_IN_MS } from "../../config"
 
 class ChooseLevel extends Component {
     _isMounted = false
     state = {
-        currSelectedValue: "-1"
+        currSelectedValue: "-1",
+        currRandHex: "#0000ff"
+    }
+
+    changeBorderColor = () => {
+        this.setState({currRandHex: "#" + Math.floor(Math.random() * Math.floor(256 * 256 * 256)).toString(16)})
     }
 
     componentDidMount() {
         this._isMounted = true
+        this.timerID = setInterval(this.changeBorderColor, BORDER_COLOR_CHANGE_IN_MS)
     }
 
     componentWillUnmount() {
         this._isMounted = false
+        clearInterval(this.timerID)
     }
 
     handleChange = (value) => {
@@ -24,10 +31,12 @@ class ChooseLevel extends Component {
         }
     }
     render() {
-        const { currSelectedValue } = this.state
+        const { currSelectedValue, currRandHex } = this.state
         const {displayName} = this.props
+
+        //console.log("currRand", currRandHex)
         const radioStyle = {
-            border: "dotted blue"
+            border: `dotted ${currRandHex}`
           }
         const fUp = displayName.charAt(0).toUpperCase() + displayName.slice(1)
         return (

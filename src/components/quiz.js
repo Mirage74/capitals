@@ -38,11 +38,7 @@ class Quiz extends Component {
         return true
     }
 
-    async componentDidUpdate(prevProps) {
 
-        // console.log("componentDidUpdate prev", prevProps.usersList)
-        // console.log("componentDidUpdate props", this.props.usersList)
-    }
     async componentDidMount() {
         this._isMounted = true
         const { user, usersList, setUsersList } = this.props

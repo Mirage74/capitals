@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { allCapitals, ALL_ANSWERS } from "../../config"
-import * as data from '../const/const_caps';
+import * as data from '../const/const_caps'
 import uuid from 'uuid'
 import { getImageName } from "../../axfunc"
 import { RadioGroup, Radio } from 'react-radio-group'
@@ -53,9 +53,6 @@ class OneTask extends Component {
 
   componentDidMount() {
     const { index, cpts, correctAnswer } = this.props
-  //   const cptsArray = Object.keys(cpts).map(function(key) {
-  //     return [Number(key), cpts[key]];
-  // })
     let randInt
     let oneRec
     let newCpts = [...cpts]
@@ -65,14 +62,8 @@ class OneTask extends Component {
     const mainCptRandIndex = Math.floor(Math.random() * Math.floor(ALL_ANSWERS))
     correctAnswer("" + mainCptRandIndex)
     for (let i = 0; i < ALL_ANSWERS - 1; i++) {
-      // console.log("DM i", i)
-      // console.log("DM cpts", cpts)
       randInt = Math.floor(Math.random() * Math.floor(newCpts.length))
-      //console.log("DM randInt", randInt)
       oneRec = newCpts[randInt]
-      // console.log("DM newCpts[randInt - 1]", newCpts[randInt - 1])
-      // console.log("DM newCpts[randInt]", newCpts[randInt])
-      // console.log("DM oneRec", oneRec)
       oneRec.index = this.countryNameToIndex(oneRec.countryName)
       randArr.push(oneRec)
       newCpts.splice(randInt, 1)
@@ -81,39 +72,24 @@ class OneTask extends Component {
     oneRec.index = this.countryNameToIndex(oneRec.countryName)
     randArr.splice(mainCptRandIndex, 0, oneRec)
     this.setState({ randArr: randArr })
-
     cardArr = this.createCards(randArr)
     this.setState({ cardArr: cardArr })
   }
 
   componentDidUpdate(prevProps) {
-    // console.log("prevprops", prevProps)
-    // console.log("this.props", this.props)
     if (this.props.index !==prevProps.index) {
       const { index, cpts, correctAnswer } = this.props
-      //console.log("cpts DidUpd", cpts)
       let randInt
       let oneRec
       let newCpts = [...cpts]
       let randArr = []
       let cardArr = []
       newCpts.splice(index, 1)
-      // const newCptsArray = Object.keys(newCpts).map(function(key) {
-      //   return [Number(key), newCpts[key]];
-      // })      
       const mainCptRandIndex = Math.floor(Math.random() * Math.floor(ALL_ANSWERS))
       correctAnswer("" + mainCptRandIndex)
-
       for (let i = 0; i < ALL_ANSWERS - 1; i++) {
-        // console.log("D Upd i", i)
-        // console.log("D Upd newCptsArray", newCptsArray)
         randInt = Math.floor(Math.random() * Math.floor(newCpts.length))
-        // console.log("D Upd randInt", randInt)        
-        // console.log("D Upd newCpts", newCpts)
         oneRec = newCpts[randInt]
-//        console.log("D Upd oneRec", oneRec)
-        //console.log("D Upd newCpts.length", newCpts.length)
-        //console.log("D Upd newCptsArray.length", newCptsArray.length)
         oneRec.index = this.countryNameToIndex(oneRec.countryName)
         randArr.push(oneRec)
         newCpts.splice(randInt, 1)
@@ -131,7 +107,6 @@ class OneTask extends Component {
   }
 
   handleChange = (value) => {
-    //console.log("handleChange value", value)
     this.setState({ currSelectedValue: value });
     this.props.currButton(value)
     this.props.indexSelected(this.state.randArr[parseInt(value)].index)
@@ -140,7 +115,6 @@ class OneTask extends Component {
   
   render() {
     const { index, cpts  } = this.props
-    //console.log("cpts", cpts)
     const { currSelectedValue, randArr, cardArr } = this.state
 
     const task = (

@@ -1,24 +1,14 @@
 import React, { Component } from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-//import { Provider } from 'react-redux';
-//import store from './store';
 import Login from './components/auth/Login'
 import Register from './components/auth/Register'
 import Quiz from './components/quiz'
 import StartQuiz from './components/layout/startQuiz'
 import ViewScore from './components/layout/viewScore'
+import ViewCapitals from './components/layout/viewcapitals'
 import './App.css';
 
 class App extends Component {
-
-
-
-// getDisplayNameCallback = (dataFromChild) => {
-//   this.setState({ displayName: dataFromChild })
-//   localStorage.setItem("displayName", dataFromChild)
-//   console.log(localStorage)
-// }
-
 
   render() {
     return (
@@ -50,7 +40,11 @@ class App extends Component {
                 <Route
                   exact path="/ViewScore"
                   render={(props) => <ViewScore {...props}/>}
-                />                
+                />
+                <Route
+                  exact path="/ViewCapitals"
+                  render={(props) => <ViewCapitals {...props}/>}
+                />                                
               </Switch>
             </div>
           </div>
@@ -59,4 +53,5 @@ class App extends Component {
   }
 }
 
-export default App;
+
+export default App

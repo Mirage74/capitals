@@ -7,6 +7,7 @@ module.exports  = {
   TIME_PER_TURN_MIDDLE : 9,
   TIME_PER_TURN_HARD : 8,
   Log_Refresh_In_Seconds : 20,
+  BORDER_COLOR_CHANGE_IN_MS: 1000,
   MIN_USER_displayName_LENGTH : 3,
   MIN_USER_PASSWORD_LENGTH : 6,
   ALL_TASKS_EASY : 8,

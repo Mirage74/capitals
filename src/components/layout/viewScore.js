@@ -1,8 +1,9 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Redirect } from "react-router-dom"
+import {lvlNames} from './viewax/axfview'
 import uuid from 'uuid'
-import Row from 'react-bootstrap/Row'
+//import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import Button from 'react-bootstrap/Button'
 import Table from 'react-bootstrap/Table'
@@ -150,23 +151,6 @@ class ViewScore extends Component {
             </Col>
         )
 
-
-
-        const lvlNames = (
-            <Col className="text-center" md={{ span: 5, offset: 1 }}>
-                <Row >
-                    <Col className="text-center" md={{ span: 1, offset: 1 }}>
-                        <h4>Easy</h4>
-                    </Col>
-                    <Col className="text-center" md={{ span: 1, offset: 3 }}>
-                        <h4>Middle</h4>
-                    </Col>
-                    <Col className="text-center" md={{ span: 1, offset: 3 }}>
-                        <h4>Hard</h4>
-                    </Col>
-                </Row>
-            </Col>
-        )
 
 
         return (
