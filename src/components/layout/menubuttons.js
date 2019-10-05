@@ -28,7 +28,7 @@ class MenuButtons extends Component {
 
         const startQuiz = (
             <div className="col text-center">
-                <button id="btnsuper" type="submit" className="btn btn-primary" onClick={this.onSubmitStartQuiz} >Start Quiz</button>
+                <button id="btnsuper" type="submit" className="btn btn-primary" onClick={this.onSubmitStartQuiz} >Start quiz</button>
             </div>
         )
 
@@ -40,7 +40,7 @@ class MenuButtons extends Component {
 
         const viewScore = (
             <div className="col text-center">
-                <button id="btnsuper" type="submit" className="btn btn-primary" onClick={this.onSubmitViewScore} >View Score</button>
+                <button id="btnsuper" type="submit" className="btn btn-primary" onClick={this.onSubmitViewScore} >View score</button>
             </div>
         )
 

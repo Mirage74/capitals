@@ -26,12 +26,15 @@ class ChooseLevel extends Component {
     render() {
         const { currSelectedValue } = this.state
         const {displayName} = this.props
+        const radioStyle = {
+            border: "dotted blue"
+          }
         const fUp = displayName.charAt(0).toUpperCase() + displayName.slice(1)
         return (
             <div>
                 <h3 className="text-left">{fUp}, please choose your level:</h3>
                 <br />
-                <RadioGroup className="text-left"
+                <RadioGroup className="text-left" style={radioStyle}
                     name="level"
                     selectedValue={currSelectedValue}
                     onChange={this.handleChange}>

@@ -6,6 +6,7 @@ import Login from './components/auth/Login'
 import Register from './components/auth/Register'
 import Quiz from './components/quiz'
 import StartQuiz from './components/layout/startQuiz'
+import ViewScore from './components/layout/viewScore'
 import './App.css';
 
 class App extends Component {
@@ -46,6 +47,10 @@ class App extends Component {
                   exact path="/StartQuiz"
                   render={(props) => <StartQuiz {...props}/>}
                 />
+                <Route
+                  exact path="/ViewScore"
+                  render={(props) => <ViewScore {...props}/>}
+                />                
               </Switch>
             </div>
           </div>

@@ -149,7 +149,7 @@ class Quiz extends Component {
             forRender = (
                 <div>
                     <Row>
-                        <Col float="center" md={{ span: 2, offset: 1 }} >
+                        <Col md={{ span: 2, offset: 1 }} >
                             <MenuButtons pressedButton={this.getMenuClickCB} />
                         </Col>
                         <Col md={{ span: 6, offset: 1 }}>

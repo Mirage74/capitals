@@ -177,7 +177,7 @@ class StartQuiz extends Component {
 
 
     render() {
-        const { redirectQuiz, currRand, timeForTurnInSec, timeForTurnInSecInitial, questFinished, resQuest, allTasks } = this.state
+        const { redirectQuiz, currRand, timeForTurnInSec, timeForTurnInSecInitial, resQuest, allTasks } = this.state
         const { user, cpts } = this.props
         let forRender, oneTask
 
@@ -195,17 +195,6 @@ class StartQuiz extends Component {
             forRender = (<div></div>)
         } else {
 
-            if (questFinished) {
-                this.setState({redirectQuiz: true})
-                // const list = resQuest.map(item =>
-                //     <li id="quest-res" className="text-center" key={uuid()}>
-                //         <h5>{item.numTask + 1}</h5>
-                //         <h5>{item.questionIndex}</h5>
-                //         <h5>{item.answerIndex}</h5>
-                //     </li>
-                // )
-                // forRender = <ul className="w-100 p-2 topContainer">{list}</ul>
-            } else {
                 const buttonConf = (
                     <input
                         type="submit"
@@ -256,7 +245,6 @@ class StartQuiz extends Component {
                     )
 
                 }
-            }
         }
         if (redirectQuiz || (user.displayName.length === 0)) {
             return <Redirect to={{
