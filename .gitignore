@@ -1,5 +1,5 @@
 node_modules/
-/src/photos/Original
-/src/photos/res
+src/photos/Original
+src/photos/res
 .idea/
 .eslintrc.json
