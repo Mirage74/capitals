@@ -23,7 +23,6 @@ class ScoreList extends Component {
 
 
     render() {
-        //const { stateLvl_0, stateLvl_1, stateLvl_2 } = this.state
         const { user, usersList } = this.props
         let stateLvl_0, stateLvl_1, stateLvl_2
 

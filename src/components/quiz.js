@@ -43,10 +43,9 @@ class Quiz extends Component {
 
     async componentDidMount() {
         this._isMounted = true
-        const { user, usersList, setUsersList } = this.props
-        if (typeof user === 'object' && user !== null && !this.isEmptyObject(user)) {
-            await setUsersList(usersList, 3)
-            //            console.log("quiz user", user)
+        const { user, setUser, setUsersList  } = this.props
+        if (typeof user === 'object' && user !== null && !this.isEmptyObject(user) ) {
+            await setUsersList(3)
             let dn = user.displayName
             if (dn.length === 0) {
                 dn = this.props.location.state.displayName
@@ -68,6 +67,8 @@ class Quiz extends Component {
             this.props.setUser({})
             if (this._isMounted) {
                 console.log("redirect login 2")
+                setUser("")
+                setUsersList(-1)                
                 this.setState({ redirectLogin: true })
             }
         }
@@ -94,10 +95,11 @@ class Quiz extends Component {
         }
         if ((dataFromChild === 4) && (this._isMounted)) {
             this.setState({ redirectLastQuiz: true })
-        }        
+        }
         if ((dataFromChild === 5) && (this._isMounted)) {
             this.setState({ redirectLogin: true })
             this.props.setUser("")
+            this.props.setUsersList(-1)
         }
         if ((dataFromChild === 6) && (this._isMounted)) {
             this.setState({ redirectAbout: true })
@@ -121,77 +123,88 @@ class Quiz extends Component {
     }
 
     render() {
-        const { user } = this.props
-        let forRender
-        if (user !== "Login failed") {
-            const { displayName } = this.props.user
-            if (this.state.redirectStartQuiz) {
-                let arr = this.getSource(this.state.radioButtonSelected)
-                this.props.setCountriesList(arr)
-                return <Redirect to={{
-                    pathname: 'StartQuiz',
-                    state: {
-                        levelValue: this.state.radioButtonSelected
-                    }
-                }}
-                />
-            }
+        const { user, usersList } = this.props
 
-            if (this.state.redirectViewCapitals) {
-                return <Redirect to='/ViewCapitals' />
-            }
 
-            if (this.state.redirectViewScore) {
-                return <Redirect to='/ViewScore' />
-            }
+        if (this.state.redirectViewCapitals) {
+            return <Redirect to='/ViewCapitals' />
+        }
 
-            if (this.state.redirectLastQuiz) {
-                return <Redirect to={{
-                  pathname: 'LastQuiz',
-                  state: {
+        if (this.state.redirectViewScore) {
+            return <Redirect to='/ViewScore' />
+        }
+
+        if (this.state.redirectLastQuiz) {
+            return <Redirect to={{
+                pathname: 'LastQuiz',
+                state: {
                     lvl: 0
-                  }
-                }}
-                />
-              }   
+                }
+            }}
+            />
+        }
 
 
-            if (this.state.redirectLogin) {
-                return <Redirect to='/Login' />
-            }
+        if (this.state.redirectLogin) {
+            return <Redirect to='/Login' />
+        }
 
-            if (this.state.redirectAbout) {
-                return <Redirect to={{
-                  pathname: 'About',
-                  state: {
+        if (this.state.redirectAbout) {
+            return <Redirect to={{
+                pathname: 'About',
+                state: {
                     isAuth: true
-                  }
-                }}
-                />
-              }            
+                }
+            }}
+            />
+        }
 
-            forRender = (
-                <div>
-                    <Row>
-                        <Col md={{ span: 2, offset: 1 }} >
-                            <MenuButtons pressedButton={this.getMenuClickCB} />
-                        </Col>
-                        <Col md={{ span: 6, offset: 1 }}>
-                            <ChooseLevel currButton={this.currRadioCB} displayName={displayName}/>
-                            <br />                            
-                            <ScoreList />
-                        </Col>
-                    </Row>
-                </div>
-            )
 
-        } else {
-            if (this.state.redirectLogin) {
-                return <Redirect to='/Login' />
+        let forRender
+        if (usersList && (usersList.length === 3)) {
+
+
+            if (user !== "Login failed") {
+                const { displayName } = this.props.user
+                if (this.state.redirectStartQuiz) {
+                    let arr = this.getSource(this.state.radioButtonSelected)
+                    this.props.setCountriesList(arr)
+                    return <Redirect to={{
+                        pathname: 'StartQuiz',
+                        state: {
+                            levelValue: this.state.radioButtonSelected
+                        }
+                    }}
+                    />
+                }
+
+
+
+                forRender = (
+                    <div>
+                        <Row>
+                            <Col md={{ span: 2, offset: 1 }} >
+                                <MenuButtons pressedButton={this.getMenuClickCB} />
+                            </Col>
+                            <Col md={{ span: 6, offset: 1 }}>
+                                <ChooseLevel currButton={this.currRadioCB} displayName={displayName} />
+                                <br />
+                                <ScoreList />
+                            </Col>
+                        </Row>
+                    </div>
+                )
+
+            } else {
+                if (this.state.redirectLogin) {
+                    return <Redirect to='/Login' />
+                }
+                forRender = (
+                    <div></div>
+                )
             }
-            forRender = (
-                <div></div>
-            )
+        } else {
+            forRender = (<></>)
         }
 
         return (
