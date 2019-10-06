@@ -5,7 +5,7 @@ import Register from './components/auth/Register'
 import Quiz from './components/quiz'
 import StartQuiz from './components/layout/startQuiz'
 import ViewScore from './components/layout/viewScore'
-import LastQuiz from './components/layout/lastQuiz'
+import LastQuiz from './components/layout/lastquiz'
 import About from './components/layout/about'
 import ViewCapitals from './components/layout/viewcapitals'
 import './App.css';

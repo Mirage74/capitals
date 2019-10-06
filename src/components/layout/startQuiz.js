@@ -25,6 +25,7 @@ class StartQuiz extends Component {
         currRand: -1,
         redirectLogin: false,
         redirectQuiz: false,
+        redirectLastQuiz: false,
         resQuest: [],
         questFinished: false
     }
@@ -85,7 +86,7 @@ class StartQuiz extends Component {
             })
 
 
-        this.setState({ redirectQuiz: true })
+        this.setState({ redirectLastQuiz: true })
 
 
     }
@@ -185,7 +186,19 @@ class StartQuiz extends Component {
     render() {
         const { redirectQuiz, currRand, timeForTurnInSec, timeForTurnInSecInitial, resQuest, allTasks } = this.state
         const { user, cpts } = this.props
+        const { levelValue } = this.props.location.state
         let forRender, oneTask
+
+        if (this.state.redirectLastQuiz) {
+            return <Redirect to={{
+              pathname: 'LastQuiz',
+              state: {
+                lvl: levelValue
+              }
+            }}
+            />
+          }   
+
 
         let currTask = resQuest.length + 1
         if (currTask > allTasks) {

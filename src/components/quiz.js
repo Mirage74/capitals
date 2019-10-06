@@ -149,8 +149,7 @@ class Quiz extends Component {
                 return <Redirect to={{
                   pathname: 'LastQuiz',
                   state: {
-                    user: user,
-                    lvl: -1
+                    lvl: 0
                   }
                 }}
                 />

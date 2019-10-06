@@ -158,7 +158,7 @@ class ViewScore extends Component {
                 {lvlNames}
                 {tableHB}
                 <br />
-                <Button onClick={this.handleBack}>Back</Button>                
+                <Button onClick={this.handleBack}>Back</Button>
             </div>
         )
 

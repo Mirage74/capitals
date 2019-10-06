@@ -12,6 +12,11 @@ class ChooseLevel extends Component {
 
     changeBorderColor = () => {
         this.setState({currRandHex: "#" + Math.floor(Math.random() * Math.floor(256 * 256 * 256)).toString(16)})
+        // let r, g, b
+        // r = Math.floor(Math.random() * Math.floor(256))
+        // g = Math.floor(Math.random() * Math.floor(256))
+        // b = ( 256 * 256 * r + 256 * g + Math.floor(Math.random() * Math.floor(256))).toString(16)
+        //this.setState({currRandHex: "#" + b})
     }
 
     componentDidMount() {
@@ -34,9 +39,8 @@ class ChooseLevel extends Component {
         const { currSelectedValue, currRandHex } = this.state
         const {displayName} = this.props
 
-        //console.log("currRand", currRandHex)
         const radioStyle = {
-            border: `dotted ${currRandHex}`
+            border: `dotted 7px ${currRandHex}`
           }
         const fUp = displayName.charAt(0).toUpperCase() + displayName.slice(1)
         return (

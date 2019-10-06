@@ -45,4 +45,36 @@ li {
 }
 
 
+.radio-myfont {
+    font-size: 1.5rem;
+}
+
+
+input[type="radio"]{
+  margin: 0 10px 0 10px;
+}
+
+.row-last-quiz-green {
+    background-color: #d9e4d4;
+    border: solid 1px #000000;
+    font-size: 1.5rem
+}
+
+.row-last-quiz-yellow {
+    background-color: #eedc82;
+    border: solid 1px #000000;
+    font-size: 1.5rem
+}
+
+.row-last-quiz-red {
+    background-color: #e08d3c;
+    border: solid 1px #000000;
+    font-size: 1.5rem
+}
+
+.row-last-quiz-red-2 {
+    background-color: #f75442;
+    border: solid 1px #000000;
+    font-size: 1.5rem
+}
 
