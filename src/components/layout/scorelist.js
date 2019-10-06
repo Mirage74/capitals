@@ -27,6 +27,10 @@ class ScoreList extends Component {
         const { user, usersList } = this.props
         let stateLvl_0, stateLvl_1, stateLvl_2
 
+        console.log("user", user)
+        console.log("user.lastRes", user.lastRes)
+        console.log("usersList", usersList)
+        console.log("usersList[0]", usersList[0])
         let tmpAr
         tmpAr = usersList[0].sort(this.compare)
         if (tmpAr.length > 5) {
