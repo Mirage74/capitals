@@ -30,8 +30,10 @@ class About extends Component {
       <div>
         <br /><br /><br />
         <h5 className="display-6">Hello ! This app is written using React-Redux, Koa, MongoDB.</h5>
-        <h5 className="display-6">Source code:</h5>
-        <a href="https://github.com/Mirage74/capitals">code on "Github"</a>
+        <h5 className="display-6">Source code Front-End:</h5>
+        <a href="https://github.com/Mirage74/capitals">Front-end on "Github"</a>
+        <h5 className="display-6">Source code Back-End:</h5>
+        <a href="https://github.com/Mirage74/capitals-server">Back-end on "Github"</a>
         <br /><br /><br />
         <h5 className="display-6">The United Nations member states are the 193 sovereign states, so 193 countries available in this quiz:</h5>
         <a href="https://en.wikipedia.org/wiki/Member_states_of_the_United_Nations">UN members</a>

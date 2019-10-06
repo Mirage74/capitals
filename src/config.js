@@ -1,6 +1,6 @@
 module.exports  = {
-//backendPath = 'https://koa-jwt.herokuapp.com/'
-  backendPath : 'http://localhost:4000/',
+backendPath : 'https://koa-auth-cpt.herokuapp.com/',
+//  backendPath : 'http://localhost:4000/',
   KEY_PERSIST_STORE : 'capitals-web-app',
   allCapitals : 193,
   TIME_PER_TURN_EASY : 20,

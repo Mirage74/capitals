@@ -1,4 +1,5 @@
 node_modules/
+koa-auth/
 Original
 res
 .idea/
