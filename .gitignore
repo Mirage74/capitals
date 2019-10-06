@@ -1,6 +1,7 @@
 node_modules/
 koa-auth/
-Original
-res
+src/photos/Original
+src/photos/res
 .idea/
 .eslintrc.json
+.travis.jml
