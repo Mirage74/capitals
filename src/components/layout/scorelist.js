@@ -21,34 +21,32 @@ class ScoreList extends Component {
         return 0;
     }
 
-    componentDidMount() {
-        const { usersList } = this.props
-        let tmpAr
 
+    render() {
+        //const { stateLvl_0, stateLvl_1, stateLvl_2 } = this.state
+        const { user, usersList } = this.props
+        let stateLvl_0, stateLvl_1, stateLvl_2
+
+        let tmpAr
         tmpAr = usersList[0].sort(this.compare)
         if (tmpAr.length > 5) {
             tmpAr = tmpAr.slice(0, 5)
         }
-
-        this.setState({ stateLvl_0: tmpAr })
+        stateLvl_0 = [...tmpAr]
 
         tmpAr = usersList[1].sort(this.compare)
         if (tmpAr.length > 5) {
             tmpAr = tmpAr.slice(0, 5)
         }
-        this.setState({ stateLvl_1: tmpAr })
+        stateLvl_1 = [...tmpAr]
 
         tmpAr = usersList[2].sort(this.compare)
         if (tmpAr.length > 5) {
             tmpAr = tmpAr.slice(0, 5)
         }
-        this.setState({ stateLvl_2: tmpAr })
+        stateLvl_2 = [...tmpAr]
 
-    }
 
-    render() {
-        const { stateLvl_0, stateLvl_1, stateLvl_2 } = this.state
-        const { user } = this.props
 
         let arrScore = []
         let oneRec = []

@@ -9,7 +9,8 @@ import axios from 'axios'
 import { connect } from 'react-redux'
 import { getCapitals } from '../../actions/list-cpt/action'
 import { setUser } from '../../actions/auth/action'
-import { Log_Refresh_In_Seconds, backendPath } from '../../config'
+import Button from 'react-bootstrap/Button'
+import { Log_Refresh_In_Seconds, backendPath, ABOUT_LOGIN_VARIANT_CHANGE_IN_SEC } from '../../config'
 
 
 class Login extends Component {
@@ -18,7 +19,10 @@ class Login extends Component {
     displayName: '',
     password: '',
     redirectReg: false,
-    redirectQuiz: false
+    redirectQuiz: false,
+    redirectAbout: false,
+    randomButton1: 0,
+    randomButton2: 1
   }
 
 
@@ -27,18 +31,30 @@ class Login extends Component {
   handleRegClick = e => {
     if (this._isMounted) {
       this.setState({ redirectReg: true })
-      //console.log("this.setState({ redirectReg: true })")
     }
   }
 
+  handleAbout = e => {
+    e.preventDefault()
+    if (this._isMounted) {
+      this.setState({ redirectAbout: true })
+    }
+  }
+
+  setRandomButton = () => {
+    this.setState({ randomButton1: Math.floor(Math.random() * Math.floor(9)) })
+    this.setState({ randomButton2: Math.floor(Math.random() * Math.floor(9)) })
+  }
 
   componentDidMount() {
-    this._isMounted = true    
+    this._isMounted = true
     this.timerID = setInterval(this.props.getCapitals, 1000 * Log_Refresh_In_Seconds)
+    this.timerAbout = setInterval(this.setRandomButton, 1000 * ABOUT_LOGIN_VARIANT_CHANGE_IN_SEC)
   }
 
   componentWillUnmount() {
     clearInterval(this.timerID)
+    clearInterval(this.timerAbout)
     this._isMounted = false
   }
 
@@ -80,14 +96,23 @@ class Login extends Component {
 
   render() {
     const { capitals, user } = this.props
-    const { redirectReg, redirectQuiz } = this.state
+    const { redirectReg, redirectQuiz, redirectAbout } = this.state
     if (redirectReg) {
       return <Redirect to='/Register' />
     }
 
-    //if (redirectQuiz || ( (user !== "Login failed") && (user !== ""))) {
+
+    if (redirectAbout) {
+      return <Redirect to={{
+        pathname: 'About',
+        state: {
+          isAuth: false
+        }
+      }}
+      />
+    }
+
     if (redirectQuiz || (typeof user === 'object' && user !== null && !this.isEmptyObject(user))) {
-      //console.log("login this.state.displayName ", this.state.displayName)
       return <Redirect to={{
         pathname: 'Quiz',
         state: {
@@ -146,7 +171,7 @@ class Login extends Component {
         <div className="card-body">
           <h1 className="text-center pb-4 pt-3">
             <button type="submit" className="btn btn-primary" onClick={this.handleRegClick}>Register</button>
-            <span className="text-primary">
+            <span className="text-primary"> <i></i>
               <i className="fas fa-lock" /> <i><font size="5"> or</font></i> Login
                 </span>
           </h1>
@@ -183,6 +208,33 @@ class Login extends Component {
       </div>
     )
 
+    const buttonAbout = (num) => {
+      switch (num) {
+        case 0:
+          return <Button variant="primary" size="lg" onClick={this.handleAbout}>ABOUT</Button>
+        case 1:
+          return <Button variant="Secondary" size="lg" onClick={this.handleAbout}>ABOUT</Button>
+        case 2:
+          return <Button variant="Success" size="lg" onClick={this.handleAbout}>ABOUT</Button>
+        case 3:
+          return <Button variant="Warning" size="lg" onClick={this.handleAbout}>ABOUT</Button>
+        case 4:
+          return <Button variant="Danger" size="lg" onClick={this.handleAbout}>ABOUT</Button>
+        case 5:
+          return <Button variant="Info" size="lg" onClick={this.handleAbout}>ABOUT</Button>
+        case 6:
+          return <Button variant="light" size="lg" onClick={this.handleAbout}>ABOUT</Button>
+        case 7:
+          return <Button variant="dark" size="lg" onClick={this.handleAbout}>ABOUT</Button>
+        case 8:
+          return <Button variant="link" size="lg" onClick={this.handleAbout}>ABOUT</Button>
+        default:
+          return <Button variant="primary" size="lg" onClick={this.handleAbout}>ABOUT</Button>
+      }
+    }
+
+    const currButtonAbout1 = buttonAbout(this.state.randomButton1)
+    const currButtonAbout2 = buttonAbout(this.state.randomButton2)
 
     const resolutionBig = (
       <div className="gridmenu">
@@ -193,8 +245,10 @@ class Login extends Component {
         <div className="Top5 justify-content-center align-self-center">{Card_4}</div>
         <div className="Top6 justify-content-center align-self-center">{Card_5}</div>
         <div className="Top7 justify-content-center align-self-center">{Card_6}</div>
-        <div className="Left  justify-content-center align-self-center">{Card_7}</div>
+        <div className="Left justify-content-center align-self-center">{Card_7}</div>
+        <div className="About1 justify-content-center align-self-center">{currButtonAbout1}</div>
         <div className="Empty"></div>
+        <div className="About2 justify-content-center align-self-center">{currButtonAbout2}</div>
         <div className="Right  justify-content-center align-self-center">{Card_8}</div>
         <div className="Bot1  justify-content-center align-self-center">{Card_9}</div>
         <div className="Bot2  justify-content-center align-self-center">{Card_10}</div>
@@ -257,7 +311,6 @@ class Login extends Component {
 
     return (
       <div>
-
         <Media query="(max-height: 700px)">
           {
             matches => matches ? (

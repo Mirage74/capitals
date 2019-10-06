@@ -26,7 +26,9 @@ class Quiz extends Component {
         redirectStartQuiz: false,
         redirectViewCapitals: false,
         redirectViewScore: false,
+        redirectLastQuiz: false,
         redirectLogin: false,
+        redirectAbout: false,
         radioButtonSelected: -1,
         errors: {}
     }
@@ -91,10 +93,16 @@ class Quiz extends Component {
             this.setState({ redirectViewScore: true })
         }
         if ((dataFromChild === 4) && (this._isMounted)) {
-            //console.log("redirect login 3")            
+            this.setState({ redirectLastQuiz: true })
+        }        
+        if ((dataFromChild === 5) && (this._isMounted)) {
             this.setState({ redirectLogin: true })
             this.props.setUser("")
         }
+        if ((dataFromChild === 6) && (this._isMounted)) {
+            this.setState({ redirectAbout: true })
+        }
+
     }
 
     getSource = (lvl) => {
@@ -137,10 +145,31 @@ class Quiz extends Component {
                 return <Redirect to='/ViewScore' />
             }
 
+            if (this.state.redirectLastQuiz) {
+                return <Redirect to={{
+                  pathname: 'LastQuiz',
+                  state: {
+                    user: user,
+                    lvl: -1
+                  }
+                }}
+                />
+              }   
+
+
             if (this.state.redirectLogin) {
                 return <Redirect to='/Login' />
             }
 
+            if (this.state.redirectAbout) {
+                return <Redirect to={{
+                  pathname: 'About',
+                  state: {
+                    isAuth: true
+                  }
+                }}
+                />
+              }            
 
             forRender = (
                 <div>

@@ -17,10 +17,21 @@ class MenuButtons extends Component {
         this.props.pressedButton(3)
     }
 
-    onSubmitLogout = e => {
+    onSubmitLastQuiz = e => {
         e.preventDefault()
         this.props.pressedButton(4)
     }
+
+    onSubmitLogout = e => {
+        e.preventDefault()
+        this.props.pressedButton(5)
+    }
+
+    onSubmitAbout = e => {
+        e.preventDefault()
+        this.props.pressedButton(6)
+    }
+   
 
     render() {
                
@@ -44,11 +55,23 @@ class MenuButtons extends Component {
             </div>
         )
 
+        const userLastQuiz = (
+            <div className="col text-center">
+                <button id="btnsuper" type="submit" className="btn btn-primary" onClick={this.onSubmitLastQuiz} >Your last quiz</button>
+            </div>
+        )        
+
         const logout = (
             <div className="col text-center">
                 <button id="btnsuper" type="submit" className="btn btn-primary" onClick={this.onSubmitLogout} >Logout</button>
             </div>
         )
+
+        const about = (
+            <div className="col text-center">
+                <button id="btnsuper" type="submit" className="btn btn-primary" onClick={this.onSubmitAbout} >About</button>
+            </div>
+        )        
 
 
         menuBut = (
@@ -56,7 +79,9 @@ class MenuButtons extends Component {
                 {startQuiz}
                 {viewCapitals}
                 {viewScore}
+                {userLastQuiz}
                 {logout}
+                {about}
             </div>
         )
 

@@ -51,14 +51,14 @@ class StartQuiz extends Component {
         }
     }
 
-    
-    finishQuiz = (newRes, levelValue) => {
+
+    finishQuiz = async (newRes, levelValue) => {
         const { user, updUser, setUser } = this.props
         let userScore = calcScore(newRes)
         if (userScore < user.bestScore[levelValue]) {
             userScore = user.bestScore[levelValue]
         }
-        console.log("userScore", userScore)
+        //console.log("userScore", userScore)
 
         let tmpLastRes = [...user.lastRes]
         tmpLastRes[levelValue] = newRes
@@ -73,17 +73,21 @@ class StartQuiz extends Component {
 
         let updatedUserRedux = updatedUser
         updatedUserRedux._id = user._id
-        updUser(updatedUser)
-            .then(res => {
-                setUser(updatedUserRedux)
-                    .then(res => {
-                        this.setState({ questFinished: true })
-                        //setCountriesList([])
-                    })
-            })
+        await updUser(updatedUser)
             .catch(err => {
                 console.log("Error update user, component startQuiz", err)
             })
+        //console.log("updated: ", res)
+
+        await setUser(updatedUserRedux)
+            .catch(err => {
+                console.log("Error setUser, component startQuiz", err)
+            })
+
+
+        this.setState({ redirectQuiz: true })
+
+
     }
 
     nextTask = () => {
@@ -100,12 +104,15 @@ class StartQuiz extends Component {
         const newCpts = [...cpts]
         newCpts.splice(currRand, 1)
         cutCountriesList(newCpts)
+        // console.log("newRes.length", newRes.length)
+        // console.log("allTasks", allTasks)
         if (newRes.length < allTasks) {
             this.setState({ radioButtonSelected: -1 })
             let currRand = Math.floor(Math.random() * Math.floor(newCpts.length))
             this.setState({ currRand: currRand })
             this.setState({ timeForTurnInSec: this.state.timeForTurnInSecInitial })
         } else {
+            this.setState({ questFinished: true })
             this.finishQuiz(newRes, levelValue)
         }
     }
@@ -115,25 +122,24 @@ class StartQuiz extends Component {
         this.setState({ indexSelected: -1 })
         if (!questFinished) {
             this.nextTask()
-        } else {
-            this.setState({ redirectQuiz: true })
-        }
+        } 
     }
 
 
     handleConfClick = e => {
         e.preventDefault()
         const { questFinished, radioButtonSelected } = this.state
-        if ((!questFinished) && (parseInt(radioButtonSelected) > -1)) {
-            this.nextTask()
-        } else {
-            this.setState({ redirectQuiz: true })
+        //console.log("radioButtonSelected", radioButtonSelected)
+        if (parseInt(radioButtonSelected) > -1) {
+            if (!questFinished)  {
+                this.nextTask()
+            }
         }
     }
 
     handleCancel = e => {
         e.preventDefault()
-        this.setState({redirectQuiz: true})
+        this.setState({ redirectQuiz: true })
     }
 
 
@@ -195,56 +201,56 @@ class StartQuiz extends Component {
             forRender = (<div></div>)
         } else {
 
-                const buttonConf = (
-                    <input
-                        type="submit"
-                        value="Confirm"
-                        className="btn btn-primary"
-                        onClick={this.handleConfClick}
-                    />
-                )
-                if (redirectQuiz || (user.displayName.length === 0)) {
-                    return <Redirect to={{
-                        pathname: 'Quiz',
-                        state: {
-                        }
-                    }}
-                    />
+            const buttonConf = (
+                <input
+                    type="submit"
+                    value="Confirm"
+                    className="btn btn-primary"
+                    onClick={this.handleConfClick}
+                />
+            )
+            if (redirectQuiz || (user.displayName.length === 0)) {
+                return <Redirect to={{
+                    pathname: 'Quiz',
+                    state: {
+                    }
+                }}
+                />
+            }
+
+
+            if (!this.isEmptyObj(cpts)) {
+                if (currRand > -1) {
+                    oneTask = <OneTask index={currRand} currButton={this.currRadioCB} correctAnswer={this.currCorrectAnswerCB} timeForTurnInSec={timeForTurnInSec} indexSelected={this.currIndexSelectedCB} />
+                } else {
+                    oneTask = <div></div>
                 }
 
-
-                if (!this.isEmptyObj(cpts)) {
-                    if (currRand > -1) {
-                        oneTask = <OneTask index={currRand} currButton={this.currRadioCB} correctAnswer={this.currCorrectAnswerCB} timeForTurnInSec={timeForTurnInSec} indexSelected={this.currIndexSelectedCB} />
-                    } else {
-                        oneTask = <div></div>
-                    }
-
-                    forRender = (
-                        <div>
-                            <div className="container">
-                                <div className="row">
-                                    <div className="col">
-                                        <h1 className="text-center">Hello, {user.displayName} !</h1>
-                                        <Row>
-                                            <Col md={{ span: 2, offset: 8 }}>
-                                                {buttonConf}
-                                            </Col>
-                                            <Col>
-                                                <Countdown timeForTurnInSec={timeForTurnInSecInitial} timeOutCB={this.timeOutCB} index={currRand} />
-                                                {currTaskNum}
-                                            </Col>
-                                        </Row>
-                                        {oneTask}
-                                        <br/><br/><br/>
-                                        <Button variant="danger" onClick={this.handleCancel}>Cancel</Button>
-                                    </div>
+                forRender = (
+                    <div>
+                        <div className="container">
+                            <div className="row">
+                                <div className="col">
+                                    <h1 className="text-center">Hello, {user.displayName} !</h1>
+                                    <Row>
+                                        <Col md={{ span: 2, offset: 8 }}>
+                                            {buttonConf}
+                                        </Col>
+                                        <Col>
+                                            <Countdown timeForTurnInSec={timeForTurnInSecInitial} timeOutCB={this.timeOutCB} index={currRand} />
+                                            {currTaskNum}
+                                        </Col>
+                                    </Row>
+                                    {oneTask}
+                                    <br /><br /><br />
+                                    <Button variant="danger" onClick={this.handleCancel}>Cancel</Button>
                                 </div>
                             </div>
                         </div>
-                    )
+                    </div>
+                )
 
-                }
+            }
         }
         if (redirectQuiz || (user.displayName.length === 0)) {
             return <Redirect to={{
@@ -271,3 +277,4 @@ const mapStateToProps = (state) => ({
 
 
 export default connect(mapStateToProps, { setUser, updUser, cutCountriesList })(StartQuiz)
+

@@ -17,8 +17,7 @@ class ViewCapitals extends Component {
         currSelectedRadio: "0",
         sortByCountry_0_Capital_1: 0,
         arrMain: [],
-        arrMainSorted: [],
-        cardArr: []
+        arrMainSorted: []
     }
 
     handleBack = e => {
@@ -87,7 +86,7 @@ class ViewCapitals extends Component {
         } else {
             arrSorted = [...arrTmp.sort(this.compareCapital)]
         }
-        this.setState({ arrMainSorted: arrSorted })
+        
 
         let cptsIndexArr = []
         for (let i = 0; i < allCapitals; i++) {
@@ -95,7 +94,11 @@ class ViewCapitals extends Component {
         }
         //console.log("cptsIndexArr", cptsIndexArr)
         const cardArr = this.createCards(cptsIndexArr)
-        this.setState({ cardArr: cardArr })
+        for (let i= 0; i < allCapitals; i++) {
+            arrSorted[i].card = cardArr[i]
+        }
+        this.setState({ arrMainSorted: arrSorted })        
+
     }
 
     handleChange = (value) => {
@@ -113,7 +116,7 @@ class ViewCapitals extends Component {
     }
 
     render() {
-        const { redirectQuiz, arrMainSorted, cardArr, expended, sortByCountry_0_Capital_1, currSelectedRadio } = this.state
+        const { redirectQuiz, arrMainSorted, expended, sortByCountry_0_Capital_1, currSelectedRadio } = this.state
         //console.log("render arrMainSorted", arrMainSorted)
         //console.log("arrMainSorted", arrMainSorted)
         if (redirectQuiz) {
@@ -182,16 +185,9 @@ class ViewCapitals extends Component {
                 let arrRow = []
                 let oneRow
                 let tempArr
-                let tempCardArr
                 for (let i = 0; i < rowsNum + 1; i++) {
                     tempArr = [...arrMainSorted]
                     tempArr = tempArr.splice(3 * i, 3)
-                    tempCardArr = [...cardArr]
-                    tempCardArr = tempCardArr.splice(3 * i, 3)
-                    for (let i = 0; i < tempArr.length; i++) {
-                        tempArr[i].card = tempCardArr[i]
-                    }
-                    //console.log("tempArr", tempArr)
                     if (sortByCountry_0_Capital_1 === 0) {
                         oneRow = tempArr.map(item =>
                             <React.Fragment key={item.index}>

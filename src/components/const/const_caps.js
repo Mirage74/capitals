@@ -252,7 +252,7 @@ const countriesNames = ["Afghanistan", "Albania", "Algeria", "Andorra", "Angola"
                         "Senegal", "Serbia", "Seychelles", "Sierra Leone", "Singapore", "Slovakia", "Slovenia", "Solomon Islands", "Somalia", "South Africa",
                         "South Korea", "South Sudan", "Spain", "Sri_Lanka", "Sudan", "Suriname", "Sweden", "Switzerland", "Syria", "Tajikistan",
                         "Tanzania", "Thailand", "Timor-Leste", "Togo", "Tonga", "Trinidad and Tobago", "Tunisia", "Turkey", "Turkmenistan", "Tuvalu",
-                        "United Arab Emirates", "Uganda", "Ukraine", "United_Kingdom", "Uruguay", "USA", "Uzbekistan", "Vanuatu", "Venezuela", "Vietnam",
+                        "United Arab Emirates", "Uganda", "Ukraine", "United Kingdom", "Uruguay", "USA", "Uzbekistan", "Vanuatu", "Venezuela", "Vietnam",
                         "Yemen", "Zambia", "Zimbabwe"]
 
 const level = [0, 1, 1, 0, 1, 2, 0, 0, 0, 0,
