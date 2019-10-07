@@ -9,6 +9,7 @@ import uuid from 'uuid'
 import * as data from '../const/const_caps'
 import { RadioGroup, Radio } from 'react-radio-group'
 import { checkAuth } from './viewax/axfview'
+import { ALL_TASKS_EASY, ALL_TASKS_MIDDLE, ALL_TASKS_HARD } from "../../config"
 
 class LastQuiz extends Component {
     state = {
@@ -186,7 +187,19 @@ class LastQuiz extends Component {
                     </label>
                 </RadioGroup>
             )
-            let strRes = ` last result: (${rigthArr.length}/${user.lastRes[currSelectedRadio].length})`
+
+            let strTasks
+            if (currSelectedRadio === "0") {
+                strTasks = ALL_TASKS_EASY
+            }
+            if (currSelectedRadio === "1") {
+                strTasks = ALL_TASKS_MIDDLE
+            }
+            if (currSelectedRadio === "2") {
+                strTasks = ALL_TASKS_HARD
+            }                        
+
+            let strRes = ` last result: (${rigthArr.length}/${strTasks})`
 
             forRender = (<>
                 <Row>

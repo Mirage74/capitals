@@ -14,5 +14,6 @@ backendPath : 'https://koa-auth-cpt.herokuapp.com/',
   ALL_TASKS_EASY : 20,
   ALL_TASKS_MIDDLE : 30,
   ALL_TASKS_HARD : 50,
-  ALL_ANSWERS : 5
+  ALL_ANSWERS : 5,
+  DEBUG_MODE : true
 }

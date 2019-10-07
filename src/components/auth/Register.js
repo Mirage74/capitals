@@ -40,7 +40,8 @@ class Register extends Component {
       "displayName": displayName,
       "password": password,
       "bestScore": [0, 0, 0],
-      "lastRes": [{}, {}, {}]
+      "lastRes": [{}, {}, {}],
+      "debuginfo": []
     })
       .then(res => {
         let strExist = "" + res.data

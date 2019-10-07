@@ -1,12 +1,12 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { allCapitals, ALL_ANSWERS } from "../../config"
+import { allCapitals, ALL_ANSWERS, DEBUG_MODE, backendPath } from "../../config"
 import * as data from '../const/const_caps'
 import uuid from 'uuid'
 import { getImageName } from "../../axfunc"
+import axios from 'axios'
 import { RadioGroup, Radio } from 'react-radio-group'
 import "../quiz.css"
-
 
 
 class OneTask extends Component {
@@ -76,9 +76,22 @@ class OneTask extends Component {
     this.setState({ cardArr: cardArr })
   }
 
-  componentDidUpdate(prevProps) {
-    if (this.props.index !==prevProps.index) {
-      const { index, cpts, correctAnswer } = this.props
+  updUserDebug = async (user) => {
+    const configAx = {
+      method: 'put',
+      data: user
+    }
+    const res = await axios.put(backendPath + `${user.displayName}`, configAx)
+      .catch(err => {
+        console.log("error updating user debug : ", err)
+      })
+    return res.data
+  }
+
+
+  async componentDidUpdate(prevProps) {
+    if (this.props.index !== prevProps.index) {
+      const { index, cpts, correctAnswer, user } = this.props
       let randInt
       let oneRec
       let newCpts = [...cpts]
@@ -94,14 +107,55 @@ class OneTask extends Component {
         randArr.push(oneRec)
         newCpts.splice(randInt, 1)
       }
+
+      if (DEBUG_MODE) {
+        console.log("user.debuginfo", user.debuginfo)
+        let dInfo = [...user.debuginfo]
+        let oneTask = []
+        let oneRecDebug = {}
+        oneRecDebug.info = "before"
+        oneRecDebug.randInt = randArr
+        oneRecDebug.oneRec = oneRec
+        oneRecDebug.cpts = cpts
+        oneRecDebug.newCpts = newCpts
+        //console.log("oneRecDebug", oneRecDebug)
+        oneTask.push(oneRecDebug)
+        //console.log("oneTask", oneTask)
+        dInfo.push(oneTask)
+        //console.log("dInfo", dInfo)
+        let updatedUser = {
+          displayName: user.displayName,
+          debuginfo: dInfo
+        }
+        await this.updUserDebug(updatedUser)
+      }
+
       oneRec = cpts[index]
       oneRec.index = this.countryNameToIndex(oneRec.countryName)
       randArr.splice(mainCptRandIndex, 0, oneRec)
       this.setState({ randArr: randArr })
-  
+
+      if (DEBUG_MODE) {
+        let dInfo = [...user.debuginfo]
+        let oneTask = []
+        let oneRecDebug = {}
+        oneRecDebug.info = "after"
+        oneRecDebug.randInt = randArr
+        oneRecDebug.oneRec = oneRec
+        oneRecDebug.cpts = cpts
+        oneRecDebug.newCpts = newCpts
+        oneTask.push(oneRecDebug)
+        dInfo.push(oneTask)
+        let updatedUser = {
+          displayName: user.displayName,
+          debuginfo: dInfo
+        }
+        await this.updUserDebug(updatedUser)
+      }
+
       cardArr = this.createCards(randArr)
-      this.setState({ cardArr: cardArr })      
-      this.setState({currSelectedValue: -1})
+      this.setState({ cardArr: cardArr })
+      this.setState({ currSelectedValue: -1 })
     }
 
   }
@@ -111,15 +165,15 @@ class OneTask extends Component {
     this.props.currButton(value)
     this.props.indexSelected(this.state.randArr[parseInt(value)].index)
   }
-  
-  
+
+
   render() {
-    const { index, cpts  } = this.props
+    const { index, cpts } = this.props
     const { currSelectedValue, randArr, cardArr } = this.state
 
     const task = (
       <div className="row">
-        
+
         <h1 id="caps-question" className="w-100 p-2 topContainer" >Please choose the capital of {cpts[index].countryName}:</h1>
 
       </div>
@@ -156,7 +210,7 @@ class OneTask extends Component {
     )
 
     const pics = cardArr.map(item =>
-      <li id="capName-answer"  key={uuid()}>
+      <li id="capName-answer" key={uuid()}>
         {item}
       </li>
     )
@@ -177,6 +231,7 @@ class OneTask extends Component {
 }
 
 const mapStateToProps = (state) => ({
+  user: state.auth.currUser,  
   cpts: state.listCapitals.currCountriesList
 })
 
