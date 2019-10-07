@@ -185,7 +185,7 @@ class StartQuiz extends Component {
 
 
     render() {
-        const { redirectQuiz, currRand, timeForTurnInSec, timeForTurnInSecInitial, resQuest, allTasks } = this.state
+        const { redirectQuiz, currRand, timeForTurnInSec, timeForTurnInSecInitial, resQuest, allTasks, questFinished } = this.state
         const { user, usersList, cpts } = this.props
 
         if (!checkAuth(user, usersList))  {
@@ -207,7 +207,6 @@ class StartQuiz extends Component {
           }   
 
 
-
         let currTask = resQuest.length + 1
         if (currTask > allTasks) {
             currTask = allTasks
@@ -218,7 +217,7 @@ class StartQuiz extends Component {
             </div>
         )
 
-        if (this.isEmptyObj(cpts) || (cpts.length === 0)) {
+        if ( this.isEmptyObj(cpts) || (cpts.length === 0) || questFinished  ) {
             forRender = (<div></div>)
         } else {
 
