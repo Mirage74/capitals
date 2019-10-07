@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { Redirect } from "react-router-dom"
 import uuid from 'uuid'
 import * as data from '../const/const_caps'
+import { connect } from 'react-redux'
 import { getImageName } from "../../axfunc"
 import { headersTableFirstCountry, headersTableFirstCapital } from './viewax/axfview'
 import Col from 'react-bootstrap/Col'
@@ -9,6 +10,7 @@ import Button from 'react-bootstrap/Button'
 import Table from 'react-bootstrap/Table'
 import { allCapitals } from "../../config"
 import { RadioGroup, Radio } from 'react-radio-group'
+import {checkAuth} from './viewax/axfview'
 
 class ViewCapitals extends Component {
     state = {
@@ -117,8 +119,13 @@ class ViewCapitals extends Component {
 
     render() {
         const { redirectQuiz, arrMainSorted, expended, sortByCountry_0_Capital_1, currSelectedRadio } = this.state
-        //console.log("render arrMainSorted", arrMainSorted)
-        //console.log("arrMainSorted", arrMainSorted)
+        const {user, usersList} = this.props
+    
+        if (!checkAuth(user, usersList))  {
+          return <Redirect to='/Login' />
+        }
+    
+
         if (redirectQuiz) {
             return <Redirect to={{
                 pathname: 'Quiz',
@@ -282,4 +289,10 @@ class ViewCapitals extends Component {
 }
 
 
-export default ViewCapitals
+const mapStateToProps = (state) => ({
+    user: state.auth.currUser,
+    usersList: state.listCapitals.currUserList
+  })
+  
+  export default connect(mapStateToProps)(ViewCapitals)
+

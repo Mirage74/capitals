@@ -4,6 +4,7 @@ import { Redirect } from "react-router-dom"
 import OneTask from "./oneTask"
 import "../quiz.css"
 import { calcScore, countryNameToIndex } from './Start/axf'
+import {checkAuth} from './viewax/axfview'
 import Countdown from './stopwatch'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
@@ -185,9 +186,15 @@ class StartQuiz extends Component {
 
     render() {
         const { redirectQuiz, currRand, timeForTurnInSec, timeForTurnInSecInitial, resQuest, allTasks } = this.state
-        const { user, cpts } = this.props
+        const { user, usersList, cpts } = this.props
+
+        if (!checkAuth(user, usersList))  {
+            return <Redirect to='/Login' />
+        }
+
         const { levelValue } = this.props.location.state
         let forRender, oneTask
+
 
         if (this.state.redirectLastQuiz) {
             return <Redirect to={{
@@ -198,6 +205,7 @@ class StartQuiz extends Component {
             }}
             />
           }   
+
 
 
         let currTask = resQuest.length + 1
@@ -284,7 +292,8 @@ class StartQuiz extends Component {
 
 const mapStateToProps = (state) => ({
     cpts: state.listCapitals.currCountriesList,
-    user: state.auth.currUser
+    user: state.auth.currUser,
+    usersList: state.listCapitals.currUserList    
 })
 
 

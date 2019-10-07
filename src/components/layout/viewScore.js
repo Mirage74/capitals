@@ -1,12 +1,13 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Redirect } from "react-router-dom"
-import {lvlNames} from './viewax/axfview'
+import { lvlNames } from './viewax/axfview'
 import uuid from 'uuid'
 //import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import Button from 'react-bootstrap/Button'
 import Table from 'react-bootstrap/Table'
+import { checkAuth } from './viewax/axfview'
 
 class ViewScore extends Component {
     state = {
@@ -18,8 +19,8 @@ class ViewScore extends Component {
 
     handleBack = e => {
         e.preventDefault()
-        this.setState({redirectQuiz: true})
-    }    
+        this.setState({ redirectQuiz: true })
+    }
 
     compare(a, b) {
         if (a[2] < b[2]) {
@@ -32,23 +33,28 @@ class ViewScore extends Component {
     }
 
     componentDidMount() {
-        const { usersList } = this.props
-        let tmpAr
+        const { user, usersList } = this.props
+        if (checkAuth(user, usersList)) {
+            let tmpAr
 
-        tmpAr = usersList[0].sort(this.compare)
+            tmpAr = usersList[0].sort(this.compare)
+            this.setState({ stateLvl_0: tmpAr })
 
-        this.setState({ stateLvl_0: tmpAr })
+            tmpAr = usersList[1].sort(this.compare)
+            this.setState({ stateLvl_1: tmpAr })
 
-        tmpAr = usersList[1].sort(this.compare)
-        this.setState({ stateLvl_1: tmpAr })
-
-        tmpAr = usersList[2].sort(this.compare)
-        this.setState({ stateLvl_2: tmpAr })
-
+            tmpAr = usersList[2].sort(this.compare)
+            this.setState({ stateLvl_2: tmpAr })
+        }
     }
 
     render() {
         const { stateLvl_0, stateLvl_1, stateLvl_2, redirectQuiz } = this.state
+        const { user, usersList } = this.props
+
+        if (!checkAuth(user, usersList)) {
+            return <Redirect to='/Login' />
+        }
 
         if (redirectQuiz) {
             return <Redirect to={{
@@ -57,7 +63,7 @@ class ViewScore extends Component {
                 }
             }}
             />
-        }        
+        }
 
         let arrScore = []
         let oneRec = []
@@ -166,6 +172,7 @@ class ViewScore extends Component {
 }
 
 const mapStateToProps = (state) => ({
+    user: state.auth.currUser,
     usersList: state.listCapitals.currUserList
 })
 

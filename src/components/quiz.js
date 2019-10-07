@@ -10,7 +10,7 @@ import ScoreList from "./layout/scorelist"
 import ChooseLevel from "./layout/chooseLevel"
 import { Redirect } from "react-router-dom"
 import * as data from './const/const_caps'
-import { getImageName } from "../axfunc"
+import { getImageName} from "../axfunc"
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import { allCapitals, backendPath, KEY_PERSIST_STORE } from "../config"
@@ -44,7 +44,7 @@ class Quiz extends Component {
     async componentDidMount() {
         this._isMounted = true
         const { user, setUser, setUsersList } = this.props
-        if (typeof user === 'object' && user !== null && !this.isEmptyObject(user)) {
+        if (!this.isEmptyObject(user)) {
             await setUsersList(3)
             let dn = user.displayName
             if (dn.length === 0) {
@@ -66,7 +66,6 @@ class Quiz extends Component {
             store.remove("persist:" + KEY_PERSIST_STORE)
             this.props.setUser({})
             if (this._isMounted) {
-                console.log("redirect login 2")
                 setUser("")
                 setUsersList(-1)
                 this.setState({ redirectLogin: true })
@@ -145,7 +144,7 @@ class Quiz extends Component {
         }
 
 
-        if (this.state.redirectLogin) {
+        if ( (this.state.redirectLogin) || (this.isEmptyObject(user)) ) {
             return <Redirect to='/Login' />
         }
 

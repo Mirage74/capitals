@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
 import Button from 'react-bootstrap/Button'
+import { connect } from 'react-redux'
 import { Redirect } from "react-router-dom"
+import {checkAuth} from './viewax/axfview'
 
 class About extends Component {
   state = {
@@ -9,8 +11,9 @@ class About extends Component {
   }
 
   handleBack = e => {
+    const {user, usersList} = this.props    
     e.preventDefault()
-    if (this.props.location.state.isAuth) {
+    if (!checkAuth(user, usersList))  {
       this.setState({ redirectQuiz: true })
     } else {
       this.setState({ redirectLogin: true })
@@ -52,4 +55,9 @@ class About extends Component {
 }
 
 
-export default About
+const mapStateToProps = (state) => ({
+  user: state.auth.currUser,
+  usersList: state.listCapitals.currUserList
+})
+
+export default connect(mapStateToProps)(About)

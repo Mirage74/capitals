@@ -8,6 +8,7 @@ import "../quiz.css"
 import uuid from 'uuid'
 import * as data from '../const/const_caps'
 import { RadioGroup, Radio } from 'react-radio-group'
+import { checkAuth } from './viewax/axfview'
 
 class LastQuiz extends Component {
     state = {
@@ -23,9 +24,12 @@ class LastQuiz extends Component {
 
 
     componentDidMount() {
-        const { lvl } = this.props.location.state
-        if ((lvl === 0) || (lvl === 1) || (lvl === 2) || (lvl === "0") || (lvl === "1") || (lvl === "2")) {
-            this.setState({ currSelectedRadio: "" + lvl })
+        const { user, usersList } = this.props
+        if (checkAuth(user, usersList)) {
+            const { lvl } = this.props.location.state
+            if ((lvl === 0) || (lvl === 1) || (lvl === 2) || (lvl === "0") || (lvl === "1") || (lvl === "2")) {
+                this.setState({ currSelectedRadio: "" + lvl })
+            }
         }
     }
 
@@ -57,7 +61,11 @@ class LastQuiz extends Component {
 
     render() {
         const { redirectQuiz, currSelectedRadio } = this.state
-        const { user } = this.props
+        const { user, usersList } = this.props
+
+        if (!checkAuth(user, usersList)) {
+            return <Redirect to='/Login' />
+        }
 
         if (redirectQuiz) {
             return <Redirect to={{
@@ -70,13 +78,13 @@ class LastQuiz extends Component {
 
         let forRender
 
-        if ( !(this.isEmptyObject(user.lastRes[0])) || (!this.isEmptyObject(user.lastRes[1])) || !(this.isEmptyObject(user.lastRes[2])) ) {
+        if (!(this.isEmptyObject(user.lastRes[0])) || (!this.isEmptyObject(user.lastRes[1])) || !(this.isEmptyObject(user.lastRes[2]))) {
 
             let qstIndex, aswIndex
             let rigthArr = []
             let timeOutArr = []
             let wrongArr = []
-            if ( !(this.isEmptyObject(user.lastRes[currSelectedRadio])) ) {
+            if (!(this.isEmptyObject(user.lastRes[currSelectedRadio]))) {
                 rigthArr = [...user.lastRes[currSelectedRadio].filter(this.isRight)]
                 timeOutArr = [...user.lastRes[currSelectedRadio].filter(this.isTimeout)]
                 wrongArr = [...user.lastRes[currSelectedRadio].filter(this.isWrong)]
@@ -87,7 +95,7 @@ class LastQuiz extends Component {
                 rigthArr[i].countryName = data.countriesNames[qstIndex]
                 rigthArr[i].capitalNameRight = data.capitalsNames[qstIndex]
             }
-        
+
 
             for (let i = 0; i < timeOutArr.length; i++) {
                 qstIndex = timeOutArr[i].questionIndex
@@ -209,14 +217,14 @@ class LastQuiz extends Component {
             )
         } else {
             forRender = (
-            <div>
-                <h3>No quiz passed yet</h3>
-                <Row>
-                    <Col>
-                        <Button onClick={this.handleBack}>Back</Button>
-                    </Col>
-                </Row>                
-            </div>
+                <div>
+                    <h3>No quiz passed yet</h3>
+                    <Row>
+                        <Col>
+                            <Button onClick={this.handleBack}>Back</Button>
+                        </Col>
+                    </Row>
+                </div>
             )
         }
 
@@ -230,7 +238,8 @@ class LastQuiz extends Component {
 }
 
 const mapStateToProps = (state) => ({
-    user: state.auth.currUser
+    user: state.auth.currUser,
+    usersList: state.listCapitals.currUserList
 })
 
 export default connect(mapStateToProps)(LastQuiz)
