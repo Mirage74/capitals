@@ -109,11 +109,14 @@ class OneTask extends Component {
       }
 
       if (DEBUG_MODE) {
-        console.log("user.debuginfo", user.debuginfo)
+        let dateFormat = require('dateformat')
+        let now = new Date()
+        let strTime = dateFormat(now, "isoDateTime")        
         let dInfo = [...user.debuginfo]
         let oneTask = []
         let oneRecDebug = {}
         oneRecDebug.info = "before"
+        oneRecDebug.strTime = strTime
         oneRecDebug.randInt = randArr
         oneRecDebug.oneRec = oneRec
         oneRecDebug.cpts = cpts
@@ -136,10 +139,14 @@ class OneTask extends Component {
       this.setState({ randArr: randArr })
 
       if (DEBUG_MODE) {
+        let dateFormat = require('dateformat')
+        let now = new Date()
+        let strTime = dateFormat(now, "isoDateTime")        
         let dInfo = [...user.debuginfo]
         let oneTask = []
         let oneRecDebug = {}
         oneRecDebug.info = "after"
+        oneRecDebug.strTime = strTime        
         oneRecDebug.randInt = randArr
         oneRecDebug.oneRec = oneRec
         oneRecDebug.cpts = cpts
