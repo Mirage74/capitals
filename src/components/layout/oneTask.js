@@ -113,7 +113,7 @@ class OneTask extends Component {
         oneTask.push(oneRecDebug)
         //console.log("oneTask", oneTask)
         dInfo.push(oneTask)
-        console.log("dInfo bef" , [...dInfo])
+        //console.log("dInfo bef" , [...dInfo])
         //console.log("dInfo", dInfo)
         // let updatedUser = {
         //   displayName: user.displayName,
@@ -142,7 +142,7 @@ class OneTask extends Component {
         oneRecDebug.newCpts = [...newCpts]
         oneTask.push(oneRecDebug)
         dInfo.push(oneTask)
-        console.log("dInfo aft", [...dInfo])
+        //console.log("dInfo aft", [...dInfo])
         let updatedUser = {
           displayName: user.displayName,
           debuginfo: dInfo
