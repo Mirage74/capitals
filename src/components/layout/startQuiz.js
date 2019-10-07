@@ -252,7 +252,7 @@ class StartQuiz extends Component {
                         <div className="container">
                             <div className="row">
                                 <div className="col">
-                                    <h1 className="text-center">Hello, {user.displayName} !</h1>
+                                    <h1 className="text-center">Hello, {user.displayName.charAt(0).toUpperCase() + user.displayName.slice(1)} !</h1>
                                     <Row>
                                         <Col md={{ span: 2, offset: 8 }}>
                                             {buttonConf}
