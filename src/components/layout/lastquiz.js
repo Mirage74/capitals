@@ -46,7 +46,13 @@ class LastQuiz extends Component {
     }
 
 
-
+    isEmptyObject = (obj) => {
+        for (let key in obj) {
+            if (obj.hasOwnProperty(key))
+                return false
+        }
+        return true
+    }
 
 
     render() {
@@ -62,110 +68,119 @@ class LastQuiz extends Component {
             />
         }
 
+        let forRender
 
-        let rigthArr = [...user.lastRes[currSelectedRadio].filter(this.isRight)]
-        let timeOutArr = [...user.lastRes[currSelectedRadio].filter(this.isTimeout)]
-        let wrongArr = [...user.lastRes[currSelectedRadio].filter(this.isWrong)]
-        let qstIndex, aswIndex
-        for (let i = 0; i < rigthArr.length; i++) {
-            qstIndex = rigthArr[i].questionIndex
-            rigthArr[i].countryName = data.countriesNames[qstIndex]
-            rigthArr[i].capitalNameRight = data.capitalsNames[qstIndex]
-        }
+        if ( !(this.isEmptyObject(user.lastRes[0])) || (!this.isEmptyObject(user.lastRes[1])) || !(this.isEmptyObject(user.lastRes[2])) ) {
 
-        for (let i = 0; i < timeOutArr.length; i++) {
-            qstIndex = timeOutArr[i].questionIndex
-            timeOutArr[i].countryName = data.countriesNames[qstIndex]
-            timeOutArr[i].capitalNameRight = data.capitalsNames[qstIndex]
-        }
+            let qstIndex, aswIndex
+            let rigthArr = []
+            let timeOutArr = []
+            let wrongArr = []
+            if ( !(this.isEmptyObject(user.lastRes[currSelectedRadio])) ) {
+                rigthArr = [...user.lastRes[currSelectedRadio].filter(this.isRight)]
+                timeOutArr = [...user.lastRes[currSelectedRadio].filter(this.isTimeout)]
+                wrongArr = [...user.lastRes[currSelectedRadio].filter(this.isWrong)]
+            }
 
-        for (let i = 0; i < wrongArr.length; i++) {
-            qstIndex = wrongArr[i].questionIndex
-            aswIndex = wrongArr[i].answerIndex
-            wrongArr[i].countryName = data.countriesNames[qstIndex]
-            wrongArr[i].capitalNameRight = data.capitalsNames[qstIndex]
-            wrongArr[i].capitalNameWrong = data.capitalsNames[aswIndex]
-        }
+            for (let i = 0; i < rigthArr.length; i++) {
+                qstIndex = rigthArr[i].questionIndex
+                rigthArr[i].countryName = data.countriesNames[qstIndex]
+                rigthArr[i].capitalNameRight = data.capitalsNames[qstIndex]
+            }
+        
 
-        let headerTab = (
-            <Row style = {{fontSize: "1.5rem"}}className="justify-content-md-center" >
-                <Col   md={{ span: 2, offset: 3 }}>
-                    <b>Country:</b>
-                </Col>
-                <Col md={{ span: 2, offset: 1 }}>
-                    <b>Capital:</b>
-                </Col>
-                <Col md={{ span: 2, offset: 1 }}>
-                    <b>Your answer:</b>
-                </Col>
-            </Row>
+            for (let i = 0; i < timeOutArr.length; i++) {
+                qstIndex = timeOutArr[i].questionIndex
+                timeOutArr[i].countryName = data.countriesNames[qstIndex]
+                timeOutArr[i].capitalNameRight = data.capitalsNames[qstIndex]
+            }
 
-        )
+            for (let i = 0; i < wrongArr.length; i++) {
+                qstIndex = wrongArr[i].questionIndex
+                aswIndex = wrongArr[i].answerIndex
+                wrongArr[i].countryName = data.countriesNames[qstIndex]
+                wrongArr[i].capitalNameRight = data.capitalsNames[qstIndex]
+                wrongArr[i].capitalNameWrong = data.capitalsNames[aswIndex]
+            }
 
-        let rightRows = rigthArr.map(item =>
-            <Row key={uuid()}>
-                <Col className = "row-last-quiz-green" md={{ span: 2, offset: 3 }}>
-                    {item.countryName}
-                </Col>
-                <Col className = "row-last-quiz-green" md={{ span: 2, offset: 1 }}>
-                    {item.capitalNameRight}
-                </Col>
-                <Col className = "row-last-quiz-green" md={{ span: 2, offset: 1 }}>
-                    {item.capitalNameRight}
-                </Col>
-            </Row>
-        )
+            let headerTab = (
+                <Row style={{ fontSize: "1.5rem" }} className="justify-content-md-center" >
+                    <Col md={{ span: 2, offset: 3 }}>
+                        <b>Country:</b>
+                    </Col>
+                    <Col md={{ span: 2, offset: 1 }}>
+                        <b>Capital:</b>
+                    </Col>
+                    <Col md={{ span: 2, offset: 1 }}>
+                        <b>Your answer:</b>
+                    </Col>
+                </Row>
 
-        let timeoutRows = timeOutArr.map(item =>
-            <Row key={uuid()}>
-                <Col className = "row-last-quiz-yellow" md={{ span: 2, offset: 3 }}>
-                    {item.countryName}
-                </Col>
-                <Col className = "row-last-quiz-yellow" md={{ span: 2, offset: 1 }}>
-                    {item.capitalNameRight}
-                </Col>
-                <Col className = "row-last-quiz-yellow" md={{ span: 2, offset: 1 }}>
-                    <b>No answer</b>
-                </Col>
-            </Row>
-        )        
+            )
 
-        let wrongRows = wrongArr.map(item =>
-            <Row key={uuid()}>
-                <Col className = "row-last-quiz-red" md={{ span: 2, offset: 3 }}>
-                    {item.countryName}
-                </Col>
-                <Col className = "row-last-quiz-red" md={{ span: 2, offset: 1 }}>
-                    {item.capitalNameRight}
-                </Col>
-                <Col className = "row-last-quiz-red-2" md={{ span: 2, offset: 1 }}>
-                    {item.capitalNameWrong}
-                </Col>
-            </Row>
-        )                
+            let rightRows = rigthArr.map(item =>
+                <Row key={uuid()}>
+                    <Col className="row-last-quiz-green" md={{ span: 2, offset: 3 }}>
+                        {item.countryName}
+                    </Col>
+                    <Col className="row-last-quiz-green" md={{ span: 2, offset: 1 }}>
+                        {item.capitalNameRight}
+                    </Col>
+                    <Col className="row-last-quiz-green" md={{ span: 2, offset: 1 }}>
+                        {item.capitalNameRight}
+                    </Col>
+                </Row>
+            )
+
+            let timeoutRows = timeOutArr.map(item =>
+                <Row key={uuid()}>
+                    <Col className="row-last-quiz-yellow" md={{ span: 2, offset: 3 }}>
+                        {item.countryName}
+                    </Col>
+                    <Col className="row-last-quiz-yellow" md={{ span: 2, offset: 1 }}>
+                        {item.capitalNameRight}
+                    </Col>
+                    <Col className="row-last-quiz-yellow" md={{ span: 2, offset: 1 }}>
+                        <b>No answer</b>
+                    </Col>
+                </Row>
+            )
+
+            let wrongRows = wrongArr.map(item =>
+                <Row key={uuid()}>
+                    <Col className="row-last-quiz-red" md={{ span: 2, offset: 3 }}>
+                        {item.countryName}
+                    </Col>
+                    <Col className="row-last-quiz-red" md={{ span: 2, offset: 1 }}>
+                        {item.capitalNameRight}
+                    </Col>
+                    <Col className="row-last-quiz-red-2" md={{ span: 2, offset: 1 }}>
+                        {item.capitalNameWrong}
+                    </Col>
+                </Row>
+            )
 
 
 
-        let chooseLvl = (
-            <RadioGroup className="text-left"
-                name="sort"
-                selectedValue={currSelectedRadio}
-                onChange={this.handleChange}>
-                <label>
-                    <Radio value="0" /><b className="radio-myfont">Easy</b>
-                </label>
-                <label>
-                    <Radio value="1" /><b className="radio-myfont">Middle</b>
-                </label>
-                <label>
-                    <Radio value="2" /><b className="radio-myfont">Hard </b>
-                </label>
-            </RadioGroup>
-        )
-        let strRes = ` last result: (${rigthArr.length}/${user.lastRes[currSelectedRadio].length})`
+            let chooseLvl = (
+                <RadioGroup className="text-left"
+                    name="sort"
+                    selectedValue={currSelectedRadio}
+                    onChange={this.handleChange}>
+                    <label>
+                        <Radio value="0" /><b className="radio-myfont">Easy</b>
+                    </label>
+                    <label>
+                        <Radio value="1" /><b className="radio-myfont">Middle</b>
+                    </label>
+                    <label>
+                        <Radio value="2" /><b className="radio-myfont">Hard </b>
+                    </label>
+                </RadioGroup>
+            )
+            let strRes = ` last result: (${rigthArr.length}/${user.lastRes[currSelectedRadio].length})`
 
-        return (
-            <div>
+            forRender = (<>
                 <Row>
                     <Col md={{ span: 5 }}>
                         <Button onClick={this.handleBack}>Back</Button>
@@ -173,15 +188,15 @@ class LastQuiz extends Component {
                     <Col md={{ span: 4 }}>
                         <h2 className="display-6">
                             <b>{user.displayName.charAt(0).toUpperCase() + user.displayName.slice(1)}</b>{strRes}
-                    </h2>
+                        </h2>
                     </Col>
                 </Row>
                 <Row className="justify-content-md-center">
                     {chooseLvl}
                 </Row>
-                <br/>
+                <br />
                 {headerTab}
-                <br/>
+                <br />
                 {rightRows}
                 {timeoutRows}
                 {wrongRows}
@@ -190,6 +205,24 @@ class LastQuiz extends Component {
                         <Button onClick={this.handleBack}>Back</Button>
                     </Col>
                 </Row>
+            </>
+            )
+        } else {
+            forRender = (
+            <div>
+                <h3>No quiz passed yet</h3>
+                <Row>
+                    <Col>
+                        <Button onClick={this.handleBack}>Back</Button>
+                    </Col>
+                </Row>                
+            </div>
+            )
+        }
+
+        return (
+            <div>
+                {forRender}
             </div>
         )
 
