@@ -162,13 +162,13 @@ class ScoreList extends Component {
             const lvlNames = (
                 <Row>
                     <Col className="text-center" md={{ span: 1, offset: 1 }}>
-                        <h4>Easy</h4>
+                        <h5>Easy</h5>
                     </Col>
                     <Col className="text-center" md={{ span: 1, offset: 3 }}>
-                        <h4>Middle</h4>
+                        <h5>Middle</h5>
                     </Col>
                     <Col className="text-center" md={{ span: 1, offset: 3 }}>
-                        <h4>Hard</h4>
+                        <h5>Hard</h5>
                     </Col>
                 </Row>
             )
@@ -176,20 +176,20 @@ class ScoreList extends Component {
                 <div>
                     <Row>
                         <Col className="text-center" md={11}>
-                            <h2>Your best score:</h2>
+                            <h3>Your best score:</h3>
                         </Col>
                     </Row>
-                    <br />
+                    <h6></h6>
 
                     {lvlNames}
                     {userScore}
-                    <br />
+                    <h6></h6>
                     <Row>
                         <Col className="text-center" md={11}>
                             <h3>Top:</h3>
                         </Col>
                     </Row>
-                    <br />
+                    <h6></h6>
 
                     {lvlNames}
 

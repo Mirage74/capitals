@@ -5,11 +5,13 @@ const INITIAL_STATE = {
   user: {}
 }
 
+
 const currUser = (state = INITIAL_STATE.user, { type, payload }) => {
   switch (type) {
     case AuthTypes.SET_USER:
       return payload;
-
+    case AuthTypes.UPDATE_USER:
+      return payload;
     default:
       return state;
   }

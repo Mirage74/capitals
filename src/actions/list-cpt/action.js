@@ -46,20 +46,6 @@ export const cutCountriesList = (newCpts) => async (dispatch) => {
   })
 }
 
-export const updUser = (user) => async dispatch => {
-  const configAx = {
-    method: 'put',
-    data: user
-  }
-  const res = await axios.put(backendPath + `${user.displayName}`, configAx)
-    .catch(err => {
-      console.log("error updating user : ", err)
-    })
-  dispatch({
-    type: ActionTypes.UPDATE_USER,
-    payload: res.data
 
-  })
-  return res.data
-}
+
 

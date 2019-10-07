@@ -1,11 +1,11 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { allCapitals, ALL_ANSWERS, DEBUG_MODE, backendPath } from "../../config"
+import { allCapitals, ALL_ANSWERS, DEBUG_MODE } from "../../config"
 import * as data from '../const/const_caps'
 import uuid from 'uuid'
 import { getImageName } from "../../axfunc"
-import axios from 'axios'
 import { RadioGroup, Radio } from 'react-radio-group'
+import { updUser } from '../../actions/auth/action'
 import "../quiz.css"
 
 
@@ -76,22 +76,10 @@ class OneTask extends Component {
     this.setState({ cardArr: cardArr })
   }
 
-  updUserDebug = async (user) => {
-    const configAx = {
-      method: 'put',
-      data: user
-    }
-    const res = await axios.put(backendPath + `${user.displayName}`, configAx)
-      .catch(err => {
-        console.log("error updating user debug : ", err)
-      })
-    return res.data
-  }
-
-
+  
   async componentDidUpdate(prevProps) {
     if (this.props.index !== prevProps.index) {
-      const { index, cpts, correctAnswer, user } = this.props
+      const { index, cpts, correctAnswer, user, updUser } = this.props
       let randInt
       let oneRec
       let newCpts = [...cpts]
@@ -107,30 +95,31 @@ class OneTask extends Component {
         randArr.push(oneRec)
         newCpts.splice(randInt, 1)
       }
-
+      let dInfo
       if (DEBUG_MODE) {
         let dateFormat = require('dateformat')
         let now = new Date()
         let strTime = dateFormat(now, "isoDateTime")        
-        let dInfo = [...user.debuginfo]
+        dInfo = [...user.debuginfo]
         let oneTask = []
         let oneRecDebug = {}
         oneRecDebug.info = "before"
         oneRecDebug.strTime = strTime
-        oneRecDebug.randInt = randArr
+        oneRecDebug.randInt = [...randArr]
         oneRecDebug.oneRec = oneRec
-        oneRecDebug.cpts = cpts
-        oneRecDebug.newCpts = newCpts
+        oneRecDebug.cpts = [...cpts]
+        oneRecDebug.newCpts = [...newCpts]
         //console.log("oneRecDebug", oneRecDebug)
         oneTask.push(oneRecDebug)
         //console.log("oneTask", oneTask)
         dInfo.push(oneTask)
+        console.log("dInfo bef" , [...dInfo])
         //console.log("dInfo", dInfo)
-        let updatedUser = {
-          displayName: user.displayName,
-          debuginfo: dInfo
-        }
-        await this.updUserDebug(updatedUser)
+        // let updatedUser = {
+        //   displayName: user.displayName,
+        //   debuginfo: dInfo
+        // }
+        // await updUser(updatedUser)
       }
 
       oneRec = cpts[index]
@@ -142,22 +131,23 @@ class OneTask extends Component {
         let dateFormat = require('dateformat')
         let now = new Date()
         let strTime = dateFormat(now, "isoDateTime")        
-        let dInfo = [...user.debuginfo]
+        //let dInfo = [...user.debuginfo]
         let oneTask = []
         let oneRecDebug = {}
         oneRecDebug.info = "after"
         oneRecDebug.strTime = strTime        
-        oneRecDebug.randInt = randArr
+        oneRecDebug.randInt = [...randArr]
         oneRecDebug.oneRec = oneRec
-        oneRecDebug.cpts = cpts
-        oneRecDebug.newCpts = newCpts
+        oneRecDebug.cpts = [...cpts]
+        oneRecDebug.newCpts = [...newCpts]
         oneTask.push(oneRecDebug)
         dInfo.push(oneTask)
+        console.log("dInfo aft", [...dInfo])
         let updatedUser = {
           displayName: user.displayName,
           debuginfo: dInfo
         }
-        await this.updUserDebug(updatedUser)
+        await updUser(updatedUser)
       }
 
       cardArr = this.createCards(randArr)
@@ -242,7 +232,5 @@ const mapStateToProps = (state) => ({
   cpts: state.listCapitals.currCountriesList
 })
 
-export default connect(mapStateToProps)(OneTask)
-
-
+export default connect(mapStateToProps, { updUser })(OneTask)
 

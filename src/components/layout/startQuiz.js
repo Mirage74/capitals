@@ -9,8 +9,8 @@ import Countdown from './stopwatch'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import Button from 'react-bootstrap/Button'
-import { updUser, cutCountriesList } from '../../actions/list-cpt/action'
-import { setUser } from '../../actions/auth/action'
+import { cutCountriesList } from '../../actions/list-cpt/action'
+import { setUser, updUser } from '../../actions/auth/action'
 import { TIME_PER_TURN_EASY, TIME_PER_TURN_MIDDLE, TIME_PER_TURN_HARD, ALL_TASKS_EASY, ALL_TASKS_MIDDLE, ALL_TASKS_HARD } from "../../config"
 
 class StartQuiz extends Component {
