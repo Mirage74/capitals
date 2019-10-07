@@ -43,8 +43,8 @@ class Quiz extends Component {
 
     async componentDidMount() {
         this._isMounted = true
-        const { user, setUser, setUsersList  } = this.props
-        if (typeof user === 'object' && user !== null && !this.isEmptyObject(user) ) {
+        const { user, setUser, setUsersList } = this.props
+        if (typeof user === 'object' && user !== null && !this.isEmptyObject(user)) {
             await setUsersList(3)
             let dn = user.displayName
             if (dn.length === 0) {
@@ -68,7 +68,7 @@ class Quiz extends Component {
             if (this._isMounted) {
                 console.log("redirect login 2")
                 setUser("")
-                setUsersList(-1)                
+                setUsersList(-1)
                 this.setState({ redirectLogin: true })
             }
         }
@@ -123,7 +123,7 @@ class Quiz extends Component {
     }
 
     render() {
-        const { user, usersList } = this.props
+        const { user } = this.props
 
 
         if (this.state.redirectViewCapitals) {
@@ -161,53 +161,46 @@ class Quiz extends Component {
 
 
         let forRender
-        if (usersList && (usersList.length === 3)) {
-
-            console.log("quiz usersList", usersList)
-            console.log("quiz usersList.length", usersList.length)
-
-            if (user !== "Login failed") {
-                const { displayName } = this.props.user
-                if (this.state.redirectStartQuiz) {
-                    let arr = this.getSource(this.state.radioButtonSelected)
-                    this.props.setCountriesList(arr)
-                    return <Redirect to={{
-                        pathname: 'StartQuiz',
-                        state: {
-                            levelValue: this.state.radioButtonSelected
-                        }
-                    }}
-                    />
-                }
-
-
-
-                forRender = (
-                    <div>
-                        <Row>
-                            <Col md={{ span: 2, offset: 1 }} >
-                                <MenuButtons pressedButton={this.getMenuClickCB} />
-                            </Col>
-                            <Col md={{ span: 6, offset: 1 }}>
-                                <ChooseLevel currButton={this.currRadioCB} displayName={displayName} />
-                                <br />
-                                <ScoreList />
-                            </Col>
-                        </Row>
-                    </div>
-                )
-
-            } else {
-                if (this.state.redirectLogin) {
-                    return <Redirect to='/Login' />
-                }
-                forRender = (
-                    <div></div>
-                )
+        if (user !== "Login failed") {
+            const { displayName } = this.props.user
+            if (this.state.redirectStartQuiz) {
+                let arr = this.getSource(this.state.radioButtonSelected)
+                this.props.setCountriesList(arr)
+                return <Redirect to={{
+                    pathname: 'StartQuiz',
+                    state: {
+                        levelValue: this.state.radioButtonSelected
+                    }
+                }}
+                />
             }
+
+
+
+            forRender = (
+                <div>
+                    <Row>
+                        <Col md={{ span: 2, offset: 1 }} >
+                            <MenuButtons pressedButton={this.getMenuClickCB} />
+                        </Col>
+                        <Col md={{ span: 6, offset: 1 }}>
+                            <ChooseLevel currButton={this.currRadioCB} displayName={displayName} />
+                            <br />
+                            <ScoreList />
+                        </Col>
+                    </Row>
+                </div>
+            )
+
         } else {
-            forRender = (<></>)
+            if (this.state.redirectLogin) {
+                return <Redirect to='/Login' />
+            }
+            forRender = (
+                <div></div>
+            )
         }
+
 
         return (
             <div>
