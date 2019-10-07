@@ -152,7 +152,7 @@ class Quiz extends Component {
             return <Redirect to={{
                 pathname: 'About',
                 state: {
-                    isAuth: true
+//                    isAuth: true
                 }
             }}
             />
