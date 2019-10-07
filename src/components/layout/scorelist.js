@@ -179,20 +179,20 @@ class ScoreList extends Component {
                             <h3>Your best score:</h3>
                         </Col>
                     </Row>
-                    <h6></h6>
-
+                    <Row style={{ height: "0.5rem" }}>
+                    </Row>
                     {lvlNames}
                     {userScore}
-                    <h6></h6>
+                    <Row style={{ height: "0.5rem" }}>
+                    </Row>
                     <Row>
                         <Col className="text-center" md={11}>
                             <h3>Top:</h3>
                         </Col>
                     </Row>
-                    <h6></h6>
-
+                    <Row style={{ height: "0.5rem" }}>
+                    </Row>
                     {lvlNames}
-
                     {tableHB}
                 </div>
             )
