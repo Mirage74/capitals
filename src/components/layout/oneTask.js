@@ -76,7 +76,7 @@ class OneTask extends Component {
     this.setState({ cardArr: cardArr })
   }
 
-  
+
   async componentDidUpdate(prevProps) {
     if (this.props.index !== prevProps.index) {
       const { index, cpts, correctAnswer, user, updUser } = this.props
@@ -99,7 +99,7 @@ class OneTask extends Component {
       if (DEBUG_MODE) {
         let dateFormat = require('dateformat')
         let now = new Date()
-        let strTime = dateFormat(now, "isoDateTime")        
+        let strTime = dateFormat(now, "isoDateTime")
         dInfo = [...user.debuginfo]
         let oneTask = []
         let oneRecDebug = {}
@@ -130,12 +130,12 @@ class OneTask extends Component {
       if (DEBUG_MODE) {
         let dateFormat = require('dateformat')
         let now = new Date()
-        let strTime = dateFormat(now, "isoDateTime")        
+        let strTime = dateFormat(now, "isoDateTime")
         //let dInfo = [...user.debuginfo]
         let oneTask = []
         let oneRecDebug = {}
         oneRecDebug.info = "after"
-        oneRecDebug.strTime = strTime        
+        oneRecDebug.strTime = strTime
         oneRecDebug.randInt = [...randArr]
         oneRecDebug.oneRec = oneRec
         oneRecDebug.cpts = [...cpts]
@@ -212,13 +212,19 @@ class OneTask extends Component {
       </li>
     )
 
-    return (
+    let forRender = (
       <div className="row">
         {task}
         {radioList}
         <ul className="w-100 p-2 topContainer">{cptNames}</ul>
         <ul className="w-100 p-2 topContainer">{pics}</ul>
       </div>
+    )
+
+    return (
+      <>
+        {forRender}
+      </>
     )
 
 
@@ -228,7 +234,7 @@ class OneTask extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  user: state.auth.currUser,  
+  user: state.auth.currUser,
   cpts: state.listCapitals.currCountriesList
 })
 
