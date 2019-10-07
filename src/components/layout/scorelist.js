@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import Table from 'react-bootstrap/Table'
+import {PropTypes} from 'prop-types'
 
 class ScoreList extends Component {
     state = {
@@ -190,6 +191,11 @@ class ScoreList extends Component {
 
     }
 }
+
+ScoreList.propTypes = {
+    user: PropTypes.object.isRequired,
+    //usersList: PropTypes.array[3].isRequired
+  }
 
 const mapStateToProps = (state) => ({
     user: state.auth.currUser,

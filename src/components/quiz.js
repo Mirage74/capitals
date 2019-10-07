@@ -163,6 +163,8 @@ class Quiz extends Component {
         let forRender
         if (usersList && (usersList.length === 3)) {
 
+            console.log("quiz usersList", usersList)
+            console.log("quiz usersList.length", usersList.length)
 
             if (user !== "Login failed") {
                 const { displayName } = this.props.user
